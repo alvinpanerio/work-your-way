@@ -5,13 +5,13 @@ const getLogin = (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
     await Account.create({
-      username,
+      email,
       password,
     });
-    res.send("signup successful");
+    res.redirect("/login");
   } catch (err) {
     console.log(err);
   }

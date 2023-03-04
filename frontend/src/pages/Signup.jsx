@@ -1,23 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
-import Button from "../shared/Button";
 import Home from "./Home";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [submit, setSubmit] = useState(true);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      email &&
+      password.length > 7 &&
+      passwordConfirm.length > 7 &&
+      password === passwordConfirm
+    ) {
+      console.log(1);
+      setSubmit(false);
+    } else {
+      setSubmit(true);
+    }
+  }, [email, password, passwordConfirm]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/signup", {
-        username: email,
-        password,
-      });
+      if (
+        email &&
+        password &&
+        passwordConfirm &&
+        passwordConfirm === password &&
+        passwordConfirm.length > 7 &&
+        password > 7
+      ) {
+        await axios.post("http://localhost:4000/signup", {
+          email,
+          password,
+        });
+        setError("");
+      } else {
+        throw new Error();
+      }
     } catch (err) {
       console.log(err);
     }
+    navigate("/login");
+  };
+
+  const handlePassword = (e) => {
+    if (e.target.value.length < 8) {
+      setSubmit(true);
+      setPassword(e.target.value);
+      return setError("Password must at least 8 characters!");
+    } else {
+      setPassword(e.target.value);
+    }
+    setError("");
+  };
+
+  const handlePasswordConfirmation = (e) => {
+    if (password !== e.target.value) {
+      setSubmit(true);
+      setPasswordConfirm(e.target.value);
+      return setError("Password must match!");
+    } else {
+      setPasswordConfirm(e.target.value);
+    }
+    setError("");
   };
 
   return (
@@ -42,27 +96,30 @@ function Login() {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePassword}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="password">Confirm Password*</label>
+            <label htmlFor="confirm-password">Confirm Password*</label>
             <input
               type="password"
-              id="password"
+              id="confirm-password"
+              value={passwordConfirm}
+              onChange={handlePasswordConfirmation}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
           </div>
-          <button type="submit">
-            asdasd
-            {/* <Button
-              n={"700"}
-              h={"800"}
-              add={"w-full ml-0 mt-3 flex justify-center"}
-            >
-              Signup
-            </Button> */}
+          {error && <div className="text-red-600 mt-3">{error}</div>}
+          <button
+            type="submit"
+            disabled={submit}
+            className={`inline-flex items-center text-white ${
+              submit ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-700"
+            }  font-medium 
+      rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center`}
+          >
+            Signup
           </button>
         </form>
       </Card>
