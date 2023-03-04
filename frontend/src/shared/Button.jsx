@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Button({ to, size, n, h, add, children }) {
+function Button({ type, to, size, n, h, add, children }) {
   return (
     <Link
       to={to}
