@@ -27,14 +27,13 @@ function Login() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
           </div>
-          <Button
-            to={"/login"}
-            n={"700"}
-            h={"800"}
-            add={"w-full ml-0 mt-3 flex justify-center"}
+          <button
+            type={"submit"}
+            className="inline-flex items-center text-white 
+              bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center"
           >
             Log In
-          </Button>
+          </button>
         </form>
       </Card>
     </div>

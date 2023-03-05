@@ -6,7 +6,7 @@ function Button({ type, to, add, children }) {
       <button
         type={type}
         className={`inline-flex items-center text-white bg-blue-500 hover:bg-blue-700 font-medium 
-      rounded-lg text-base px-5 py-2.5 text-center ${add}`}
+      rounded-lg text-base px-5 py-2.5 text-center ml-3 ${add}`}
       >
         {children}
       </button>
