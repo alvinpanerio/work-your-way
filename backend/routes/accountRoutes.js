@@ -1,13 +1,13 @@
 const express = require("express");
 const {
-  getLogin,
+  login,
   signup,
   getForgotPassword,
 } = require("../controllers/accountsController");
 
 const router = express.Router();
 
-router.get("/", getLogin);
+router.post("/login", login);
 
 router.post("/signup", signup);
 

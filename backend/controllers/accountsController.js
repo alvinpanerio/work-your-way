@@ -1,18 +1,38 @@
+require("dotenv").config();
 const emailExistence = require("email-existence");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const Account = require("../models/accounts");
 
-const getLogin = (req, res) => {
-  res.send("login");
+const generateToken = (_id) => {
+  jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
 };
 
-async function generateSalt(num) {
-  return await bcrypt.genSalt(num);
-}
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  let id = null;
+  try {
+    await Account.exists({ email }).then((result) => {
+      id = result;
+      Account.findById(result).then((result) => {
+        bcrypt.compare(password, result.password, (error, result) => {
+          if (error) {
+            console.log(error);
+          }
 
-async function hashPassword(em, sa) {
-  return await bcrypt.hash(em, sa);
-}
+          if (result) {
+            generateToken(id);
+            res.send("Login successful");
+          } else {
+            res.status(404).json({ error: "Incorrect username and password!" });
+          }
+        });
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -45,6 +65,7 @@ const signup = async (req, res) => {
         })
         .catch((err) => console.log(err));
     } else {
+      res.status(404).json({ error: "Sign up error!" });
       throw new Error();
     }
   } catch (err) {
@@ -56,4 +77,4 @@ const getForgotPassword = (req, res) => {
   res.send("forgot password");
 };
 
-module.exports = { getLogin, signup, getForgotPassword };
+module.exports = { login, signup, getForgotPassword };
