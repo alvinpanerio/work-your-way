@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
+import LoadingProvider from "../context/LoadingContext";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,15 @@ function Login() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+
+  const { setIsLoading } = useContext(LoadingProvider);
+
+  useEffect(() => {
+    let isAuth = localStorage.getItem("user");
+    if (isAuth && isAuth !== "undefined") {
+      navigate("/");
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +30,12 @@ function Login() {
           password,
         })
         .then((res) => {
-          console.log(res.status);
           if (res.status === 200) {
+            if (res.data.token) {
+              localStorage.setItem("user", JSON.stringify(res.data));
+            }
+            // window.location.reload(true);
+            setIsLoading(true);
             navigate("/");
           }
         })
@@ -36,10 +50,12 @@ function Login() {
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
+    setError("");
   };
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
+    setError("");
   };
 
   return (

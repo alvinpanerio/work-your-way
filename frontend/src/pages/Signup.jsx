@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
@@ -14,6 +15,13 @@ function Login() {
   const [submit, setSubmit] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let isAuth = localStorage.getItem("user");
+    if (isAuth && isAuth !== "undefined") {
+      navigate("/");
+    }
+  }, []);
 
   useEffect(() => {
     if (

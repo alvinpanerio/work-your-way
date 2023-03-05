@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const Account = require("../models/accounts");
 
 const generateToken = (_id) => {
-  jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
+  return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
 };
 
 const login = async (req, res) => {
@@ -13,21 +13,27 @@ const login = async (req, res) => {
   let id = null;
   try {
     await Account.exists({ email }).then((result) => {
-      id = result;
-      Account.findById(result).then((result) => {
-        bcrypt.compare(password, result.password, (error, result) => {
-          if (error) {
-            console.log(error);
-          }
+      id = result._id;
+      if (!result) {
+        res.status(404).json({ error: "Uknown email!" });
+      } else {
+        Account.findById(result).then((result) => {
+          bcrypt.compare(password, result.password, (error, result) => {
+            if (error) {
+              console.log(error);
+            }
 
-          if (result) {
-            generateToken(id);
-            res.send("Login successful");
-          } else {
-            res.status(404).json({ error: "Incorrect username and password!" });
-          }
+            if (result) {
+              const token = generateToken(id);
+              res.status(200).json({ email, token });
+            } else {
+              res
+                .status(404)
+                .json({ error: "Incorrect username and password!" });
+            }
+          });
         });
-      });
+      }
     });
   } catch (err) {
     console.log(err);
