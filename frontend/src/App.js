@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
+import PasswordReset from "./pages/PasswordReset";
+import Error404 from "./pages/Error404";
 import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
 
@@ -25,6 +27,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot" element={<ForgotPassword />} />
+            <Route path="/forgot/:resetToken" element={<PasswordReset />} />
+            <Route path="*" element={<Error404 />} />
           </Routes>
         </BrowserRouter>
       )}

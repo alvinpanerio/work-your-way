@@ -2,6 +2,7 @@ require("dotenv").config();
 const emailExistence = require("email-existence");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const Account = require("../models/accounts");
 
@@ -102,8 +103,91 @@ const signup = async (req, res) => {
   }
 };
 
-const getForgotPassword = (req, res) => {
-  res.send("forgot password");
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await Account.findOne({ email });
+    await Account.findOne({ email }).then((result) => {
+      if (!result) {
+        res.status(404).json({ error: "Email is not registered!" });
+      } else {
+        const token = crypto.randomBytes(32).toString("hex");
+        // setting key/value pairs in db
+        user.resetToken = token;
+        user.resetExpiresOn = Date.now() + 900000;
+        user.save();
+        let successfulMessage = {
+          from: "codetalker@zohomail.com",
+          to: `${email}`,
+          subject: "Personal Workspace Account Password Reset",
+          text: `http://localhost:3000/forgot/${token}`,
+        };
+
+        makeTransport.sendMail(successfulMessage, (err, data) => {
+          err
+            ? console.log("Email error" + err)
+            : console.log("Email sent successfully");
+        });
+        console.log(user);
+        res.send("Registered email");
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-module.exports = { login, signup, getForgotPassword };
+const getPasswordReset = async (req, res) => {
+  const { resetToken } = req.params;
+  try {
+    await Account.findOne({ resetToken, resetExpiresOn: { $gt: Date.now() } })
+      .then((result) => {
+        if (result) {
+          res.send("asdasd");
+        } else {
+          res.status(404).json({ redirect: "/error" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const passwordReset = async (req, res) => {
+  const { resetToken } = req.params;
+  const { password } = req.body;
+  const user = await Account.findOne({ resetToken });
+  try {
+    await Account.findOne({
+      resetToken,
+      resetExpiresOn: { $gt: Date.now() },
+    }).then((result) => {
+      if (password.length > 7) {
+        bcrypt.genSalt(10).then((result) => {
+          bcrypt.hash(password, result).then((result) => {
+            user.password = result;
+            user.resetToken = undefined;
+            user.resetExpiresOn = undefined;
+            user.save();
+            res.send("Reset Successful");
+          });
+        });
+      } else {
+        res.status(404).json({ redirect: "/error" });
+      }
+    });
+  } catch (err) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  login,
+  signup,
+  forgotPassword,
+  passwordReset,
+  getPasswordReset,
+};

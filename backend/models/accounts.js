@@ -9,6 +9,8 @@ const accountSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resetToken: String,
+  resetExpiresOn: String,
 });
 
 module.exports = mongoose.model("Account", accountSchema);

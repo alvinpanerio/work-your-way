@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { FaEye } from "react-icons/fa";
 import Card from "../components/Card";
 import Home from "./Home";
 import LoadingProvider from "../context/LoadingContext";
@@ -9,6 +10,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [show, setShow] = useState("");
 
   const navigate = useNavigate();
 
@@ -73,6 +75,12 @@ function Login() {
               onChange={handleEmail}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
+            <FaEye
+              onClick={() => {
+                alert("sfdad");
+              }}
+              className="top-8 cursor-pointer absolute"
+            ></FaEye>
           </div>
           <div className="flex flex-col">
             <label htmlFor="password">Password*</label>
