@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import RiseLoader from "react-spinners/RiseLoader";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
-import Loading from "../assets/loading.gif";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -102,7 +101,9 @@ function Login() {
       <Home></Home>
       <Card>
         {submitting ? (
-          <img src={Loading} alt="loading" />
+          <div className="h-full flex justify-center items-center">
+            <RiseLoader color="#3b82f6" margin={2} size={30} />
+          </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <p>Sign Up</p>

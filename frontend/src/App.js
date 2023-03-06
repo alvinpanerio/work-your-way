@@ -5,17 +5,17 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import LoadingProvider from "./context/LoadingContext";
-import Loading from "./assets/loading.gif";
+import RiseLoader from "react-spinners/RiseLoader";
 
 function App() {
-  const { isLoading, setIsLoading } = useContext(LoadingProvider);
+  const { isLoading } = useContext(LoadingProvider);
 
   return (
     <div>
       {isLoading ? (
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000)
+        <div className="h-screen flex justify-center items-center">
+          <RiseLoader color="#3b82f6" margin={2} size={30} />
+        </div>
       ) : (
         <BrowserRouter>
           <NavBar />
