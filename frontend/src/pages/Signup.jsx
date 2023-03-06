@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import RiseLoader from "react-spinners/RiseLoader";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
@@ -12,6 +13,7 @@ function Login() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submit, setSubmit] = useState(true);
+  const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
 
@@ -117,25 +119,55 @@ function Login() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               />
             </div>
-            <div className="flex flex-col">
+            <div className="relative flex flex-col">
               <label htmlFor="password">Password*</label>
               <input
-                type="password"
+                type={show ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={handlePassword}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               />
+              {show ? (
+                <FaEyeSlash
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                  className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                ></FaEyeSlash>
+              ) : (
+                <FaEye
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                ></FaEye>
+              )}
             </div>
-            <div className="flex flex-col">
+            <div className="relative flex flex-col">
               <label htmlFor="confirm-password">Confirm Password*</label>
               <input
-                type="password"
+                type={show ? "text" : "password"}
                 id="confirm-password"
                 value={passwordConfirm}
                 onChange={handlePasswordConfirmation}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               />
+              {show ? (
+                <FaEyeSlash
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                  className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                ></FaEyeSlash>
+              ) : (
+                <FaEye
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                ></FaEye>
+              )}
             </div>
             {error && <div className="text-red-600 mt-3">{error}</div>}
             <button

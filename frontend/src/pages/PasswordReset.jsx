@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Card from "../components/Card";
 import LoadingProvider from "../context/LoadingContext";
 
@@ -12,6 +12,7 @@ function PasswordReset() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState("");
   const [submit, setSubmit] = useState(true);
+  const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
   const { setIsLoading } = useContext(LoadingProvider);
@@ -102,25 +103,55 @@ function PasswordReset() {
           <Card>
             <form onSubmit={handleSubmit}>
               <p>Password Reset</p>
-              <div className="flex flex-col">
+              <div className="relative flex flex-col">
                 <label htmlFor="password">Password*</label>
                 <input
-                  type="password"
+                  type={show ? "text" : "password"}
                   id="password"
                   value={password}
                   onChange={handlePassword}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 />
+                {show ? (
+                  <FaEyeSlash
+                    onClick={() => {
+                      setShow(false);
+                    }}
+                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                  ></FaEyeSlash>
+                ) : (
+                  <FaEye
+                    onClick={() => {
+                      setShow(true);
+                    }}
+                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                  ></FaEye>
+                )}
               </div>
-              <div className="flex flex-col">
+              <div className="relative flex flex-col">
                 <label htmlFor="confirm-password">Confirm Password*</label>
                 <input
-                  type="password"
+                  type={show ? "text" : "password"}
                   id="confirm-password"
                   value={passwordConfirm}
                   onChange={handlePasswordConfirmation}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 />
+                {show ? (
+                  <FaEyeSlash
+                    onClick={() => {
+                      setShow(false);
+                    }}
+                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                  ></FaEyeSlash>
+                ) : (
+                  <FaEye
+                    onClick={() => {
+                      setShow(true);
+                    }}
+                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                  ></FaEye>
+                )}
               </div>
               {error && <div className="text-red-600 mt-3">{error}</div>}
               <button
