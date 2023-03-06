@@ -4,6 +4,8 @@ const LoadingContext = createContext();
 
 export const LoadingProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -16,6 +18,10 @@ export const LoadingProvider = ({ children }) => {
       value={{
         isLoading,
         setIsLoading,
+        isLogged,
+        setIsLogged,
+        name,
+        setName,
       }}
     >
       {children}

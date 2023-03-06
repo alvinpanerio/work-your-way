@@ -1,14 +1,15 @@
-import { useEffect, useState, useContext } from "react";
-
+import { useContext, useEffect } from "react";
+import LoadingProvider from "../context/LoadingContext";
 function Home() {
-  const [isLogged, setIsLogged] = useState(false);
-  const [name, setName] = useState("");
+  const { isLogged, setIsLogged, setName, name } = useContext(LoadingProvider);
 
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
     if (isAuth && isAuth !== "undefined") {
       setName(JSON.parse(isAuth).email);
       setIsLogged(true);
+    } else {
+      setIsLogged(false);
     }
   }, []);
 
