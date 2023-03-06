@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot" element={<ForgotPassword />} />
           </Routes>
         </BrowserRouter>
       )}

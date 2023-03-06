@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import RiseLoader from "react-spinners/RiseLoader";
 import axios from "axios";
 import Card from "../components/Card";
@@ -148,6 +148,11 @@ function Login() {
             >
               Signup
             </button>
+            <div className="flex justify-end mt-2">
+              <Link to={"/forgot"} className={"font-medium text-blue-500"}>
+                Forgot Password?
+              </Link>
+            </div>
           </form>
         )}
       </Card>

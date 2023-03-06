@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
@@ -85,6 +85,11 @@ function Login() {
             />
           </div>
           {error && <div className="text-red-600 mt-3">{error}</div>}
+          <div className="flex justify-end mt-2">
+            <Link to={"/forgot"} className={"font-medium text-blue-500"}>
+              Forgot Password?
+            </Link>
+          </div>
           <button
             type={"submit"}
             className="inline-flex items-center text-white 

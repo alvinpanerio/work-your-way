@@ -2,21 +2,30 @@ require("dotenv").config();
 const emailExistence = require("email-existence");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const Account = require("../models/accounts");
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
 };
 
+const makeTransport = nodemailer.createTransport({
+  service: "Zoho",
+  auth: {
+    user: process.env.MAILER_USER,
+    pass: process.env.MAILER_PASS,
+  },
+});
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   let id = null;
   try {
-    await Account.exists({ email }).then((result) => {
-      id = result._id;
+    await Account.findOne({ email }).then((result) => {
       if (!result) {
         res.status(404).json({ error: "Uknown email!" });
       } else {
+        id = result._id;
         Account.findById(result).then((result) => {
           bcrypt.compare(password, result.password, (error, result) => {
             if (error) {
@@ -59,6 +68,20 @@ const signup = async (req, res) => {
                     Account.create({
                       email,
                       password: result,
+                    });
+                    // email the account
+                    let successfulMessage = {
+                      from: "codetalker@zohomail.com",
+                      to: `${email}`,
+                      subject:
+                        "Personal Workspace Account Creation Confirmation",
+                      text: `We are pleased to inform you that your account: ${email} has been successfully created on our platform. We appreciate your decision to join our community and look forward to serving you.`,
+                    };
+
+                    makeTransport.sendMail(successfulMessage, (err, data) => {
+                      err
+                        ? console.log("Email error" + err)
+                        : console.log("Email sent successfully");
                     });
                     res.send("succesful");
                   });
