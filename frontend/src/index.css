@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .checked:has(input:checked) {
+    @apply ring-8 ring-blue-500 rounded-full;
+  }
+}

@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
+import Avatars from "../assets/avatars/Avatars";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,9 @@ function Login() {
   const [submitting, setSubmitting] = useState(false);
   const [submit, setSubmit] = useState(true);
   const [show, setShow] = useState(false);
+  const [profileAvatar, setProfileAvatar] = useState(
+    "/static/media/female-bangs.edb240080c99c12324da.png"
+  );
 
   const navigate = useNavigate();
 
@@ -25,7 +29,12 @@ function Login() {
   }, []);
 
   useEffect(() => {
+    console.log(profileAvatar);
+  }, [profileAvatar]);
+
+  useEffect(() => {
     if (
+      profileAvatar &&
       email &&
       password.length > 7 &&
       passwordConfirm.length > 7 &&
@@ -41,6 +50,7 @@ function Login() {
     e.preventDefault();
     try {
       if (
+        profileAvatar &&
         email &&
         password.length > 7 &&
         passwordConfirm.length > 7 &&
@@ -51,6 +61,9 @@ function Login() {
           .post("http://localhost:4000/signup", {
             email,
             password,
+            profileDetails: {
+              profileAvatar,
+            },
           })
           .then((res) => {
             console.log(res.status);
@@ -99,7 +112,7 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-between mt-20 container mx-auto">
+    <div className="flex flex-wrap justify-between mt-20 container mx-auto">
       <Home></Home>
       <Card>
         {submitting ? (
@@ -109,6 +122,43 @@ function Login() {
         ) : (
           <form onSubmit={handleSubmit}>
             <p>Sign Up</p>
+            <div>
+              <p>Choose an Avatar*</p>
+              <div className="flex flex-wrap gap-y-5 my-5 justify-center">
+                {Avatars.map((avatar, i) => {
+                  return (
+                    <label
+                      htmlFor={avatar}
+                      className="checked cursor-pointer mr-5"
+                      key={i}
+                    >
+                      {i === 0 ? (
+                        <input
+                          type="radio"
+                          name="avatars"
+                          id={avatar}
+                          value={avatar}
+                          className="appearance-none hidden"
+                          onChange={(e) => setProfileAvatar(e.target.value)}
+                          defaultChecked
+                        />
+                      ) : (
+                        <input
+                          type="radio"
+                          name="avatars"
+                          id={avatar}
+                          value={avatar}
+                          className="appearance-none hidden"
+                          onChange={(e) => setProfileAvatar(e.target.value)}
+                        />
+                      )}
+
+                      <img src={avatar} alt="" className="w-14 h-14" />
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
             <div className="flex flex-col">
               <label htmlFor="email">Email*</label>
               <input

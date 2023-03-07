@@ -51,7 +51,7 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, profileDetails } = req.body;
   try {
     if (email && password.length > 7) {
       await Account.countDocuments({ email: email })
@@ -69,6 +69,7 @@ const signup = async (req, res) => {
                     Account.create({
                       email,
                       password: result,
+                      profileDetails,
                     });
                     // email the account
                     let successfulMessage = {
