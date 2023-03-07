@@ -14,7 +14,7 @@ function App() {
   const { isLoading } = useContext(LoadingProvider);
 
   return (
-    <div>
+    <div className="select-none">
       {isLoading ? (
         <div className="h-screen flex justify-center items-center">
           <RiseLoader color="#3b82f6" margin={2} size={30} />

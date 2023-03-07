@@ -112,7 +112,7 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between mt-20 container mx-auto">
+    <div className="flex flex-wrap justify-between pt-40 container mx-auto">
       <Home></Home>
       <Card>
         {submitting ? (
