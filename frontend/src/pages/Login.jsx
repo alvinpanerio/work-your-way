@@ -61,13 +61,20 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-wrap justify-between pt-40 container mx-auto">
-      <Home></Home>
+    <div className="pr-20 flex flex-wrap justify-between pt-40 container mx-auto">
+      <div className="-mt-40 w-[96px]">
+        <Home addClass={"ml-[300px] mt-36"} />
+      </div>
       <Card>
-        <form onSubmit={handleSubmit}>
-          <p>Log In</p>
+        <form
+          onSubmit={handleSubmit}
+          className="text-[#102c54] text-lg font-medium"
+        >
+          <p className="text-[#102c54] text-3xl font-bold mb-3">Log In</p>
           <div className="flex flex-col">
-            <label htmlFor="email">Email*</label>
+            <label htmlFor="email" className="my-1">
+              Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               id="email"
@@ -77,7 +84,9 @@ function Login() {
             />
           </div>
           <div className="relative flex flex-col">
-            <label htmlFor="password">Password*</label>
+            <label htmlFor="password" className="my-1">
+              Password <span className="text-red-500">*</span>
+            </label>
             <input
               type={show ? "text" : "password"}
               id="password"
@@ -90,14 +99,14 @@ function Login() {
                 onClick={() => {
                   setShow(false);
                 }}
-                className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                className="top-12 left-72 cursor-pointer absolute h-5 w-5"
               ></FaEyeSlash>
             ) : (
               <FaEye
                 onClick={() => {
                   setShow(true);
                 }}
-                className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                className="top-12 left-72 cursor-pointer absolute h-5 w-5"
               ></FaEye>
             )}
           </div>

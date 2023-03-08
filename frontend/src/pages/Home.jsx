@@ -1,29 +1,43 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import axios from "axios";
 import LoadingProvider from "../context/LoadingContext";
 import Icons from "../assets/icons/Icons";
+import Arrow from "../assets/arrow-hand.svg";
 
-function Home() {
-  const { isLogged, setIsLogged, setName, name } = useContext(LoadingProvider);
-
+function Home({ addClass }) {
+  const { isLogged, setIsLogged } = useContext(LoadingProvider);
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
     if (isAuth && isAuth !== "undefined") {
-      setName(JSON.parse(isAuth).email);
+      getAccountDetails(JSON.parse(isAuth).id);
       setIsLogged(true);
     } else {
       setIsLogged(false);
     }
   }, []);
 
+  const getAccountDetails = async (user) => {
+    try {
+      await axios.get(`http://localhost:4000/${user}`).then((result) => {
+        setName(result.data.name);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     // <div className="bg-[url('./assets/wave-haikei.svg')] bg-no-repeat bg-top bg-contain overflow-x-hidden -ml-4 -mt-4"
     <div className="pt-56">
       {isLogged ? (
-        `Hello ${name}`
+        <div className="container flex flex-col mx-auto font-roboto px-20 -m-12">
+          <p className="text-4xl text-[#102c54] font-bold">{`${name.toUpperCase()}'s Dashboard`}</p>
+        </div>
       ) : (
         <div className="container flex flex-col mx-auto font-roboto px-20">
           <div className="flex justify-between flex-wrap">
@@ -53,7 +67,15 @@ function Home() {
                 <FaLongArrowAltRight className="ml-3"></FaLongArrowAltRight>
               </button>
             </div>
-            <div>
+            <div className={`relative ${addClass ? addClass : null}`}>
+              <img
+                src={Arrow}
+                alt=""
+                className="absolute -top-4 -left-64 w-[100px] rotate-12"
+              />
+              <p className="text-[#102c54] absolute -left-52 -top-1 font-medium text-xl -rotate-2">
+                Features
+              </p>
               <div className="relative w-[200px] h-[200px] bg-blue-500 rounded-3xl mr-20 -ml-[50px] shadow-2xl shadow-sky-500/50">
                 <img
                   src={Icons[1]}

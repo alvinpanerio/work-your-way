@@ -4,7 +4,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const uniqid = require("uniqid");
+const {
+  uniqueNamesGenerator,
+  adjectives,
+  animals,
+} = require("unique-names-generator");
 const Account = require("../models/accounts");
+const { findOne } = require("../models/accounts");
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
@@ -35,7 +42,7 @@ const login = async (req, res) => {
 
             if (result) {
               const token = generateToken(id);
-              res.status(200).json({ email, token });
+              res.status(200).json({ email, token, id });
             } else {
               res
                 .status(404)
@@ -69,7 +76,14 @@ const signup = async (req, res) => {
                     Account.create({
                       email,
                       password: result,
-                      profileDetails,
+                      profileDetails: {
+                        uid: "#" + uniqid.process(),
+                        name: uniqueNamesGenerator({
+                          dictionaries: [adjectives, animals],
+                          separator: " ",
+                        }).slice(0, 16),
+                        profileAvatar: profileDetails.profileAvatar,
+                      },
                     });
                     // email the account
                     let successfulMessage = {
@@ -77,7 +91,16 @@ const signup = async (req, res) => {
                       to: `${email}`,
                       subject:
                         "Personal Workspace Account Creation Confirmation",
-                      text: `We are pleased to inform you that your account: ${email} has been successfully created on our platform. We appreciate your decision to join our community and look forward to serving you.`,
+                      text: `Dear ${email},
+                      
+We are pleased to inform you that your registration to our website has been successful. You can now access all the features and services that our website offers.
+                      
+Thank you for choosing our website as your online destination. We are committed to providing you with the best user experience possible. Please do not hesitate to contact us if you have any questions or concerns.
+                      
+Once again, thank you for registering with us. We look forward to having you as a valued member of our community.
+              
+Best regards,
+Codetalker`,
                     };
 
                     makeTransport.sendMail(successfulMessage, (err, data) => {
@@ -121,7 +144,20 @@ const forgotPassword = async (req, res) => {
           from: "codetalker@zohomail.com",
           to: `${email}`,
           subject: "Personal Workspace Account Password Reset",
-          text: `http://localhost:3000/forgot/${token}`,
+          text: `Dear ${email},
+
+It seems that you have forgotten your password to access your account on our website. Not to worry, we are here to help you reset your password and regain access to your account.
+
+Please click on the link http://localhost:3000/forgot/${token} within the next 15 minutes to reset your password. If you do not reset your password within this time frame, the link will expire, and you will need to request a new one.
+
+Please note that for security reasons, we cannot retrieve it for you. You will need to follow the password reset process to create a new password.
+
+If you did not request a password reset, please disregard this email and contact us immediately to report any unauthorized activity on your account.
+
+Thank you for your cooperation.
+
+Best regards,
+CodeTalker`,
         };
 
         makeTransport.sendMail(successfulMessage, (err, data) => {
@@ -180,7 +216,27 @@ const passwordReset = async (req, res) => {
         res.status(404).json({ redirect: "/error" });
       }
     });
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAccountDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await Account.findOne({ _id: id })
+      .then((result) => {
+        res.status(200).json({
+          uid: result.profileDetails[0].uid,
+          name: result.profileDetails[0].name,
+          avatar: result.profileDetails[0].profileAvatar,
+          email: result.email,
+        });
+      })
+      .catch((error) => {
+        res.status(404).json({ redirect: "/error" });
+      });
+  } catch (error) {
     console.log(error);
   }
 };
@@ -191,4 +247,5 @@ module.exports = {
   forgotPassword,
   passwordReset,
   getPasswordReset,
+  getAccountDetails,
 };

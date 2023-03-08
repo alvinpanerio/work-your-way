@@ -40,13 +40,22 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="flex justify-between mt-20 container mx-auto">
-      <Home></Home>
+    <div className="pr-20 flex flex-wrap justify-between pt-40 container mx-auto">
+      <div className="-mt-40 w-[96px]">
+        <Home addClass={"ml-[300px] mt-36"} />
+      </div>
       <Card>
-        <form onSubmit={handleSubmit}>
-          <p>Forgot Password</p>
+        <form
+          onSubmit={handleSubmit}
+          className="text-[#102c54] text-lg font-medium"
+        >
+          <p className="text-[#102c54] text-3xl font-bold mb-3">
+            Forgot Password
+          </p>
           <div className="flex flex-col">
-            <label htmlFor="email">Email*</label>
+            <label htmlFor="email" className="my-1">
+              Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
               id="email"
@@ -62,7 +71,7 @@ function ForgotPassword() {
             className="inline-flex items-center text-white 
               bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center"
           >
-            Log In
+            Submit
           </button>
         </form>
       </Card>

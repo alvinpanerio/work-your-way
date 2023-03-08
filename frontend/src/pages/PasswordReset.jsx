@@ -99,12 +99,19 @@ function PasswordReset() {
       {isAllowed ? (
         ""
       ) : (
-        <div className="flex justify-center items-center mt-48">
+        <div className="pt-40 flex justify-center">
           <Card>
-            <form onSubmit={handleSubmit}>
-              <p>Password Reset</p>
+            <form
+              onSubmit={handleSubmit}
+              className="text-[#102c54] text-lg font-medium"
+            >
+              <p className="text-[#102c54] text-3xl font-bold mb-3">
+                Password Reset
+              </p>
               <div className="relative flex flex-col">
-                <label htmlFor="password">Password*</label>
+                <label htmlFor="password" className="my-1">
+                  Password <span className="text-red-500">*</span>
+                </label>
                 <input
                   type={show ? "text" : "password"}
                   id="password"
@@ -117,19 +124,21 @@ function PasswordReset() {
                     onClick={() => {
                       setShow(false);
                     }}
-                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
                   ></FaEyeSlash>
                 ) : (
                   <FaEye
                     onClick={() => {
                       setShow(true);
                     }}
-                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
                   ></FaEye>
                 )}
               </div>
               <div className="relative flex flex-col">
-                <label htmlFor="confirm-password">Confirm Password*</label>
+                <label htmlFor="confirm-password" className="my-1">
+                  Confirm Password <span className="text-red-500">*</span>
+                </label>
                 <input
                   type={show ? "text" : "password"}
                   id="confirm-password"
@@ -142,14 +151,14 @@ function PasswordReset() {
                     onClick={() => {
                       setShow(false);
                     }}
-                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
                   ></FaEyeSlash>
                 ) : (
                   <FaEye
                     onClick={() => {
                       setShow(true);
                     }}
-                    className="top-9 left-72 cursor-pointer absolute h-5 w-5"
+                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
                   ></FaEye>
                 )}
               </div>
