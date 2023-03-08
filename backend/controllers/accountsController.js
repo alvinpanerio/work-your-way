@@ -159,12 +159,9 @@ CodeTalker`,
         };
 
         makeTransport.sendMail(successfulMessage, (err, data) => {
-          err
-            ? res.send("error" + JSON.stringify(err))
-            : res.send("succesful");
+          err ? res.send("error" + JSON.stringify(err)) : res.send("succesful");
         });
         console.log(user);
-        res.send("Registered email");
       }
     });
   } catch (err) {
