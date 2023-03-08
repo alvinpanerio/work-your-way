@@ -23,9 +23,11 @@ function Home({ addClass }) {
 
   const getAccountDetails = async (user) => {
     try {
-      await axios.get(`http://localhost:4000/${user}`).then((result) => {
-        setName(result.data.name);
-      });
+      await axios
+        .get(process.env.REACT_APP_API_URI + `/${user}`)
+        .then((result) => {
+          setName(result.data.name);
+        });
     } catch (err) {
       console.log(err);
     }

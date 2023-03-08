@@ -29,12 +29,14 @@ function NavBar() {
 
   const getAccountDetails = async (user) => {
     try {
-      await axios.get(`http://localhost:4000/${user}`).then((result) => {
-        setUid(result.data.uid);
-        setName(result.data.name);
-        setAvatar(result.data.avatar);
-        setEmail(result.data.email);
-      });
+      await axios
+        .get(process.env.REACT_APP_API_URI + `/${user}`)
+        .then((result) => {
+          setUid(result.data.uid);
+          setAvatar(result.data.avatar);
+          setEmail(result.data.email);
+          setName(result.data.name);
+        });
     } catch (err) {
       console.log(err);
     }
@@ -43,7 +45,6 @@ function NavBar() {
   const navbarMod = () => {
     if (window.scrollY >= 30) {
       setisNavAllowed(true);
-      console.log("hala");
     } else {
       setisNavAllowed(false);
     }

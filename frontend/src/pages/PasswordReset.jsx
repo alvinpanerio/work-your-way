@@ -19,7 +19,7 @@ function PasswordReset() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/forgot/${resetToken}`)
+      .get(process.env.REACT_APP_API_URI + `/${resetToken}`)
       .then((res) => {
         if (res.status === 200) {
           setIsAllowed(true);
@@ -52,7 +52,7 @@ function PasswordReset() {
         password === passwordConfirm
       ) {
         await axios
-          .put(`http://localhost:4000/forgot/${resetToken}`, {
+          .put(process.env.REACT_APP_API_URI + `/${resetToken}`, {
             password,
           })
           .then((res) => {

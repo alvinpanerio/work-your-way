@@ -27,7 +27,7 @@ function Login() {
     e.preventDefault();
     try {
       await axios
-        .post("http://localhost:4000/login", {
+        .post(process.env.REACT_APP_API_URI + "/login", {
           email,
           password,
         })

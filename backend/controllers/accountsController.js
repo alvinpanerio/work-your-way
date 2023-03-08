@@ -102,13 +102,11 @@ Once again, thank you for registering with us. We look forward to having you as 
 Best regards,
 Codetalker`,
                     };
-
                     makeTransport.sendMail(successfulMessage, (err, data) => {
                       err
-                        ? console.log("Email error" + err)
-                        : console.log("Email sent successfully");
+                        ? res.send("error" + JSON.stringify(err))
+                        : res.send("succesful");
                     });
-                    res.send("succesful");
                   });
                 });
               } else {

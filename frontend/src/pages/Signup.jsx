@@ -58,7 +58,7 @@ function Login() {
       ) {
         setSubmitting(true);
         await axios
-          .post("http://localhost:4000/signup", {
+          .post(process.env.REACT_APP_API_URI + "/signup", {
             email,
             password,
             profileDetails: { uid: 0, profileAvatar },
