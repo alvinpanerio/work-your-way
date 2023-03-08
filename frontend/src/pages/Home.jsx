@@ -32,8 +32,7 @@ function Home({ addClass }) {
   };
 
   return (
-    // <div className="bg-[url('./assets/wave-haikei.svg')] bg-no-repeat bg-top bg-contain overflow-x-hidden -ml-4 -mt-4"
-    <div className="pt-56">
+    <div className="2xl:pt-56 md:pt-48">
       {isLogged ? (
         <div className="container flex flex-col mx-auto font-roboto px-20 -m-12">
           <p className="text-4xl text-[#102c54] font-bold">{`${name.toUpperCase()}'s Dashboard`}</p>
@@ -67,7 +66,9 @@ function Home({ addClass }) {
                 <FaLongArrowAltRight className="ml-3"></FaLongArrowAltRight>
               </button>
             </div>
-            <div className={`relative ${addClass ? addClass : null}`}>
+            <div
+              className={`relative ${addClass ? addClass : null} md:-mr-[70px]`}
+            >
               <img
                 src={Arrow}
                 alt=""
