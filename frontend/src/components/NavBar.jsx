@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaRegBell } from "react-icons/fa";
 
 import LoadingProvider from "../context/LoadingContext";
 import Logo from "../assets/logo-transparent.png";
@@ -68,14 +68,11 @@ function NavBar() {
       }`}
     >
       <div className="container mx-auto flex justify-between">
-        <div className="flex items-center">
-          <Link to={"/"} className={"font-semibold text-lg flex items-center"}>
-            <img src={Logo} alt="" className="h-[28px] mr-3" /> Personal
-            Workspace
-          </Link>
-        </div>
         {isLogged ? (
-          <div className="relative">
+          <div className="relative flex gap-7 justify-end w-full">
+            <button className="text-center">
+              <FaRegBell size={20} className="text-blue-500" />
+            </button>
             <button
               type="button"
               onClick={() => {
@@ -91,7 +88,7 @@ function NavBar() {
             <div
               className={`z-10 ${
                 showDropDown ? "visible" : "hidden"
-              } font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-max absolute right-0`}
+              } font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-max absolute right-0 top-14`}
             >
               <div className="flex gap-4 items-center p-5">
                 <img src={avatar} alt="" className="w-[64px] h-[64px]" />
@@ -113,25 +110,36 @@ function NavBar() {
             </div>
           </div>
         ) : (
-          <div>
-            <button
-              className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg 
+          <div className="container mx-auto flex justify-between">
+            <div className="flex items-center">
+              <Link
+                to={"/"}
+                className={"font-semibold text-lg flex items-center"}
+              >
+                <img src={Logo} alt="" className="h-[28px] mr-3" /> Personal
+                Workspace
+              </Link>
+            </div>
+            <div>
+              <button
+                className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg 
             text-sm px-5 py-2.5 text-center drop-shadow-xl shadow-blue-300 mr-5"
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Sign Up
-            </button>
-            <button
-              className="text-blue-500 bg-white hover:bg-slate-200 font-medium rounded-lg 
+                onClick={() => {
+                  navigate("/signup");
+                }}
+              >
+                Sign Up
+              </button>
+              <button
+                className="text-blue-500 bg-white hover:bg-slate-200 font-medium rounded-lg 
             text-sm px-5 py-2.5 text-center drop-shadow-xl shadow-blue-300"
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Log In
-            </button>
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log In
+              </button>
+            </div>
           </div>
         )}
       </div>

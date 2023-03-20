@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaLongArrowAltRight } from "react-icons/fa";
+import { FaLongArrowAltRight, FaSearch } from "react-icons/fa";
 import axios from "axios";
 import LoadingProvider from "../context/LoadingContext";
 import Icons from "../assets/icons/Icons";
 import Arrow from "../assets/arrow-hand.svg";
+import SideBar from "../components/SideBar";
 
 function Home({ addClass }) {
   const { isLogged, setIsLogged } = useContext(LoadingProvider);
@@ -36,8 +37,18 @@ function Home({ addClass }) {
   return (
     <div className="2xl:pt-56 md:pt-48">
       {isLogged ? (
-        <div className="container flex flex-col mx-auto font-roboto px-20 -m-12">
-          <p className="text-4xl text-[#102c54] font-bold">{`${name.toUpperCase()}'s Dashboard`}</p>
+        <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
+          <SideBar />
+          <div className="relative">
+            <input
+              type="text"
+              id="seacrh"
+              placeholder="Search"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5"
+            />
+            <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
+          </div>
+          <p className="text-2xl text-[#102c54] font-bold mt-12">{`Hello, ${name.toUpperCase()}!`}</p>
         </div>
       ) : (
         <div className="container flex flex-col mx-auto font-roboto px-20">
