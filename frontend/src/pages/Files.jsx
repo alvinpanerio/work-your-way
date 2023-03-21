@@ -1,7 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SideBar from "../components/SideBar";
-import { FaSearch, FaPlus, FaCheck, FaTimes } from "react-icons/fa";
+import {
+  FaSearch,
+  FaPlus,
+  FaCheck,
+  FaTimes,
+  FaTrash,
+  FaCloudDownloadAlt,
+} from "react-icons/fa";
+import { SiMicrosoftexcel, SiMicrosoftword, SiFiles } from "react-icons/si";
+import { BsFiletypeExe } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { FileUploader } from "react-drag-drop-files";
 import axios from "axios";
@@ -10,6 +19,8 @@ function Files() {
   const [file, setFile] = useState(null);
   const [uid, setUid] = useState(null);
   const [email, setEmail] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [reload, setReload] = useState(false);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -22,8 +33,17 @@ function Files() {
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
     if (isAuth && isAuth !== "undefined") {
-      getAccountDetails(JSON.parse(isAuth).id);
-    } else {
+      if (!reload) {
+        getAccountDetails(JSON.parse(isAuth).email);
+        setReload(!reload);
+      }
+    }
+  }, [reload]);
+
+  useEffect(() => {
+    let isAuth = localStorage.getItem("user");
+    if (isAuth && isAuth !== "undefined") {
+      getAccountDetails(JSON.parse(isAuth).email);
     }
   }, []);
 
@@ -41,8 +61,10 @@ function Files() {
       await axios
         .get(process.env.REACT_APP_API_URI + "/files/" + user)
         .then((result) => {
-          setUid(result.data.uid);
-          setEmail(result.data.email);
+          setEmail(result.data.accountDetails.email);
+          setUid(result.data.accountDetails.profileDetails[0].uid);
+          console.log(result.data.fileDetails);
+          setFiles([...result.data.fileDetails.files]);
         });
     } catch (err) {
       console.log(err);
@@ -62,6 +84,8 @@ function Files() {
       await axios
         .post(process.env.REACT_APP_API_URI + "/files", formData)
         .then((res) => {
+          setReload(!reload);
+          setFile(null);
           console.log(res);
         });
     } catch (err) {
@@ -72,13 +96,14 @@ function Files() {
   const handleDeleteFile = async (e) => {
     e.preventDefault();
     try {
+      setReload(!reload);
       setFile(null);
     } catch (err) {
       console.log(err);
     }
   };
   return (
-    <div className="2xl:pt-56 md:pt-48 bg-blue-100">
+    <div className="2xl:pt-56 md:pt-48 bg-blue-100 h-auto">
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px] ">
         <SideBar />
         <div className="relative">
@@ -129,14 +154,264 @@ function Files() {
               </div>
             ) : null}
           </div>
-          <div className="bg-white rounded-lg p-5 my-10">
+          <div className="bg-white rounded-lg px-5 pt-5 my-10 shadow-md">
             <p className=" border-b-2 pb-5">Recent Files</p>
             <div className="flex justify-center gap-5">
-              <ul>
-                <li>{}</li>
+              <ul
+                className={`flex ${
+                  files.length < 4 ? "justify-start" : "justify-between"
+                } w-full`}
+              >
+                {files
+                  .slice(0)
+                  .reverse()
+                  .map((i, n) => {
+                    if (n < 5) {
+                      if (i.fileName.split(".").pop() === "xlsx") {
+                        return (
+                          <li
+                            key={n}
+                            className="flex flex-col items-center p-8"
+                          >
+                            <div className="bg-[#5cb85c] p-3 rounded-lg">
+                              <SiMicrosoftexcel
+                                size={32}
+                                className="text-white"
+                              />
+                            </div>
+                            <p className="truncate w-32 mt-3 text-center">
+                              {i.fileName}
+                            </p>
+                          </li>
+                        );
+                      } else if (
+                        i.fileName.split(".").pop() === "docx" ||
+                        i.fileName.split(".").pop() === "pdf"
+                      ) {
+                        return (
+                          <li
+                            key={n}
+                            className="flex flex-col items-center p-8"
+                          >
+                            <div className="bg-[#0275d8] p-3 rounded-lg">
+                              <SiMicrosoftword
+                                size={32}
+                                className="text-white"
+                              />
+                            </div>
+                            <p className="truncate w-32 mt-3 text-center">
+                              {i.fileName}
+                            </p>
+                          </li>
+                        );
+                      } else if (i.fileName.split(".").pop() === "exe") {
+                        return (
+                          <li
+                            key={n}
+                            className="flex flex-col items-center p-8"
+                          >
+                            <div className="bg-[#d9534f] p-3 rounded-lg">
+                              <BsFiletypeExe size={32} className="text-white" />
+                            </div>
+                            <p className="truncate w-32 mt-3 text-center">
+                              {i.fileName}
+                            </p>
+                          </li>
+                        );
+                      } else {
+                        return (
+                          <li
+                            key={n}
+                            className="flex flex-col items-center p-8"
+                          >
+                            <div className="bg-[#292b2c] p-3 rounded-lg">
+                              <SiFiles size={32} className="text-white" />
+                            </div>
+                            <p className="truncate w-32 mt-3 text-center">
+                              {i.fileName}
+                            </p>
+                          </li>
+                        );
+                      }
+                    }
+                  })}
               </ul>
             </div>
           </div>
+          <p className="font-semibold">Browse Files</p>
+          <table class="table-fixed w-full">
+            <thead>
+              <tr className="bg-blue-200 rounded-lg py-3 px-16 mt-5 flex justify-between items-center mb-5">
+                <th className="w-[200px] flex justify-start">File Name</th>
+                <th className="w-[200px] flex justify-center">Date Uploaded</th>
+                <th className="w-[200px] flex justify-center">File Size</th>
+                <th className="w-[200px] flex justify-end">Options</th>
+              </tr>
+            </thead>
+            <tbody className="">
+              <div className="max-h-[24rem] overflow-y-scroll">
+                {files
+                  .slice(0)
+                  .reverse()
+                  .map((i, n) => {
+                    if (n < 5) {
+                      if (i.fileName.split(".").pop() === "xlsx") {
+                        return (
+                          <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                            <td className="w-[200px] flex justify-start items-center gap-3 relative">
+                              <div className="bg-[#5cb85c] p-1 rounded-md">
+                                <SiMicrosoftexcel className="text-white" />
+                              </div>
+                              <p className="truncate pl-2">{i.fileName}</p>
+                            </td>
+                            <td className="w-[200px] flex justify-center text-center gap-1">
+                              <p className="text-blue-500 font-bold">
+                                {new Date(i.updatedAt).toLocaleDateString() ===
+                                new Date().toLocaleDateString()
+                                  ? "Today,"
+                                  : `${new Date(
+                                      i.updatedAt
+                                    ).toLocaleDateString()},`}
+                              </p>
+
+                              {`${new Date(i.updatedAt).toLocaleTimeString()}`}
+                            </td>
+                            <td className="w-[200px] flex justify-center">
+                              {i.fileSize}
+                            </td>
+                            <td className="w-[200px] flex justify-end gap-5 items-center">
+                              <button>
+                                <FaCloudDownloadAlt
+                                  size={22}
+                                  className="text-[#5cb85c]"
+                                />
+                              </button>
+                              <button>
+                                <FaTrash size={18} className="text-[#d9534f]" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      } else if (
+                        i.fileName.split(".").pop() === "docx" ||
+                        i.fileName.split(".").pop() === "pdf"
+                      ) {
+                        return (
+                          <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                            <td className="w-[200px] flex justify-start items-center gap-3 relative">
+                              <div className="bg-[#0275d8] p-1 rounded-md">
+                                <SiMicrosoftword className="text-white" />
+                              </div>
+                              <p className="truncate pl-2">{i.fileName}</p>
+                            </td>
+                            <td className="w-[200px] flex justify-center text-center gap-1">
+                              <p className="text-blue-500 font-bold">
+                                {new Date(i.updatedAt).toLocaleDateString() ===
+                                new Date().toLocaleDateString()
+                                  ? "Today,"
+                                  : `${new Date(
+                                      i.updatedAt
+                                    ).toLocaleDateString()},`}
+                              </p>
+
+                              {`${new Date(i.updatedAt).toLocaleTimeString()}`}
+                            </td>
+                            <td className="w-[200px] flex justify-center">
+                              {i.fileSize}
+                            </td>
+                            <td className="w-[200px] flex justify-end gap-5 items-center">
+                              <button>
+                                <FaCloudDownloadAlt
+                                  size={22}
+                                  className="text-[#5cb85c]"
+                                />
+                              </button>
+                              <button>
+                                <FaTrash size={18} className="text-[#d9534f]" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      } else if (i.fileName.split(".").pop() === "exe") {
+                        return (
+                          <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                            <td className="w-[200px] flex justify-start items-center gap-3 relative">
+                              <div className="bg-[#d9534f] p-1 rounded-md">
+                                <BsFiletypeExe className="text-white" />
+                              </div>
+                              <p className="truncate pl-2">{i.fileName}</p>
+                            </td>
+                            <td className="w-[200px] flex justify-center text-center gap-1">
+                              <p className="text-blue-500 font-bold">
+                                {new Date(i.updatedAt).toLocaleDateString() ===
+                                new Date().toLocaleDateString()
+                                  ? "Today,"
+                                  : `${new Date(
+                                      i.updatedAt
+                                    ).toLocaleDateString()},`}
+                              </p>
+
+                              {`${new Date(i.updatedAt).toLocaleTimeString()}`}
+                            </td>
+                            <td className="w-[200px] flex justify-center">
+                              {i.fileSize}
+                            </td>
+                            <td className="w-[200px] flex justify-end gap-5 items-center">
+                              <button>
+                                <FaCloudDownloadAlt
+                                  size={22}
+                                  className="text-[#5cb85c]"
+                                />
+                              </button>
+                              <button>
+                                <FaTrash size={18} className="text-[#d9534f]" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      } else {
+                        return (
+                          <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                            <td className="w-[200px] flex justify-start items-center gap-3 relative">
+                              <div className="bg-[#292b2c] p-1 rounded-md">
+                                <SiFiles className="text-white" />
+                              </div>
+                              <p className="truncate pl-2">{i.fileName}</p>
+                            </td>
+                            <td className="w-[200px] flex justify-center text-center gap-1">
+                              <p className="text-blue-500 font-bold">
+                                {new Date(i.updatedAt).toLocaleDateString() ===
+                                new Date().toLocaleDateString()
+                                  ? "Today,"
+                                  : `${new Date(
+                                      i.updatedAt
+                                    ).toLocaleDateString()},`}
+                              </p>
+
+                              {`${new Date(i.updatedAt).toLocaleTimeString()}`}
+                            </td>
+                            <td className="w-[200px] flex justify-center">
+                              {i.fileSize}
+                            </td>
+                            <td className="w-[200px] flex justify-end gap-5 items-center">
+                              <button>
+                                <FaCloudDownloadAlt
+                                  size={22}
+                                  className="text-[#5cb85c]"
+                                />
+                              </button>
+                              <button>
+                                <FaTrash size={18} className="text-[#d9534f]" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      }
+                    }
+                  })}
+              </div>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -11,8 +11,8 @@ import {
 import { MdWorkspacesFilled } from "react-icons/md";
 function SideBar() {
   return (
-    <nav>
-      <div className="bg-blue-500 h-full w-[4%] absolute top-0 left-0">
+    <nav className="z-30">
+      <div className="fixed bg-blue-500 h-full w-[4%] top-0 left-0">
         <li className="list-none flex flex-col items-center gap-6">
           <ul>
             <Link to={"/"}>
