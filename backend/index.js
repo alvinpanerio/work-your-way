@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 const accountRoutes = require("./routes/accountRoutes");
+const filesRoutes = require("./routes/filesRoutes");
 
 const app = express();
 
@@ -30,3 +32,4 @@ app.use((req, res, next) => {
 //routes
 
 app.use("/", accountRoutes);
+app.use("/files", filesRoutes);
