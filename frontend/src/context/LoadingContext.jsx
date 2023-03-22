@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const LoadingContext = createContext();
 
@@ -6,6 +7,8 @@ export const LoadingProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [name, setName] = useState("");
+
+  const [filesArr, setFilesArr] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -22,6 +25,8 @@ export const LoadingProvider = ({ children }) => {
         setIsLogged,
         name,
         setName,
+        filesArr,
+        setFilesArr,
       }}
     >
       {children}

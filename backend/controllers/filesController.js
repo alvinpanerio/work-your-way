@@ -73,7 +73,9 @@ const downloadFile = async (req, res) => {
     console.log(uid, fileName);
     const user = await Files.findOne({ uid: `#${uid}` });
     const path = await user.files.forEach((i) => {
-      return i.file.filename === fileName ? res.download(i.file.path) : null;
+      return i.file.filename === fileName
+        ? res.download(`./${i.file.path}`)
+        : null;
     });
   } catch (error) {
     console.log(error);
