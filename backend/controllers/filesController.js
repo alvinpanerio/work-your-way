@@ -1,5 +1,6 @@
 require("dotenv").config();
 const multer = require("multer");
+const fs = require("fs");
 const byteSize = require("byte-size");
 const Files = require("../models/files");
 const Account = require("../models/accounts");
@@ -57,8 +58,8 @@ const sendFile = async (req, res) => {
       email,
       files: {
         file: req.file,
+        fileName,
         fileSize: `${byteSize(fileSize).value} ${byteSize(fileSize).unit}`,
-        fileSize,
       },
     });
   }
@@ -74,9 +75,42 @@ const downloadFile = async (req, res) => {
     const path = await user.files.forEach((i) => {
       return i.file.filename === fileName ? res.download(i.file.path) : null;
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    res.download("files/file-1679416440668");
-    // console.log(file);
+const deleteFile = async (req, res) => {
+  const { uid, fileName } = req.params;
+  try {
+    console.log(uid, fileName);
+    const user = await Files.findOne({ uid: `#${uid}` });
+
+    const file = await Files.findByIdAndUpdate(user._id, {
+      file: { filename: fileName },
+    });
+
+    let fileId = "";
+
+    file.files.forEach((i) => {
+      i.file.filename === fileName ? (fileId = i._id) : null;
+    });
+
+    await Files.findOneAndUpdate({
+      $pull: {
+        files: {
+          _id: fileId,
+        },
+      },
+    });
+
+    fs.unlink("files/" + fileName, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
+    res.send("The file has been deleted successfully.");
   } catch (error) {
     console.log(error);
   }
@@ -87,4 +121,5 @@ module.exports = {
   getAccountDetails,
   upload,
   downloadFile,
+  deleteFile,
 };

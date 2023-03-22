@@ -126,6 +126,25 @@ function Files() {
     }
   };
 
+  const handleDeleteFileToDb = async (fileName, origFileName) => {
+    try {
+      await axios
+        .delete(
+          process.env.REACT_APP_API_URI +
+            "/files/delete/" +
+            uid.substring("1") +
+            "/" +
+            fileName
+        )
+        .then((res) => {
+          setReload(!reload);
+          console.log("deleted");
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     setSearch(e.target.value);
@@ -328,7 +347,16 @@ function Files() {
                               />
                             </button>
                             <button>
-                              <FaTrash size={18} className="text-[#d9534f]" />
+                              <FaTrash
+                                size={18}
+                                className="text-[#d9534f]"
+                                onClick={() => {
+                                  handleDeleteFileToDb(
+                                    i.file.filename,
+                                    i.fileName
+                                  );
+                                }}
+                              />
                             </button>
                           </td>
                         </tr>
@@ -374,7 +402,16 @@ function Files() {
                               />
                             </button>
                             <button>
-                              <FaTrash size={18} className="text-[#d9534f]" />
+                              <FaTrash
+                                size={18}
+                                className="text-[#d9534f]"
+                                onClick={() => {
+                                  handleDeleteFileToDb(
+                                    i.file.filename,
+                                    i.fileName
+                                  );
+                                }}
+                              />
                             </button>
                           </td>
                         </tr>
@@ -417,7 +454,16 @@ function Files() {
                               />
                             </button>
                             <button>
-                              <FaTrash size={18} className="text-[#d9534f]" />
+                              <FaTrash
+                                size={18}
+                                className="text-[#d9534f]"
+                                onClick={() => {
+                                  handleDeleteFileToDb(
+                                    i.file.filename,
+                                    i.fileName
+                                  );
+                                }}
+                              />
                             </button>
                           </td>
                         </tr>
@@ -460,7 +506,16 @@ function Files() {
                               />
                             </button>
                             <button>
-                              <FaTrash size={18} className="text-[#d9534f]" />
+                              <FaTrash
+                                size={18}
+                                className="text-[#d9534f]"
+                                onClick={() => {
+                                  handleDeleteFileToDb(
+                                    i.file.filename,
+                                    i.fileName
+                                  );
+                                }}
+                              />
                             </button>
                           </td>
                         </tr>
