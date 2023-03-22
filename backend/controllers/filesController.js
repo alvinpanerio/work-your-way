@@ -66,8 +66,25 @@ const sendFile = async (req, res) => {
   res.status(200).send({ msf: "Dd" });
 };
 
+const downloadFile = async (req, res) => {
+  const { uid, fileName } = req.params;
+  try {
+    console.log(uid, fileName);
+    const user = await Files.findOne({ uid: `#${uid}` });
+    const path = await user.files.forEach((i) => {
+      return i.file.filename === fileName ? res.download(i.file.path) : null;
+    });
+
+    res.download("files/file-1679416440668");
+    // console.log(file);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   sendFile,
   getAccountDetails,
   upload,
+  downloadFile,
 };
