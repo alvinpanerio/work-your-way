@@ -38,26 +38,6 @@ function Planner() {
   }, []);
 
   const handleSearch = () => {};
-  const handleAddTask = async (e) => {
-    e.preventDefault();
-    if (
-      taskName.trim().length &&
-      taskDesc.trim().length &&
-      taskDuration.trim().length
-    ) {
-      setOpenModal(!openModal);
-      console.log(taskName);
-      console.log(taskDesc);
-      console.log(taskDuration.toString());
-      //remove input
-      setTaskName("");
-      setTaskDesc("");
-      setTaskDuration("day");
-      setShowMessage(false);
-    } else {
-      setShowMessage(!showMessage);
-    }
-  };
 
   const getAccountDetails = async (user) => {
     try {
@@ -67,6 +47,44 @@ function Planner() {
           setEmail(result.data.accountDetails.email);
           setUid(result.data.accountDetails.profileDetails[0].uid);
         });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSubmitTask = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (
+        taskName.trim().length &&
+        taskDesc.trim().length &&
+        taskDuration.trim().length
+      ) {
+        await axios
+          .post(process.env.REACT_APP_API_URI + "/planner", {
+            uid,
+            email,
+            taskName,
+            taskDesc,
+            taskDuration,
+            taskTime,
+          })
+          .then((result) => {
+            setOpenModal(false);
+            //remove input
+            setTaskName("");
+            setTaskDesc("");
+            setTaskDuration("day");
+            setTaskTime("");
+            setShowMessage(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        setShowMessage(!showMessage);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -105,7 +123,7 @@ function Planner() {
               Please provide a non-empty value!
             </p>
           ) : null}
-          <form onSubmit={handleAddTask} className="flex flex-col gap-3">
+          <form onSubmit={handleSubmitTask} className="flex flex-col gap-3">
             <input
               type="text"
               className="border rounded-lg border-slate-300 p-3 focus:outline-blue-500 w-[600px]"
@@ -179,6 +197,13 @@ function Planner() {
                 Within a month
               </label>
             </div>
+            <input
+              type="time"
+              onChange={(e) => {
+                setTaskTime(e.target.value);
+              }}
+              required
+            />
             <button
               className="bg-blue-500 font-medium rounded-lg
              px-5 py-2.5 text-center gap-2 text-md transition duration-200 text-white hover:bg-blue-700 text-center"
