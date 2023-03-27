@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import SideBar from "../components/SideBar";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { GiProgression, GiCheckMark, GiPaperClip } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
 
 function Planner() {
+  const [uid, setUid] = useState(null);
+  const [email, setEmail] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [inProgValue, setInProgValue] = useState(17);
   const [newTaskValue, setNewTaskValue] = useState(3);
@@ -15,7 +18,7 @@ function Planner() {
   const [taskDuration, setTaskDuration] = useState("day");
   const [taskTime, setTaskTime] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [showInProgress, setShowInProgress] = useState(false);
+  const [showInProgress, setShowInProgress] = useState(true);
   const [showNewAssigned, setShowNewAssigned] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
 
@@ -24,6 +27,13 @@ function Planner() {
   useEffect(() => {
     if (!localStorage.getItem("user")) {
       navigate("/");
+    }
+  }, []);
+
+  useEffect(() => {
+    let isAuth = localStorage.getItem("user");
+    if (isAuth && isAuth !== "undefined") {
+      getAccountDetails(JSON.parse(isAuth).email);
     }
   }, []);
 
@@ -46,6 +56,19 @@ function Planner() {
       setShowMessage(false);
     } else {
       setShowMessage(!showMessage);
+    }
+  };
+
+  const getAccountDetails = async (user) => {
+    try {
+      await axios
+        .get(process.env.REACT_APP_API_URI + "/files/" + user)
+        .then((result) => {
+          setEmail(result.data.accountDetails.email);
+          setUid(result.data.accountDetails.profileDetails[0].uid);
+        });
+    } catch (err) {
+      console.log(err);
     }
   };
 
