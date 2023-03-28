@@ -8,12 +8,12 @@ const getAccountDetails = async (req, res) => {
   try {
     await Promise.all([
       Account.findOne({ email: id }),
-      Files.findOne({ email: id }),
+      Planner.findOne({ email: id }),
     ])
       .then((results) => {
         const combinedData = {
           accountDetails: results[0],
-          fileDetails: results[1],
+          plannerDetails: results[1],
         };
         res.json(combinedData);
       })
@@ -26,8 +26,27 @@ const getAccountDetails = async (req, res) => {
 };
 
 const submitTask = async (req, res) => {
-  const { uid, email, taskName, taskDesc, taskDuration, taskTime } = req.body;
+  const {
+    uid,
+    email,
+    taskName,
+    taskDesc,
+    taskDurationNum,
+    taskDuration,
+    taskTime,
+  } = req.body;
   try {
+    let duration = 0;
+
+    if (taskDuration === "day") {
+      duration = 1;
+    } else if (taskDuration === "week") {
+      duration = 7;
+    } else if (taskDuration === "month") {
+      duration = 30;
+    }
+    let dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + duration);
     if (await Planner.findOne({ uid })) {
       await Planner.findOneAndUpdate({
         uid,
@@ -36,7 +55,8 @@ const submitTask = async (req, res) => {
           plannerList: {
             taskName,
             taskDescription: taskDesc,
-            taskDuration,
+            taskDurationNum: duration,
+            taskDuration: dueDate,
             taskDueTime: taskTime,
           },
         },
@@ -48,7 +68,8 @@ const submitTask = async (req, res) => {
         plannerList: {
           taskName,
           taskDescription: taskDesc,
-          taskDuration,
+          taskDurationNum: duration,
+          taskDuration: dueDate,
           taskDueTime: taskTime,
         },
       });

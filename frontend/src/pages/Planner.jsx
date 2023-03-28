@@ -16,11 +16,28 @@ function Planner() {
   const [taskName, setTaskName] = useState("");
   const [taskDesc, setTaskDesc] = useState("");
   const [taskDuration, setTaskDuration] = useState("day");
+  const [taskDurationNum, setTaskDurationNum] = useState(0);
   const [taskTime, setTaskTime] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [showInProgress, setShowInProgress] = useState(true);
   const [showNewAssigned, setShowNewAssigned] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
+  const [plannerList, setPlannerList] = useState([]);
+
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const navigate = useNavigate();
 
@@ -42,10 +59,11 @@ function Planner() {
   const getAccountDetails = async (user) => {
     try {
       await axios
-        .get(process.env.REACT_APP_API_URI + "/files/" + user)
+        .get(process.env.REACT_APP_API_URI + "/planner/" + user)
         .then((result) => {
           setEmail(result.data.accountDetails.email);
           setUid(result.data.accountDetails.profileDetails[0].uid);
+          setPlannerList([...result.data.plannerDetails.plannerList]);
         });
     } catch (err) {
       console.log(err);
@@ -54,7 +72,6 @@ function Planner() {
 
   const handleSubmitTask = async (e) => {
     e.preventDefault();
-
     try {
       if (
         taskName.trim().length &&
@@ -67,6 +84,7 @@ function Planner() {
             email,
             taskName,
             taskDesc,
+            taskDurationNum,
             taskDuration,
             taskTime,
           })
@@ -355,7 +373,86 @@ function Planner() {
             Completed
           </label>
         </div>
-        {showInProgress ? <div>inprog</div> : null}
+        {showInProgress ? (
+          <>
+            {plannerList.map((i, n) => {
+              if (new Date().toString() > new Date(i.taskDuration).toString()) {
+                return (
+                  <div
+                    key={n}
+                    className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-2/3"
+                  >
+                    <div
+                      className="w-[50px] h-[50px] rounded-lg"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                      }}
+                    ></div>
+                    <div className="flex flex-col gap-1 w-3/12">
+                      <p className="font-bold">{i.taskName}</p>
+                      <p className="text-gray-400 text-sm text-ellipsis truncate">
+                        {i.taskDescription}
+                      </p>
+                    </div>
+                    <div className="w-4/12">
+                      <p className="text-gray-400">
+                        {`Created: ${month[new Date(i.createdAt).getMonth()]}
+                      ${new Date(i.createdAt).getDate()}, 
+                      ${new Date(i.createdAt).getFullYear()}`}
+                      </p>
+                      <p className="font-bold">
+                        {`Due: ${month[new Date(i.taskDuration).getMonth()]}
+                      ${new Date(i.taskDuration).getDate()}, 
+                      ${new Date(i.taskDuration).getFullYear()}`}
+                      </p>
+                    </div>
+                    <div className="w-4/12   flex flex-col gap-3 justify-end">
+                      <div className="flex justify-between">
+                        <p className="text-sm">Remaining</p>
+                        <p className="text-sm">
+                          {i.taskDurationNum >=
+                          new Date(
+                            new Date(i.taskDuration) - new Date()
+                          ).getDate() -
+                            1
+                            ? new Date(
+                                new Date(i.taskDuration) - new Date()
+                              ).getDate() - 1
+                            : 0}
+                          d
+                        </p>
+                      </div>
+                      <div className="rounded-lg h-2 bg-[#00d2ff]/20">
+                        <div
+                          className="rounded-lg h-2"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                            width: `${
+                              i.taskDurationNum >=
+                                new Date(
+                                  new Date(i.taskDuration) - new Date()
+                                ).getDate() -
+                                  1 && i.taskDurationNum < 0
+                                ? 1 -
+                                  (new Date(
+                                    new Date(i.taskDuration) - new Date()
+                                  ).getDate() -
+                                    1) /
+                                    i.taskDurationNum
+                                : 100
+                            }%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+            })}
+          </>
+        ) : null}
         {showNewAssigned ? <div>newassigned</div> : null}
         {showCompleted ? <div>completed</div> : null}
       </div>

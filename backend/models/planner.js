@@ -10,8 +10,12 @@ const plannerListDetailsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    taskDurationNum: {
+      type: Number,
+      required: true,
+    },
     taskDuration: {
-      type: String,
+      type: Date,
       required: true,
     },
     taskDueTime: {
