@@ -80,7 +80,112 @@ const submitTask = async (req, res) => {
   }
 };
 
+const submitTodo = async (req, res) => {
+  const { uid, email, todoDesc, markDone } = req.body;
+  try {
+    if (await Planner.findOne({ uid })) {
+      await Planner.findOneAndUpdate({
+        uid,
+        email,
+        $push: {
+          todoList: {
+            todoDescription: todoDesc,
+            markDone,
+          },
+        },
+      });
+    } else {
+      await Planner.create({
+        uid,
+        email,
+        todoList: {
+          todoDescription: todoDesc,
+          markDone,
+        },
+      });
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateTodo = async (req, res) => {
+  const { id } = req.params;
+  const { uid, email, markDone } = req.body;
+  try {
+    if (await Planner.findOne({ uid })) {
+      await Planner.findOneAndUpdate(
+        { uid, todoList: { $elemMatch: { _id: id } } },
+        {
+          $set: {
+            "todoList.$.markDone": markDone,
+          },
+        }
+      );
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteTodo = async (req, res) => {
+  const { id } = req.params;
+  const { uid, email, markDone } = req.body;
+  try {
+    if (await Planner.findOne({ uid })) {
+      await Planner.findOneAndUpdate(
+        { todoList: { $elemMatch: { _id: id } } },
+        {
+          $pull: {
+            todoList: {
+              _id: id,
+            },
+          },
+        }
+      );
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteTask = async (req, res) => {
+  const { id } = req.params;
+  const { uid, email, markDone } = req.body;
+  try {
+    console.log("napasok");
+    if (await Planner.findOne({ uid })) {
+      await Planner.findOneAndUpdate(
+        { plannerList: { $elemMatch: { _id: id } } },
+        {
+          $pull: {
+            plannerList: {
+              _id: id,
+            },
+          },
+        }
+      );
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getAccountDetails,
   submitTask,
+  submitTodo,
+  updateTodo,
+  deleteTodo,
+  deleteTask,
 };

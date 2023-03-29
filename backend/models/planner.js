@@ -26,6 +26,20 @@ const plannerListDetailsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const todoListDetailsSchema = new mongoose.Schema(
+  {
+    todoDescription: {
+      type: String,
+      required: true,
+    },
+    markDone: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
 const plannerSchema = new mongoose.Schema({
   uid: {
     type: String,
@@ -36,6 +50,7 @@ const plannerSchema = new mongoose.Schema({
     required: true,
   },
   plannerList: [plannerListDetailsSchema],
+  todoList: [todoListDetailsSchema],
 });
 
 module.exports = mongoose.model("Planner", plannerSchema);
