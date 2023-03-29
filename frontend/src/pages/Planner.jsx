@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTimer } from "react-timer-hook";
 import SideBar from "../components/SideBar";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { GiProgression, GiCheckMark, GiPaperClip } from "react-icons/gi";
@@ -8,6 +9,7 @@ import { MdClose } from "react-icons/md";
 import { GoKebabVertical } from "react-icons/go";
 import { TbDiscountCheckFilled } from "react-icons/tb";
 import { CgToday } from "react-icons/cg";
+import { CiPlay1, CiRedo, CiPause1 } from "react-icons/ci";
 
 function Planner() {
   const [uid, setUid] = useState(null);
@@ -27,6 +29,27 @@ function Planner() {
   const [showCompleted, setShowCompleted] = useState(false);
   const [plannerList, setPlannerList] = useState([]);
   const [search, setSearch] = useState("");
+  const [expiryTimestamp, setExpiryTimestamp] = useState(
+    new Date().setSeconds(new Date().getSeconds() + 1500)
+  );
+  const [timerDuration, setTimerDuration] = useState("pomodoro");
+  const [timerPause, setTimerPause] = useState(false);
+
+  const {
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart,
+  } = useTimer({
+    expiryTimestamp,
+    autoStart: false,
+    onExpire: () => console.warn("onExpire called"),
+  });
 
   const month = [
     "Jan",
@@ -168,6 +191,15 @@ function Planner() {
     e.preventDefault();
     console.log(e.target.value);
     setSearch(e.target.value);
+  };
+
+  const changeTimer = (duration, durationText) => {
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + duration);
+
+    restart(time);
+    pause();
+    setTimerDuration(durationText);
   };
 
   return (
@@ -676,7 +708,117 @@ function Planner() {
               </div>
             ) : null}
           </div>
-          <div className="w-1/3"></div>
+          <div className="w-1/3 ml-4 border-l border-gray-300 pl-4">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex gap-5 bg-blue-200 rounded-lg pt-3 px-5 mt-5 mb-5 w-max">
+                <input
+                  type="radio"
+                  id="pomodoro"
+                  name="timer"
+                  value="pomodoro"
+                  className="peer/pomodoro hidden"
+                  onChange={() => {
+                    changeTimer(1500, "pomodoro");
+                  }}
+                  defaultChecked
+                />
+                <label
+                  htmlFor="pomodoro"
+                  className="border-blue-500 peer-checked/pomodoro:border-b-8 peer-checked/pomodoro:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                >
+                  Pomodoro
+                </label>
+                <input
+                  type="radio"
+                  id="short"
+                  name="timer"
+                  value="short"
+                  className="peer/short hidden"
+                  onChange={() => {
+                    changeTimer(300, "short");
+                  }}
+                />
+                <label
+                  htmlFor="short"
+                  className="border-blue-500 peer-checked/short:border-b-8 peer-checked/short:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                >
+                  Short Break
+                </label>
+                <input
+                  type="radio"
+                  id="long"
+                  name="timer"
+                  value="completed"
+                  className="peer/long hidden"
+                  onChange={() => {
+                    changeTimer(600, "long");
+                  }}
+                />
+                <label
+                  htmlFor="long"
+                  className="border-blue-500 peer-checked/long:border-b-8 peer-checked/long:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                >
+                  Long Break
+                </label>
+              </div>
+              <div
+                className="rounded-[2rem] p-5 shadow-xl w-max text-white text-9xl"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right bottom, #b06ab3, #4568dc)",
+                }}
+              >
+                {minutes >= 10 ? minutes : `0${minutes}`}:
+                {seconds >= 10 ? seconds : `0${seconds}`}
+              </div>
+              <div className="flex gap-3 mt-3 text-white">
+                <button
+                  className="p-2 rounded-lg"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, #b06ab3, #4568dc)",
+                  }}
+                  onClick={() => {
+                    setTimerPause(!timerPause);
+                    resume();
+                  }}
+                >
+                  <CiPlay1 size={36} />
+                </button>
+                <button
+                  className="p-2 rounded-lg"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, #b06ab3, #4568dc)",
+                  }}
+                  onClick={() => {
+                    setTimerPause(!timerPause);
+                    pause();
+                  }}
+                >
+                  <CiPause1 size={36} />
+                </button>
+                <button
+                  className="p-2 rounded-lg"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, #b06ab3, #4568dc)",
+                  }}
+                  onClick={() => {
+                    if (timerDuration === "pomodoro") {
+                      changeTimer(1500, "pomodoro");
+                    } else if (timerDuration === "short") {
+                      changeTimer(300, "short");
+                    } else if (timerDuration === "long") {
+                      changeTimer(600, "long");
+                    }
+                  }}
+                >
+                  <CiRedo size={36} />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
