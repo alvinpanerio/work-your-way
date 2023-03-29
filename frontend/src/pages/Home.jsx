@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaLongArrowAltRight, FaSearch } from "react-icons/fa";
 import { SiMicrosoftexcel, SiMicrosoftword, SiFiles } from "react-icons/si";
-import { BsFiletypeExe } from "react-icons/bs";
+import { BsFiletypeExe, BsFileEarmarkImage } from "react-icons/bs";
 import axios from "axios";
 import LoadingProvider from "../context/LoadingContext";
 import Icons from "../assets/icons/Icons";
@@ -13,6 +13,8 @@ function Home({ addClass }) {
   const { isLogged, setIsLogged } = useContext(LoadingProvider);
   const [name, setName] = useState("");
   const [files, setFiles] = useState([]);
+  const [plannerList, setPlannerList] = useState([]);
+  const [todoList, setTodoList] = useState([]);
   const [uid, setUid] = useState(null);
   const [email, setEmail] = useState(null);
   const [reload, setReload] = useState(false);
@@ -34,6 +36,7 @@ function Home({ addClass }) {
     if (isAuth && isAuth !== "undefined") {
       if (!reload) {
         getRecentFiles(JSON.parse(isAuth).email);
+        getPlannerList(JSON.parse(isAuth).email);
         setReload(!reload);
       }
     }
@@ -54,6 +57,24 @@ function Home({ addClass }) {
     }
   };
 
+  const getPlannerList = async (user) => {
+    try {
+      await axios
+        .get(process.env.REACT_APP_API_URI + "/planner/" + user)
+        .then((result) => {
+          setEmail(result.data.accountDetails.email);
+          setUid(result.data.accountDetails.profileDetails[0].uid);
+          setPlannerList([...result.data.plannerDetails.plannerList]);
+          setTodoList([...result.data.plannerDetails.todoList]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getAccountDetails = async (user) => {
     try {
       await axios
@@ -65,6 +86,21 @@ function Home({ addClass }) {
       console.log(err);
     }
   };
+
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   return (
     <>
@@ -149,6 +185,27 @@ function Home({ addClass }) {
                               </p>
                             </li>
                           );
+                        } else if (
+                          i.fileName.split(".").pop() === "png" ||
+                          i.fileName.split(".").pop() === "jpeg" ||
+                          i.fileName.split(".").pop() === "jpg"
+                        ) {
+                          return (
+                            <li
+                              key={n}
+                              className="flex flex-col items-center p-8"
+                            >
+                              <div className="bg-[#6610f2] p-2 rounded-lg">
+                                <BsFileEarmarkImage
+                                  size={20}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="truncate w-32 mt-3 text-center">
+                                {i.fileName}
+                              </p>
+                            </li>
+                          );
                         } else {
                           return (
                             <li
@@ -169,17 +226,100 @@ function Home({ addClass }) {
                 </ul>
               </div>
             </div>
+            <div className="max-h-[24rem] w-2/3">
+              {plannerList.map((i, n) => {
+                if (new Date() < new Date(i.taskDuration)) {
+                  if (n < 3) {
+                    return (
+                      <>
+                        <div
+                          key={n}
+                          className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
+                        >
+                          <div
+                            className="w-[50px] h-[50px] rounded-lg"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                            }}
+                          ></div>
+                          <div className="flex flex-col gap-1 w-3/12">
+                            <p className="font-bold">{i.taskName}</p>
+                            <p className="text-gray-400 text-sm text-ellipsis truncate">
+                              {i.taskDescription}
+                            </p>
+                          </div>
+                          <div className="w-4/12">
+                            <p className="text-gray-400">
+                              {`Created: ${
+                                month[new Date(i.createdAt).getMonth()]
+                              }
+                      ${new Date(i.createdAt).getDate()}, 
+                      ${new Date(i.createdAt).getFullYear()}`}
+                            </p>
+                            <p className="font-bold">
+                              {`Due: ${
+                                month[new Date(i.taskDuration).getMonth()]
+                              }
+                      ${new Date(i.taskDuration).getDate()}, 
+                      ${new Date(i.taskDuration).getFullYear()}`}
+                            </p>
+                          </div>
+                          <div className="w-3/12 flex flex-col gap-3 justify-end">
+                            <div className="flex justify-between">
+                              <p className="text-sm">Remaining</p>
+                              <p className="text-sm">
+                                {i.taskDurationNum >=
+                                new Date(
+                                  new Date(i.taskDuration) - new Date()
+                                ).getDate() -
+                                  1
+                                  ? new Date(
+                                      new Date(i.taskDuration) - new Date()
+                                    ).getDate() - 1
+                                  : 0}
+                                d
+                              </p>
+                            </div>
+                            <div className="rounded-lg h-2 bg-[#00d2ff]/20">
+                              <div
+                                className="rounded-lg h-2"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                                  width: `${
+                                    (1 -
+                                      (new Date(
+                                        new Date(i.taskDuration) - new Date()
+                                      ).getDate() -
+                                        1) /
+                                        i.taskDurationNum) *
+                                    100
+                                  }%`,
+                                }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  }
+                } else {
+                  return null;
+                }
+              })}
+            </div>
           </div>
         </div>
       ) : (
         <div className="2xl:pt-56 md:pt-48">
           <div className="container flex flex-col mx-auto font-roboto px-20">
-            <div className="flex justify-between flex-wrap">
+            <div className="pr-20 flex justify-between flex-wrap">
               <div>
                 <p className="font-semibold text-6xl w-[38rem] text-[#102c54]">
-                  Design
+                  Work
                   <br />
-                  Your Perfect
+                  Your Way
                   <br />
                   <p className="relative mt-5">
                     <div className="absolute bg-[#102c54] py-5 w-[620px] h-[88px] -rotate-1 -top-3 -right-1"></div>

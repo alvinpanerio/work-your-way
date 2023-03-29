@@ -15,7 +15,7 @@ import {
 } from "react-icons/ai";
 import { FcGenericSortingAsc, FcGenericSortingDesc } from "react-icons/fc";
 import { SiMicrosoftexcel, SiMicrosoftword, SiFiles } from "react-icons/si";
-import { BsFiletypeExe } from "react-icons/bs";
+import { BsFiletypeExe, BsFileEarmarkImage } from "react-icons/bs";
 import Icons from "../assets/icons/Icons";
 import { motion } from "framer-motion";
 import { FileUploader } from "react-drag-drop-files";
@@ -319,6 +319,27 @@ function Files() {
                             </p>
                           </li>
                         );
+                      } else if (
+                        i.fileName.split(".").pop() === "png" ||
+                        i.fileName.split(".").pop() === "jpeg" ||
+                        i.fileName.split(".").pop() === "jpg"
+                      ) {
+                        return (
+                          <li
+                            key={n}
+                            className="flex flex-col items-center p-8"
+                          >
+                            <div className="bg-[#6610f2] p-3 rounded-lg">
+                              <BsFileEarmarkImage
+                                size={32}
+                                className="text-white"
+                              />
+                            </div>
+                            <p className="truncate w-32 mt-3 text-center">
+                              {i.fileName}
+                            </p>
+                          </li>
+                        );
                       } else {
                         return (
                           <li
@@ -527,6 +548,68 @@ function Files() {
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#d9534f] p-1 rounded-md">
                                       <BsFiletypeExe className="text-white" />
+                                    </div>
+                                    <p className="truncate pl-2">
+                                      {i.fileName}
+                                    </p>
+                                  </td>
+                                  <td className="w-[200px] flex justify-center text-center gap-1">
+                                    <p className="text-blue-500 font-bold">
+                                      {new Date(
+                                        i.updatedAt
+                                      ).toLocaleDateString() ===
+                                      new Date().toLocaleDateString()
+                                        ? "Today,"
+                                        : `${new Date(
+                                            i.updatedAt
+                                          ).toLocaleDateString()},`}
+                                    </p>
+
+                                    {`${new Date(
+                                      i.updatedAt
+                                    ).toLocaleTimeString()}`}
+                                  </td>
+                                  <td className="w-[200px] flex justify-center">
+                                    {i.fileSize}
+                                  </td>
+                                  <td className="w-[200px] flex justify-end gap-5 items-center">
+                                    <button>
+                                      <FaCloudDownloadAlt
+                                        size={22}
+                                        className="text-[#5cb85c]"
+                                        onClick={() => {
+                                          handleDownloadFile(
+                                            i.file.filename,
+                                            i.fileName
+                                          );
+                                        }}
+                                      />
+                                    </button>
+                                    <button>
+                                      <FaTrash
+                                        size={18}
+                                        className="text-[#d9534f]"
+                                        onClick={() => {
+                                          handleDeleteFileToDb(
+                                            i.file.filename,
+                                            i.fileName
+                                          );
+                                        }}
+                                      />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            } else if (
+                              i.fileName.split(".").pop() === "png" ||
+                              i.fileName.split(".").pop() === "jpeg" ||
+                              i.fileName.split(".").pop() === "jpg"
+                            ) {
+                              return (
+                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                  <td className="w-[200px] flex justify-start items-center gap-3 relative">
+                                    <div className="bg-[#6610f2] p-1 rounded-md">
+                                      <BsFileEarmarkImage className="text-white" />
                                     </div>
                                     <p className="truncate pl-2">
                                       {i.fileName}

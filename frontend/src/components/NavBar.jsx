@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaSignOutAlt, FaRegBell } from "react-icons/fa";
+import { MdWorkspacesFilled } from "react-icons/md";
 
 import LoadingProvider from "../context/LoadingContext";
 import Logo from "../assets/logo-transparent.png";
@@ -116,8 +117,7 @@ function NavBar() {
                 to={"/"}
                 className={"font-semibold text-lg flex items-center"}
               >
-                <img src={Logo} alt="" className="h-[28px] mr-3" /> Personal
-                Workspace
+                <MdWorkspacesFilled size={40} className="mr-3" /> Work Your Way
               </Link>
             </div>
             <div>

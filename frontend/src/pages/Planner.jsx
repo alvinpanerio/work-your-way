@@ -1211,7 +1211,7 @@ function Planner() {
               </div>
               <div className="flex gap-3 mt-3">
                 <button
-                  className={`p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
+                  className={`text-white p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
                     timerState === "play"
                       ? "bg-gradient-to-br from-[#b06ab3] to-[#4568dc] text-white"
                       : "bg-gray-300"
@@ -1225,7 +1225,7 @@ function Planner() {
                   <CiPlay1 size={36} />
                 </button>
                 <button
-                  className={`p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
+                  className={`text-white p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
                     timerState === "pause"
                       ? "bg-gradient-to-br from-[#b06ab3] to-[#4568dc] text-white"
                       : "bg-gray-300"
