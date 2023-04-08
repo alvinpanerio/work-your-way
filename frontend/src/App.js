@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import PasswordReset from "./pages/PasswordReset";
 import Error404 from "./pages/Error404";
+import Profile from "./pages/Profile";
 import Files from "./pages/Files";
 import Planner from "./pages/Planner";
 import LoadingProvider from "./context/LoadingContext";
@@ -31,6 +32,7 @@ function App() {
             <Route path="/forgot" element={<ForgotPassword />} />
             <Route path="/forgot/:resetToken" element={<PasswordReset />} />
             <Route path="*" element={<Error404 />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/files" element={<Files />} />
             <Route path="/planner" element={<Planner />} />
           </Routes>

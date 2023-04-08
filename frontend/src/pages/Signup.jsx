@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import RiseLoader from "react-spinners/RiseLoader";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
 import axios from "axios";
 import Card from "../components/Card";
 import Home from "./Home";
@@ -18,6 +19,7 @@ function Login() {
   const [profileAvatar, setProfileAvatar] = useState(
     "/static/media/female-bangs.edb240080c99c12324da.png"
   );
+  const [showLoginConfirm, setShowLoginConfirm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,11 +66,10 @@ function Login() {
             profileDetails: { uid: 0, profileAvatar },
           })
           .then((res) => {
-            console.log(res.status);
             if (res.status === 200) {
               setSubmitting(false);
+              setShowLoginConfirm(true);
               setError("");
-              navigate("/login");
             }
           })
           .catch((err) => {
@@ -111,6 +112,35 @@ function Login() {
 
   return (
     <div className="pr-20 flex flex-wrap justify-between pt-40 container mx-auto ">
+      <div
+        className={`h-full w-full left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 fixed bg-zinc-900/50 z-40 ${
+          showLoginConfirm ? "visible" : "hidden"
+        }`}
+      >
+        <div
+          className="bg-white rounded-lg absolute z-50 left-1/2 top-1/2 -translate-y-1/2 opacity-100 -translate-x-1/2 p-8 flex flex-col 
+        justify-center items-center"
+        >
+          <div className="flex w-full justify-between text-blue-500 font-bold items-center mb-5">
+            <p className="text-2xl">Registered Successfully!</p>
+            <button
+              onClick={() => {
+                setShowLoginConfirm(false);
+                navigate("/login");
+              }}
+            >
+              <MdClose size={28} />
+            </button>
+          </div>
+          <div className="w-[500px] text-lg flex flex-col text-center">
+            <p className="mb-5">
+              Thank you for signing up! Your registration is now complete.
+              Please visit your email inbox for the confirmation.
+            </p>
+            <p>Please close this window to access the login page.</p>
+          </div>
+        </div>
+      </div>
       <div className="-mt-40 w-[96px]">
         <Home addClass={"ml-[300px] mt-36"} />
       </div>

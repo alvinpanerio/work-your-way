@@ -83,7 +83,7 @@ function NavBar() {
               <img
                 src={avatar}
                 alt=""
-                className="w-[48px] h-[48px] hover:ring-blue-200 hover:ring-4 rounded-full "
+                className="w-[48px] h-[48px] hover:ring-blue-200 hover:ring-4 rounded-full"
               />
             </button>
             <div
@@ -92,11 +92,27 @@ function NavBar() {
               } font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-md w-max absolute right-0 top-14`}
             >
               <div className="flex gap-4 items-center p-5">
-                <img src={avatar} alt="" className="w-[64px] h-[64px]" />
+                <Link
+                  to={"/profile"}
+                  className="hover:ring-blue-200 hover:ring-4 rounded-full"
+                  onClick={() => {
+                    setShowDropDown(!showDropDown);
+                  }}
+                >
+                  <img src={avatar} alt="" className="w-[64px] h-[64px]" />
+                </Link>
                 <div>
-                  <p className="font-medium text-base gap-3 text-[#102c54]">
-                    {name}
-                  </p>
+                  <Link
+                    to={"/profile"}
+                    className="hover:underline"
+                    onClick={() => {
+                      setShowDropDown(!showDropDown);
+                    }}
+                  >
+                    <p className="font-medium text-base gap-3 text-[#102c54]">
+                      {name}
+                    </p>
+                  </Link>
                   <p className="font-normal text-sm text-[#102c54]">{uid}</p>
                   <p className="text-sm text-[#102c54]">{email}</p>
                 </div>

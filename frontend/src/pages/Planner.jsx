@@ -450,7 +450,7 @@ function Planner() {
         justify-center items-center"
         >
           <div className="flex w-full justify-between text-blue-500 font-bold items-center mb-5">
-            <p className="text-2xl">Add Task</p>
+            <p className="text-2xl">Add Todo</p>
             <button
               onClick={() => {
                 setOpenModalTodo(!openModalTodo);

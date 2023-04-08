@@ -13,6 +13,36 @@ const profileDetailsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  course: {
+    type: String,
+    required: false,
+    default: "n/a",
+  },
+  address: {
+    type: String,
+    required: false,
+    default: "n/a",
+  },
+  contactNo: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  bday: {
+    type: String,
+    required: false,
+    default: "n/a",
+  },
+  status: {
+    type: String,
+    required: false,
+    default: "n/a",
+  },
+  bio: {
+    type: String,
+    required: false,
+    default: "n/a",
+  },
 });
 
 const accountSchema = new mongoose.Schema({
