@@ -236,6 +236,36 @@ const getAccountDetails = async (req, res) => {
   }
 };
 
+const updateInfo = async (req, res) => {
+  const { id } = req.params;
+  const { name, image, course, address, contactNo, bday, status, bio } =
+    req.body;
+  try {
+    if (await Account.findOne({ _id: id })) {
+      await Account.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            "profileDetails.0.name": name,
+            "profileDetails.0.profileAvatar": image,
+            "profileDetails.0.course": course,
+            "profileDetails.0.address": address,
+            "profileDetails.0.contactNo": contactNo,
+            "profileDetails.0.bday": bday,
+            "profileDetails.0.status": status,
+            "profileDetails.0.bio": bio,
+          },
+        }
+      );
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   login,
   signup,
@@ -243,4 +273,5 @@ module.exports = {
   passwordReset,
   getPasswordReset,
   getAccountDetails,
+  updateInfo,
 };
