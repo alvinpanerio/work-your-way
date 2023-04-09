@@ -160,7 +160,6 @@ const deleteTask = async (req, res) => {
   const { id } = req.params;
   const { uid, email, markDone } = req.body;
   try {
-    console.log("napasok");
     if (await Planner.findOne({ uid })) {
       await Planner.findOneAndUpdate(
         { plannerList: { $elemMatch: { _id: id } } },
@@ -181,6 +180,32 @@ const deleteTask = async (req, res) => {
   }
 };
 
+const markTaskDone = async (req, res) => {
+  const { id } = req.params;
+  const { uid, email } = req.body;
+  try {
+    let dueDate = new Date();
+    dueDate.setDate(dueDate.getDate());
+    console.log(dueDate);
+    if (await Planner.findOne({ uid })) {
+      await Planner.findOneAndUpdate(
+        { plannerList: { $elemMatch: { _id: id } } },
+        {
+          $set: {
+            "plannerList.$.taskDuration": dueDate,
+            "plannerList.$.taskDueTime": `${dueDate.getHours()}:${dueDate.getMinutes()}`,
+          },
+        }
+      );
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("submitted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getAccountDetails,
   submitTask,
@@ -188,4 +213,5 @@ module.exports = {
   updateTodo,
   deleteTodo,
   deleteTask,
+  markTaskDone,
 };

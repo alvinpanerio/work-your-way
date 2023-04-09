@@ -322,6 +322,28 @@ function Planner() {
     }
   };
 
+  const handleMarkDoneTask = async (e, id) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post(process.env.REACT_APP_API_URI + "/planner/task-done/" + id, {
+          uid,
+          email,
+        })
+        .then((result) => {
+          setReload(!reload);
+          setOpenTaskModal(false);
+          setOpenTaskNewModal(false);
+          setOpenTaskCompleteModal(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="lg:h-screen 2xl:pt-56 md:pt-48 bg-blue-100 sm:h-full">
       <div
@@ -555,7 +577,15 @@ function Planner() {
               }}
             ></div>
           </div>
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-end gap-5">
+            <button
+              className="rounded-lg bg-green-500 shadow-lg p-3 text-white"
+              onClick={(e) => {
+                handleMarkDoneTask(e, modalId);
+              }}
+            >
+              Done
+            </button>
             <button
               className="rounded-lg bg-red-500 shadow-lg p-3 text-white"
               onClick={(e) => {
