@@ -270,13 +270,23 @@ const updateInfo = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
   const { email } = req.params;
+  const { password } = req.body;
+
   try {
+    const user = await Account.findOne({ email });
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      res.status(404).json({ errorMessage: "Password Incorrect!" });
+      return;
+    }
+
     if (await Account.findOne({ email })) {
       await Account.deleteOne({ email });
       await Files.deleteOne({ email });
       await Planner.deleteOne({ email });
     } else {
-      return res.status(404).send("failed");
+      res.status(404).send("failed");
     }
     res.status(200).send("deleted");
   } catch (error) {

@@ -38,6 +38,8 @@ function Profile() {
   const [openImageModal, setOpenImageModal] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [openDeleteAccModal, setOpenDeleteAccModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const courses = [
@@ -125,13 +127,21 @@ function Profile() {
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
     try {
       await axios
-        .delete(process.env.REACT_APP_API_URI + "/delete-account/" + email)
+        .post(process.env.REACT_APP_API_URI + "/delete-account/" + email, {
+          password,
+        })
         .then((res) => {
-          localStorage.removeItem("user");
           window.location.reload(true);
+          localStorage.removeItem("user");
+        })
+        .catch((err) => {
+          setErrorMessage(err.response.data.errorMessage);
+          setPassword("");
+          console.log(err);
         });
     } catch (error) {
       console.log(error);
@@ -202,7 +212,7 @@ function Profile() {
       >
         <div
           className="bg-white rounded-lg absolute z-50 left-1/2 top-1/2 -translate-y-1/2 opacity-100 -translate-x-1/2 p-8 flex flex-col 
-        justify-center items-center w-[420px]"
+         w-[420px]"
         >
           <div className="flex w-full justify-between text-blue-500 font-bold items-center mb-6">
             <p className="text-2xl text-red-500">Deleting Account</p>
@@ -214,18 +224,34 @@ function Profile() {
               <MdClose size={28} />
             </button>
           </div>
-          <div className="text-center mb-6">
+          <div className="text-center mb-3">
             Are you sure you want to delete your account? This action cannot be
             undone and all your data will be permanently deleted. Please confirm
-            your decision by clicking "Delete Account" below.
+            your typing your password and clicking "Delete Account" below.
           </div>
-
-          <button
-            className="rounded-lg bg-red-500 shadow-lg p-3 text-white"
-            onClick={handleDeleteAccount}
-          >
-            Delete Account
-          </button>
+          <p className="text-gray-300 font-semibold mb-2">
+            Type your password:
+          </p>
+          <form onSubmit={handleDeleteAccount}>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none mb-2"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrorMessage("");
+              }}
+              required
+            />
+            <p className="text-red-500 mb-3 text-center">{errorMessage}</p>
+            <button
+              className="w-full rounded-lg bg-red-500 shadow-lg p-3 text-white"
+              type="submit"
+            >
+              Delete Account
+            </button>
+          </form>
         </div>
       </div>
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">

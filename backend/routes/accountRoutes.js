@@ -19,6 +19,6 @@ router.get("/forgot/:resetToken", getPasswordReset);
 router.put("/forgot/:resetToken", passwordReset);
 router.get("/:id", getAccountDetails);
 router.post("/edit-info/:id", updateInfo);
-router.delete("/delete-account/:email", deleteAccount);
+router.post("/delete-account/:email", deleteAccount);
 
 module.exports = router;
