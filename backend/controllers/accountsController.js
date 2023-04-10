@@ -294,6 +294,16 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    await Account.find({}).then((result) => {
+      res.status(200).json(result);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   login,
   signup,
@@ -303,4 +313,5 @@ module.exports = {
   getAccountDetails,
   updateInfo,
   deleteAccount,
+  getUsers,
 };

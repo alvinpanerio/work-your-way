@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaLongArrowAltRight, FaSearch } from "react-icons/fa";
+import { FaLongArrowAltRight, FaSearch, FaUserPlus } from "react-icons/fa";
 import { SiMicrosoftexcel, SiMicrosoftword, SiFiles } from "react-icons/si";
 import { BsFiletypeExe, BsFileEarmarkImage } from "react-icons/bs";
 import axios from "axios";
@@ -18,6 +18,8 @@ function Home({ addClass }) {
   const [uid, setUid] = useState(null);
   const [email, setEmail] = useState(null);
   const [reload, setReload] = useState(false);
+  const [search, setSearch] = useState("");
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ function Home({ addClass }) {
     if (isAuth && isAuth !== "undefined") {
       getAccountDetails(JSON.parse(isAuth).id);
       getRecentFiles(JSON.parse(isAuth).email);
+      handleGetUsers();
       setIsLogged(true);
     } else {
       setIsLogged(false);
@@ -37,6 +40,7 @@ function Home({ addClass }) {
       if (!reload) {
         getRecentFiles(JSON.parse(isAuth).email);
         getPlannerList(JSON.parse(isAuth).email);
+        handleGetUsers();
         setReload(!reload);
       }
     }
@@ -87,6 +91,18 @@ function Home({ addClass }) {
     }
   };
 
+  const handleGetUsers = async () => {
+    try {
+      await axios
+        .get(process.env.REACT_APP_API_URI + "/get/users")
+        .then((result) => {
+          setUsers([...result.data]);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const month = [
     "Jan",
     "Feb",
@@ -111,11 +127,61 @@ function Home({ addClass }) {
             <div className="relative">
               <input
                 type="text"
-                id="seacrh"
-                placeholder="Search"
-                className="bg-white text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+                id="search"
+                onChange={(e) => {
+                  setSearch(e.target.value.trim());
+                }}
+                placeholder="Search people..."
+                className="bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
               />
               <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
+              {search ? (
+                <div className="w-4/12 bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-xl">
+                  {users.filter((i) => {
+                    return search.length
+                      ? i.profileDetails[0].name.toLowerCase().includes(search)
+                      : i;
+                  }).length === 0 ? (
+                    <p className="font-bold mb-3 px-2 py-3">
+                      No searched results
+                    </p>
+                  ) : (
+                    users
+                      .filter((i) => {
+                        return search.length
+                          ? i.profileDetails[0].name
+                              .toLowerCase()
+                              .includes(search)
+                          : i;
+                      })
+                      .map((user, i) => {
+                        return (
+                          <button
+                            key={i}
+                            className="flex flex-wrap items-center justify-between gap-5 w-full mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                          >
+                            <div className="flex flex-wrap items-center gap-5">
+                              <img
+                                src={user.profileDetails[0].profileAvatar}
+                                alt=""
+                                className="w-[50px] h-[50px]"
+                              />
+                              <div>
+                                <p className="font-bold">
+                                  {user.profileDetails[0].name}
+                                </p>
+                                <p>{user.profileDetails[0].uid}</p>
+                              </div>
+                            </div>
+                            <button className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100">
+                              <FaUserPlus />
+                            </button>
+                          </button>
+                        );
+                      })
+                  )}
+                </div>
+              ) : null}
             </div>
             <p className="text-2xl font-bold mt-8 mb-3 text-blue-500 text-4xl">{`Hello, ${name}!`}</p>
             <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-1/2">
