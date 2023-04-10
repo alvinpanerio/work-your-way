@@ -9,6 +9,7 @@ const {
   updateInfo,
   deleteAccount,
   getUsers,
+  addFriendUser,
 } = require("../controllers/accountsController");
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.get("/:id", getAccountDetails);
 router.post("/edit-info/:id", updateInfo);
 router.post("/delete-account/:email", deleteAccount);
 router.get("/get/users", getUsers);
+router.post("/add-friend/:uid", addFriendUser);
 
 module.exports = router;

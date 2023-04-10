@@ -1,6 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaLongArrowAltRight, FaSearch, FaUserPlus } from "react-icons/fa";
+import {
+  FaLongArrowAltRight,
+  FaSearch,
+  FaUserPlus,
+  FaCheck,
+  FaUserCheck,
+} from "react-icons/fa";
 import { SiMicrosoftexcel, SiMicrosoftword, SiFiles } from "react-icons/si";
 import { BsFiletypeExe, BsFileEarmarkImage } from "react-icons/bs";
 import axios from "axios";
@@ -20,6 +26,7 @@ function Home({ addClass }) {
   const [reload, setReload] = useState(false);
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
+  const [friends, setFriends] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +52,19 @@ function Home({ addClass }) {
       }
     }
   }, [reload]);
+
+  useEffect(() => {
+    let index = users
+      .map((i) => {
+        return i.profileDetails[0].uid;
+      })
+      .indexOf(uid);
+    setFriends(users[index]);
+    users.splice(index, 1);
+    if (!reload) {
+      setReload(!reload);
+    }
+  }, [users]);
 
   const getRecentFiles = async (user) => {
     try {
@@ -98,6 +118,19 @@ function Home({ addClass }) {
         .then((result) => {
           setUsers([...result.data]);
         });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleAddUser = async (id) => {
+    try {
+      await axios
+        .post(process.env.REACT_APP_API_URI + "/add-friend/" + id, {
+          email,
+          uidRequestor: uid,
+        })
+        .then((result) => {});
     } catch (err) {
       console.log(err);
     }
@@ -173,9 +206,54 @@ function Home({ addClass }) {
                                 <p>{user.profileDetails[0].uid}</p>
                               </div>
                             </div>
-                            <button className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100">
-                              <FaUserPlus />
-                            </button>
+                            {friends.friends.map((x, i) => {
+                              if (
+                                x.uid === user.profileDetails[0].uid &&
+                                x.isConfirmedFriend === true
+                              ) {
+                                return (
+                                  <button
+                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
+                                    onClick={() => {
+                                      handleAddUser(
+                                        user.profileDetails[0].uid.slice(1, 12)
+                                      );
+                                    }}
+                                  >
+                                    <FaUserCheck />
+                                  </button>
+                                );
+                              } else if (
+                                x.uid === user.profileDetails[0].uid &&
+                                x.isConfirmedFriend === false
+                              ) {
+                                return (
+                                  <button
+                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
+                                    onClick={() => {
+                                      handleAddUser(
+                                        user.profileDetails[0].uid.slice(1, 12)
+                                      );
+                                    }}
+                                  >
+                                    <FaUserPlus />
+                                  </button>
+                                );
+                              } else {
+                                return (
+                                  <button
+                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
+                                    onClick={() => {
+                                      handleAddUser(
+                                        user.profileDetails[0].uid.slice(1, 12)
+                                      );
+                                    }}
+                                  >
+                                    <FaCheck />
+                                  </button>
+                                );
+                              }
+                            })}
                           </button>
                         );
                       })

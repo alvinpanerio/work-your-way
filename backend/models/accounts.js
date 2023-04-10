@@ -45,6 +45,25 @@ const profileDetailsSchema = new mongoose.Schema({
   },
 });
 
+const friendsSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+  },
+  uid: {
+    type: String,
+    required: true,
+  },
+  isConfirmedFriend: {
+    type: Boolean,
+    required: true,
+  },
+  isRequestorMe: {
+    type: Boolean,
+    required: true,
+  },
+});
+
 const accountSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -55,6 +74,7 @@ const accountSchema = new mongoose.Schema({
     required: true,
   },
   profileDetails: [profileDetailsSchema],
+  friends: [friendsSchema],
   resetToken: String,
   resetExpiresOn: String,
 });

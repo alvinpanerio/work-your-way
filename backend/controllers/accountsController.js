@@ -14,6 +14,7 @@ const Account = require("../models/accounts");
 const Files = require("../models/files");
 const Planner = require("../models/planner");
 const { findOne } = require("../models/accounts");
+const { constants } = require("http2");
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
@@ -304,6 +305,55 @@ const getUsers = async (req, res) => {
   }
 };
 
+const addFriendUser = async (req, res) => {
+  const { uid } = req.params;
+  const { email, uidRequestor } = req.body;
+  try {
+    if (
+      (await Account.findOne({ "profileDetails.0.uid": "#" + uid })) &&
+      uid !== uidRequestor.slice(1, 12)
+    ) {
+      //added friend
+      const addedFriend = await Account.findOneAndUpdate(
+        {
+          "profileDetails.0.uid": "#" + uid,
+        },
+        {
+          $push: {
+            friends: {
+              email,
+              uid: uidRequestor,
+              isConfirmedFriend: false,
+              isRequestorMe: false,
+            },
+          },
+        }
+      );
+      //requestor
+      await Account.findOneAndUpdate(
+        {
+          "profileDetails.0.uid": uidRequestor,
+        },
+        {
+          $push: {
+            friends: {
+              email: addedFriend.email,
+              uid: "#" + uid,
+              isConfirmedFriend: false,
+              isRequestorMe: true,
+            },
+          },
+        }
+      );
+      res.status(200).json({ reload: true });
+    } else {
+      res.status(404).send("User not Found!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   login,
   signup,
@@ -314,4 +364,5 @@ module.exports = {
   updateInfo,
   deleteAccount,
   getUsers,
+  addFriendUser,
 };
