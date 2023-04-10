@@ -546,8 +546,19 @@ function Planner() {
                       ${new Date(modalTaskDue).getDate()}, 
                       ${new Date(modalTaskDue).getFullYear()}
                       ${
-                        modalTaskTime > 12
-                          ? 24 - modalTaskTime.slice(0, 2) + "P.M."
+                        Number(modalTaskTime.slice(0, 2)) >= 12
+                          ? Number(modalTaskTime.slice(0, 2)) === 12
+                            ? modalTaskTime + " P.M."
+                            : (
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              ).toString().length === 1
+                            ? `0${
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              }:${modalTaskTime.slice(3, 5)} P.M.`
+                            : Number(modalTaskTime.slice(0, 2)) -
+                              12 +
+                              Number(modalTaskTime.slice(3, 5)) +
+                              " P.M."
                           : modalTaskTime + " A.M."
                       }`}
           </p>
@@ -634,8 +645,19 @@ function Planner() {
                       ${new Date(modalTaskDue).getDate()}, 
                       ${new Date(modalTaskDue).getFullYear()}
                       ${
-                        modalTaskTime > 12
-                          ? 24 - modalTaskTime.slice(0, 2) + "P.M."
+                        Number(modalTaskTime.slice(0, 2)) >= 12
+                          ? Number(modalTaskTime.slice(0, 2)) === 12
+                            ? modalTaskTime + " P.M."
+                            : (
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              ).toString().length === 1
+                            ? `0${
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              }:${modalTaskTime.slice(3, 5)} P.M.`
+                            : Number(modalTaskTime.slice(0, 2)) -
+                              12 +
+                              Number(modalTaskTime.slice(3, 5)) +
+                              " P.M."
                           : modalTaskTime + " A.M."
                       }`}
           </p>
@@ -714,8 +736,19 @@ function Planner() {
                       ${new Date(modalTaskDue).getDate()}, 
                       ${new Date(modalTaskDue).getFullYear()}
                       ${
-                        modalTaskTime > 12
-                          ? 24 - modalTaskTime.slice(0, 2) + "P.M."
+                        Number(modalTaskTime.slice(0, 2)) >= 12
+                          ? Number(modalTaskTime.slice(0, 2)) === 12
+                            ? modalTaskTime + " P.M."
+                            : (
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              ).toString().length === 1
+                            ? `0${
+                                Number(modalTaskTime.slice(0, 2)) - 12
+                              }:${modalTaskTime.slice(3, 5)} P.M.`
+                            : Number(modalTaskTime.slice(0, 2)) -
+                              12 +
+                              Number(modalTaskTime.slice(3, 5)) +
+                              " P.M."
                           : modalTaskTime + " A.M."
                       }`}
           </p>
