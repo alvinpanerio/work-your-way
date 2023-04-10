@@ -56,7 +56,6 @@ function NavBar() {
     try {
       setIsLoading(true);
       localStorage.removeItem("user");
-      console.log("logout");
     } catch (err) {
       console.log(err);
     }

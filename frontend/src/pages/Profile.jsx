@@ -13,6 +13,7 @@ import {
   FaBirthdayCake,
   FaCircleNotch,
   FaPenAlt,
+  FaUserTimes,
 } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import SideBar from "../components/SideBar";
@@ -36,6 +37,7 @@ function Profile() {
   const [isEdit, setIsEdit] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const [cancel, setCancel] = useState(false);
+  const [openDeleteAccModal, setOpenDeleteAccModal] = useState(false);
   const navigate = useNavigate();
 
   const courses = [
@@ -123,6 +125,19 @@ function Profile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      await axios
+        .delete(process.env.REACT_APP_API_URI + "/delete-account/" + email)
+        .then((res) => {
+          localStorage.removeItem("user");
+          window.location.reload(true);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="lg:h-screen 2xl:pt-56 md:pt-48 bg-blue-100 sm:h-full">
       <div
@@ -178,6 +193,39 @@ function Profile() {
               );
             })}
           </div>
+        </div>
+      </div>
+      <div
+        className={`h-full w-full left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 fixed bg-zinc-900/50 z-40 ${
+          openDeleteAccModal ? "visible" : "hidden"
+        }`}
+      >
+        <div
+          className="bg-white rounded-lg absolute z-50 left-1/2 top-1/2 -translate-y-1/2 opacity-100 -translate-x-1/2 p-8 flex flex-col 
+        justify-center items-center w-[420px]"
+        >
+          <div className="flex w-full justify-between text-blue-500 font-bold items-center mb-6">
+            <p className="text-2xl text-red-500">Deleting Account</p>
+            <button
+              onClick={() => {
+                setOpenDeleteAccModal(!openDeleteAccModal);
+              }}
+            >
+              <MdClose size={28} />
+            </button>
+          </div>
+          <div className="text-center mb-6">
+            Are you sure you want to delete your account? This action cannot be
+            undone and all your data will be permanently deleted. Please confirm
+            your decision by clicking "Delete Account" below.
+          </div>
+
+          <button
+            className="rounded-lg bg-red-500 shadow-lg p-3 text-white"
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </button>
         </div>
       </div>
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
@@ -387,7 +435,7 @@ function Profile() {
                   <p className="">{email}</p>
                 </div>
               </div>
-              <div>
+              <div className="flex gap-3 h-full">
                 <button
                   className="rounded-lg bg-blue-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
                   onClick={() => {
@@ -396,6 +444,15 @@ function Profile() {
                 >
                   <FaUserEdit />
                   Edit Info
+                </button>
+                <button
+                  className="rounded-lg bg-red-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
+                  onClick={() => {
+                    setOpenDeleteAccModal(true);
+                  }}
+                >
+                  <FaUserTimes />
+                  Delete Account
                 </button>
               </div>
             </div>

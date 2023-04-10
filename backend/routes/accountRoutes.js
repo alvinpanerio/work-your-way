@@ -7,22 +7,18 @@ const {
   getPasswordReset,
   getAccountDetails,
   updateInfo,
+  deleteAccount,
 } = require("../controllers/accountsController");
 
 const router = express.Router();
 
 router.post("/login", login);
-
 router.post("/signup", signup);
-
 router.post("/forgot", forgotPassword);
-
 router.get("/forgot/:resetToken", getPasswordReset);
-
 router.put("/forgot/:resetToken", passwordReset);
-
 router.get("/:id", getAccountDetails);
-
 router.post("/edit-info/:id", updateInfo);
+router.delete("/delete-account/:email", deleteAccount);
 
 module.exports = router;

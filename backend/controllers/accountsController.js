@@ -11,6 +11,8 @@ const {
   animals,
 } = require("unique-names-generator");
 const Account = require("../models/accounts");
+const Files = require("../models/files");
+const Planner = require("../models/planner");
 const { findOne } = require("../models/accounts");
 
 const generateToken = (_id) => {
@@ -266,6 +268,22 @@ const updateInfo = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  const { email } = req.params;
+  try {
+    if (await Account.findOne({ email })) {
+      await Account.deleteOne({ email });
+      await Files.deleteOne({ email });
+      await Planner.deleteOne({ email });
+    } else {
+      return res.status(404).send("failed");
+    }
+    res.status(200).send("deleted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   login,
   signup,
@@ -274,4 +292,5 @@ module.exports = {
   getPasswordReset,
   getAccountDetails,
   updateInfo,
+  deleteAccount,
 };
