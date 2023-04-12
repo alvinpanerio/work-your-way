@@ -27,6 +27,7 @@ function Home({ addClass }) {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState({});
+  const [no, setNo] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -136,6 +137,18 @@ function Home({ addClass }) {
     }
   };
 
+  const handleVisitUser = async (id) => {
+    try {
+      await axios
+        .get(process.env.REACT_APP_API_URI + "/user/" + id)
+        .then((result) => {
+          navigate("/user/" + id);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const month = [
     "Jan",
     "Feb",
@@ -166,6 +179,7 @@ function Home({ addClass }) {
                 }}
                 placeholder="Search people..."
                 className="bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+                autocomplete="off"
               />
               <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
               {search ? (
@@ -192,6 +206,11 @@ function Home({ addClass }) {
                           <button
                             key={i}
                             className="flex flex-wrap items-center justify-between gap-5 w-full mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                            onClick={() => {
+                              handleVisitUser(
+                                user.profileDetails[0].uid.slice(1, 12)
+                              );
+                            }}
                           >
                             <div className="flex flex-wrap items-center gap-5">
                               <img
@@ -199,61 +218,13 @@ function Home({ addClass }) {
                                 alt=""
                                 className="w-[50px] h-[50px]"
                               />
-                              <div>
+                              <div className="flex items-start flex-col">
                                 <p className="font-bold">
                                   {user.profileDetails[0].name}
                                 </p>
                                 <p>{user.profileDetails[0].uid}</p>
                               </div>
                             </div>
-                            {friends.friends.map((x, i) => {
-                              if (
-                                x.uid === user.profileDetails[0].uid &&
-                                x.isConfirmedFriend === true
-                              ) {
-                                return (
-                                  <button
-                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
-                                    onClick={() => {
-                                      handleAddUser(
-                                        user.profileDetails[0].uid.slice(1, 12)
-                                      );
-                                    }}
-                                  >
-                                    <FaUserCheck />
-                                  </button>
-                                );
-                              } else if (
-                                x.uid === user.profileDetails[0].uid &&
-                                x.isConfirmedFriend === false
-                              ) {
-                                return (
-                                  <button
-                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
-                                    onClick={() => {
-                                      handleAddUser(
-                                        user.profileDetails[0].uid.slice(1, 12)
-                                      );
-                                    }}
-                                  >
-                                    <FaUserPlus />
-                                  </button>
-                                );
-                              } else {
-                                return (
-                                  <button
-                                    className="bg-blue-500 rounded-lg p-2 text-white hover:bg-white hover:text-blue-500 transition duration-100"
-                                    onClick={() => {
-                                      handleAddUser(
-                                        user.profileDetails[0].uid.slice(1, 12)
-                                      );
-                                    }}
-                                  >
-                                    <FaCheck />
-                                  </button>
-                                );
-                              }
-                            })}
                           </button>
                         );
                       })

@@ -10,6 +10,7 @@ import Error404 from "./pages/Error404";
 import Profile from "./pages/Profile";
 import Files from "./pages/Files";
 import Planner from "./pages/Planner";
+import User from "./pages/User";
 import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/files" element={<Files />} />
             <Route path="/planner" element={<Planner />} />
+            <Route path="/user/:id" element={<User />} />
           </Routes>
         </BrowserRouter>
       )}

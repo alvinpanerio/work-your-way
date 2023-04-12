@@ -55,7 +55,7 @@ const friendsSchema = new mongoose.Schema({
     required: true,
   },
   isConfirmedFriend: {
-    type: Boolean,
+    type: Number,
     required: true,
   },
   isRequestorMe: {

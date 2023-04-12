@@ -323,7 +323,7 @@ const addFriendUser = async (req, res) => {
             friends: {
               email,
               uid: uidRequestor,
-              isConfirmedFriend: false,
+              isConfirmedFriend: 1,
               isRequestorMe: false,
             },
           },
@@ -339,13 +339,43 @@ const addFriendUser = async (req, res) => {
             friends: {
               email: addedFriend.email,
               uid: "#" + uid,
-              isConfirmedFriend: false,
+              isConfirmedFriend: 1,
               isRequestorMe: true,
             },
           },
         }
       );
       res.status(200).json({ reload: true });
+    } else {
+      res.status(404).send("User not Found!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const visitUser = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    if (await Account.findOne({ "profileDetails.0.uid": "#" + uid })) {
+      res.status(200).send("found");
+    } else {
+      res.status(404).send("User not Found!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUser = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    if (await Account.findOne({ "profileDetails.0.uid": "#" + uid })) {
+      await Account.findOne({ "profileDetails.0.uid": "#" + uid }).then(
+        (result) => {
+          res.status(200).json({ result });
+        }
+      );
     } else {
       res.status(404).send("User not Found!");
     }
@@ -365,4 +395,6 @@ module.exports = {
   deleteAccount,
   getUsers,
   addFriendUser,
+  visitUser,
+  getUser,
 };

@@ -412,14 +412,27 @@ function Profile() {
                     <option value={status} hidden defaultValue>
                       {status}
                     </option>
-                    <option value="Studying" className="bg-white">
-                      Studying
+
+                    <option value="📖 Studying" className="bg-white">
+                      📖 Studying
                     </option>
-                    <option value="Working" className="bg-white">
-                      Working
+                    <option value="👨‍💻 Coding" className="bg-white">
+                      👨‍💻 Coding
                     </option>
-                    <option value="Relaxing" className="bg-white">
-                      Relaxing
+                    <option value="🔍 Researching" className="bg-white">
+                      🔍 Researching
+                    </option>
+                    <option value="👨‍💼 Working" className="bg-white">
+                      👨‍💼 Working
+                    </option>
+                    <option value="⏳ Breaktime" className="bg-white">
+                      ⏳ Breaktime
+                    </option>
+                    <option value="😌 Relaxing" className="bg-white">
+                      😌 Relaxing
+                    </option>
+                    <option value="😴 Sleeping" className="bg-white">
+                      😴 Sleeping
                     </option>
                   </select>
                   <div className="absolute right-4 top-4">
