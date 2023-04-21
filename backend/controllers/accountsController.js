@@ -19,6 +19,11 @@ const emailValidation = require("nodejs-email-validation");
 var validator = require("email-validator");
 const EmailValidator = require("email-deep-validator");
 var nev = require("node-email-validator");
+var kickbox = require("kickbox")
+  .client(
+    "live_465a5c0c6125f0e7e30be7ac5eee54af3604ffaa607b901b93df747f6149a434"
+  )
+  .kickbox();
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
@@ -68,50 +73,38 @@ const signup = async (req, res) => {
   const { email, password, profileDetails } = req.body;
   try {
     if (email && password.length > 7) {
-      let isValid = await new Promise((resolve, reject) => {
-        emailExistence.check(email, (error, response) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
-        });
-      });
-      // let responsess = emailExistence.check(email, (error, response) =>
-      //   console.log(response)
-      // );
       await Account.countDocuments({ email: email })
         .then((docs) => {
           console.log(docs);
           if (docs > 0) {
             res.status(404).json({ error: "Email is already registered!" });
           } else {
-            // emailExistence.check(email, (error, response) => {
-            // console.log(isValid);
-            // return;
-            if (isValid) {
-              // encrypting the password
-              bcrypt.genSalt(10).then((result) => {
-                bcrypt.hash(password, result).then((result) => {
-                  // pushing to the database
-                  Account.create({
-                    email,
-                    password: result,
-                    profileDetails: {
-                      uid: "#" + uniqid.process(),
-                      name: uniqueNamesGenerator({
-                        dictionaries: [adjectives, animals],
-                        separator: " ",
-                      }).slice(0, 16),
-                      profileAvatar: profileDetails.profileAvatar,
-                    },
-                  });
-                  // email the account
-                  let successfulMessage = {
-                    from: "codetalker@zohomail.com",
-                    to: `${email}`,
-                    subject: "Personal Workspace Account Creation Confirmation",
-                    text: `Dear ${email},
+            kickbox.verify(email, function (err, response) {
+              console.log(response.body);
+              if (response.body.result === "deliverable") {
+                // encrypting the password
+                bcrypt.genSalt(10).then((result) => {
+                  bcrypt.hash(password, result).then((result) => {
+                    // pushing to the database
+                    Account.create({
+                      email,
+                      password: result,
+                      profileDetails: {
+                        uid: "#" + uniqid.process(),
+                        name: uniqueNamesGenerator({
+                          dictionaries: [adjectives, animals],
+                          separator: " ",
+                        }).slice(0, 16),
+                        profileAvatar: profileDetails.profileAvatar,
+                      },
+                    });
+                    // email the account
+                    let successfulMessage = {
+                      from: "codetalker@zohomail.com",
+                      to: `${email}`,
+                      subject:
+                        "Personal Workspace Account Creation Confirmation",
+                      text: `Dear ${email},
                       
 We are pleased to inform you that your registration to our website has been successful. You can now access all the features and services that our website offers.
                       
@@ -121,18 +114,18 @@ Once again, thank you for registering with us. We look forward to having you as 
               
 Best regards,
 Codetalker`,
-                  };
-                  makeTransport.sendMail(successfulMessage, (err, data) => {
-                    err
-                      ? res.send("error" + JSON.stringify(err))
-                      : res.send("succesful");
+                    };
+                    makeTransport.sendMail(successfulMessage, (err, data) => {
+                      err
+                        ? res.send("error" + JSON.stringify(err))
+                        : res.send("succesful");
+                    });
                   });
                 });
-              });
-            } else {
-              res.status(404).json({ error: "Enter a valid email!" });
-            }
-            // });
+              } else {
+                res.status(404).json({ error: "Enter a valid email!" });
+              }
+            });
           }
         })
         .catch((err) => console.log(err));
