@@ -29,7 +29,9 @@ const getAccountDetails = async (req, res) => {
 
 //multer
 const storage = multer.diskStorage({
-  destination: "./files/",
+  destination: function (req, file, cb) {
+    cb(null, process.env.FILE_STORAGE_PATH);
+  },
   filename: function (req, file, cb) {
     cb(null, "file-" + Date.now());
   },
