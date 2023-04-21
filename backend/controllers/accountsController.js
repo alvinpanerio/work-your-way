@@ -15,6 +15,7 @@ const Files = require("../models/files");
 const Planner = require("../models/planner");
 const { findOne } = require("../models/accounts");
 const { constants } = require("http2");
+const emailValidator = require("deep-email-validator");
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
@@ -70,31 +71,31 @@ const signup = async (req, res) => {
           if (docs > 0) {
             res.status(404).json({ error: "Email is already registered!" });
           } else {
-            emailExistence.check(email, function (error, response) {
-              if (response) {
-                // encrypting the password
-                bcrypt.genSalt(10).then((result) => {
-                  bcrypt.hash(password, result).then((result) => {
-                    // pushing to the database
-                    Account.create({
-                      email,
-                      password: result,
-                      profileDetails: {
-                        uid: "#" + uniqid.process(),
-                        name: uniqueNamesGenerator({
-                          dictionaries: [adjectives, animals],
-                          separator: " ",
-                        }).slice(0, 16),
-                        profileAvatar: profileDetails.profileAvatar,
-                      },
-                    });
-                    // email the account
-                    let successfulMessage = {
-                      from: "codetalker@zohomail.com",
-                      to: `${email}`,
-                      subject:
-                        "Personal Workspace Account Creation Confirmation",
-                      text: `Dear ${email},
+            let response = emailValidator.validate(email);
+            // emailExistence.check(email, (error, response) => {
+            if (response.valid) {
+              // encrypting the password
+              bcrypt.genSalt(10).then((result) => {
+                bcrypt.hash(password, result).then((result) => {
+                  // pushing to the database
+                  Account.create({
+                    email,
+                    password: result,
+                    profileDetails: {
+                      uid: "#" + uniqid.process(),
+                      name: uniqueNamesGenerator({
+                        dictionaries: [adjectives, animals],
+                        separator: " ",
+                      }).slice(0, 16),
+                      profileAvatar: profileDetails.profileAvatar,
+                    },
+                  });
+                  // email the account
+                  let successfulMessage = {
+                    from: "codetalker@zohomail.com",
+                    to: `${email}`,
+                    subject: "Personal Workspace Account Creation Confirmation",
+                    text: `Dear ${email},
                       
 We are pleased to inform you that your registration to our website has been successful. You can now access all the features and services that our website offers.
                       
@@ -104,18 +105,18 @@ Once again, thank you for registering with us. We look forward to having you as 
               
 Best regards,
 Codetalker`,
-                    };
-                    makeTransport.sendMail(successfulMessage, (err, data) => {
-                      err
-                        ? res.send("error" + JSON.stringify(err))
-                        : res.send("succesful");
-                    });
+                  };
+                  makeTransport.sendMail(successfulMessage, (err, data) => {
+                    err
+                      ? res.send("error" + JSON.stringify(err))
+                      : res.send("succesful");
                   });
                 });
-              } else {
-                res.status(404).json({ error: "Enter a valid email!" });
-              }
-            });
+              });
+            } else {
+              res.status(404).json({ error: "Enter a valid email!" });
+            }
+            // });
           }
         })
         .catch((err) => console.log(err));
