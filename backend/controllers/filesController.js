@@ -75,8 +75,15 @@ const downloadFile = async (req, res) => {
     console.log(uid, fileName);
     const user = await Files.findOne({ uid: `#${uid}` });
     const path = await user.files.forEach((i) => {
+      res.setHeader("Content-Type", "application/octet-stream");
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + i.file.filename
+      );
+      const fileStream = fs.createReadStream(i.file.path);
       return i.file.filename === fileName
-        ? res.download(i.file.path)
+        ? // ? res.download(`./${i.file.path}`)
+          fileStream.pipe(res)
         : null;
     });
   } catch (error) {
