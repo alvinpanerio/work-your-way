@@ -2,18 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
-  FaUserEdit,
   FaCheck,
-  FaTimes,
-  FaAngleDown,
-  FaRegEdit,
   FaBookReader,
   FaLocationArrow,
   FaPhoneAlt,
   FaBirthdayCake,
-  FaCircleNotch,
-  FaPenAlt,
-  FaUserTimes,
   FaUserPlus,
   FaUserCheck,
 } from "react-icons/fa";
