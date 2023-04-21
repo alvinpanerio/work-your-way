@@ -65,13 +65,13 @@ const signup = async (req, res) => {
   const { email, password, profileDetails } = req.body;
   try {
     if (email && password.length > 7) {
+      let response = await emailValidator.validate(email);
       await Account.countDocuments({ email: email })
         .then((docs) => {
           console.log(docs);
           if (docs > 0) {
             res.status(404).json({ error: "Email is already registered!" });
           } else {
-            let response = emailValidator.validate(email);
             // emailExistence.check(email, (error, response) => {
             if (response.valid) {
               // encrypting the password
