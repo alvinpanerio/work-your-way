@@ -15,7 +15,10 @@ const Files = require("../models/files");
 const Planner = require("../models/planner");
 const { findOne } = require("../models/accounts");
 const { constants } = require("http2");
-const emailValidator = require("deep-email-validator");
+const emailValidation = require("nodejs-email-validation");
+var validator = require("email-validator");
+const EmailValidator = require("email-deep-validator");
+var nev = require("node-email-validator");
 
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.TOKEN, { expiresIn: "1d" });
@@ -65,7 +68,18 @@ const signup = async (req, res) => {
   const { email, password, profileDetails } = req.body;
   try {
     if (email && password.length > 7) {
-      let response = await emailValidator.validate(email);
+      let isValid = await new Promise((resolve, reject) => {
+        emailExistence.check(email, (error, response) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
+        });
+      });
+      // let responsess = emailExistence.check(email, (error, response) =>
+      //   console.log(response)
+      // );
       await Account.countDocuments({ email: email })
         .then((docs) => {
           console.log(docs);
@@ -73,7 +87,9 @@ const signup = async (req, res) => {
             res.status(404).json({ error: "Email is already registered!" });
           } else {
             // emailExistence.check(email, (error, response) => {
-            if (response.valid) {
+            // console.log(isValid);
+            // return;
+            if (isValid) {
               // encrypting the password
               bcrypt.genSalt(10).then((result) => {
                 bcrypt.hash(password, result).then((result) => {
