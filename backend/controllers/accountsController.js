@@ -149,7 +149,7 @@ const forgotPassword = async (req, res) => {
 
 It seems that you have forgotten your password to access your account on our website. Not to worry, we are here to help you reset your password and regain access to your account.
 
-Please click on the link http://localhost:3000/forgot/${token} within the next 15 minutes to reset your password. If you do not reset your password within this time frame, the link will expire, and you will need to request a new one.
+Please click on the link http://${process.env.REACT_APP_MAIN_URI}/forgot/${token} within the next 15 minutes to reset your password. If you do not reset your password within this time frame, the link will expire, and you will need to request a new one.
 
 Please note that for security reasons, we cannot retrieve it for you. You will need to follow the password reset process to create a new password.
 

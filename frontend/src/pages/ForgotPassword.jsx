@@ -14,7 +14,7 @@ function ForgotPassword() {
     e.preventDefault();
     try {
       axios
-        .post(process.env.REACT_APP_API_URI + "/forgot", {
+        .post(process.env.REACT_APP_API_URI + "/forgot-password", {
           email,
         })
         .then((res) => {
