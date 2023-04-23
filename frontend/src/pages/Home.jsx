@@ -74,7 +74,7 @@ function Home({ addClass }) {
         .then((result) => {
           setEmail(result.data.accountDetails.email);
           setUid(result.data.accountDetails.profileDetails[0].uid);
-          console.log(result.data.fileDetails);
+
           setFiles([...result.data.fileDetails.files]);
         });
     } catch (err) {

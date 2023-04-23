@@ -6,7 +6,7 @@ import { FaSignOutAlt, FaRegBell } from "react-icons/fa";
 import { MdWorkspacesFilled } from "react-icons/md";
 
 import LoadingProvider from "../context/LoadingContext";
-import Logo from "../assets/logo-transparent.png";
+import io from "socket.io-client";
 
 function NavBar() {
   const { isLogged, setIsLogged, setIsLoading } = useContext(LoadingProvider);
@@ -17,6 +17,14 @@ function NavBar() {
   const [email, setEmail] = useState("");
   const [showDropDown, setShowDropDown] = useState(false);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_API_URI);
+    socket.on("notification", (data) => {
+      setNotifications([...notifications, data]);
+    });
+  }, [notifications]);
 
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
@@ -67,6 +75,7 @@ function NavBar() {
         isNavAllowed ? "shadow-md backdrop-blur-3xl z-20" : null
       }`}
     >
+      {console.log(notifications)}
       <div className="container mx-auto flex justify-between">
         {isLogged ? (
           <div className="relative flex gap-7 justify-end w-full">

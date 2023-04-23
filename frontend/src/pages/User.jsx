@@ -103,9 +103,12 @@ function User() {
         .get(process.env.REACT_APP_API_URI + "/find-user/" + id)
         .then((result) => {
           SetUserInfo(result.data.result);
+        })
+        .catch((err) => {
+          navigate("/error");
         });
     } catch (err) {
-      navigate("/error");
+      console.log(err);
     }
   };
 

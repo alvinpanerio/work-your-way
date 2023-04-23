@@ -1,5 +1,4 @@
 require("dotenv").config();
-const emailExistence = require("email-existence");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -15,11 +14,7 @@ const Files = require("../models/files");
 const Planner = require("../models/planner");
 const { findOne } = require("../models/accounts");
 const { constants } = require("http2");
-const emailValidation = require("nodejs-email-validation");
-var validator = require("email-validator");
-const EmailValidator = require("email-deep-validator");
-var nev = require("node-email-validator");
-var kickbox = require("kickbox")
+const kickbox = require("kickbox")
   .client(
     "live_465a5c0c6125f0e7e30be7ac5eee54af3604ffaa607b901b93df747f6149a434"
   )
@@ -159,7 +154,7 @@ const forgotPassword = async (req, res) => {
 
 It seems that you have forgotten your password to access your account on our website. Not to worry, we are here to help you reset your password and regain access to your account.
 
-Please click on the link http://${process.env.REACT_APP_MAIN_URI}/forgot/${token} within the next 15 minutes to reset your password. If you do not reset your password within this time frame, the link will expire, and you will need to request a new one.
+Please click on the link ${process.env.REACT_APP_MAIN_URI}/forgot/${token} within the next 15 minutes to reset your password. If you do not reset your password within this time frame, the link will expire, and you will need to request a new one.
 
 Please note that for security reasons, we cannot retrieve it for you. You will need to follow the password reset process to create a new password.
 

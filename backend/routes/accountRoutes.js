@@ -27,6 +27,6 @@ router.post("/delete-account/:email", deleteAccount);
 router.get("/get/users", getUsers);
 router.post("/add-friend/:uid", addFriendUser);
 router.get("/user/:uid", visitUser);
-router.get("/find-user  /:uid", getUser);
+router.get("/find-user/:uid", getUser);
 
 module.exports = router;
