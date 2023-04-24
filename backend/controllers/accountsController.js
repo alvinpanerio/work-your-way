@@ -389,6 +389,65 @@ const getUser = async (req, res) => {
   }
 };
 
+const confirmUser = async (req, res) => {
+  const { uid } = req.params; // requestor
+  const { email, confirmingUser } = req.body; //confirming user
+  console.log(uid, email, confirmingUser);
+  try {
+    if (
+      (await Account.findOne({ "profileDetails.0.uid": "#" + uid })) &&
+      uid !== confirmingUser.slice(1, 12)
+    ) {
+      //confirming user (main)
+      const user = await Account.findOne({
+        email,
+      });
+      let ident = "";
+      user.friends.forEach((i) => {
+        if (i.uid === "#" + uid) {
+          ident = i._id;
+        }
+      });
+      await Account.findOneAndUpdate(
+        {
+          friends: { $elemMatch: { _id: ident } },
+        },
+        {
+          $set: {
+            "friends.$.isConfirmedFriend": 2,
+          },
+        }
+      );
+
+      //requestor(secondary);
+      const secondUser = await Account.findOne({
+        "profileDetails.0.uid": "#" + uid,
+      });
+      let identi = "";
+      secondUser.friends.forEach((i) => {
+        if (i.uid === confirmingUser) {
+          identi = i._id;
+        }
+      });
+      await Account.findOneAndUpdate(
+        {
+          friends: { $elemMatch: { _id: identi } },
+        },
+        {
+          $set: {
+            "friends.$.isConfirmedFriend": 2,
+          },
+        }
+      );
+      res.status(200).json({ reload: true });
+    } else {
+      res.status(404).send("User not Found!");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   login,
   signup,
@@ -402,4 +461,5 @@ module.exports = {
   addFriendUser,
   visitUser,
   getUser,
+  confirmUser,
 };

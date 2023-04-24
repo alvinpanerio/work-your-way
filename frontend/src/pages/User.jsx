@@ -162,6 +162,22 @@ function User({ socket }) {
     }
   };
 
+  const handleConfirmUser = async (id) => {
+    try {
+      await axios
+        .post(process.env.REACT_APP_API_URI + "/confirm-user/" + id, {
+          email,
+          confirmingUser: uid,
+        })
+        .then((result) => {
+          setReload(!reload);
+          console.log(result);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="lg:h-screen 2xl:pt-56 md:pt-48 bg-blue-100 sm:h-full">
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
@@ -183,7 +199,14 @@ function User({ socket }) {
                       Added
                     </button>
                   ) : (
-                    <button className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
+                    <button
+                      className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center"
+                      onClick={() => {
+                        handleConfirmUser(
+                          userInfo.profileDetails[0].uid.slice(1, 12)
+                        );
+                      }}
+                    >
                       <FaCheck />
                       Confirm
                     </button>

@@ -142,12 +142,12 @@ function NavBar({ socket }) {
               className="text-center bg-white rounded-lg px-3"
               type="button"
               onClick={() => {
+                setShowDropDown(false);
                 setShowDropDownNotif(!showDropDownNotif);
               }}
             >
               <div className="relative">
                 <FaRegBell size={20} className="text-blue-500" />
-                {console.log(notifications)}
                 {notifTemp.length ? (
                   <div className="bg-red-500 rounded-full px-2 text-white absolute font-bold -top-6 left-4">
                     {notifTemp.length}
@@ -217,6 +217,7 @@ function NavBar({ socket }) {
               type="button"
               onClick={() => {
                 setShowDropDown(!showDropDown);
+                setShowDropDownNotif(false);
               }}
             >
               <img

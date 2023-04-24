@@ -25,16 +25,6 @@ mongoose
     server.listen(process.env.PORT, () => {
       console.log("connected to localhost:" + process.env.PORT + " and DB");
     });
-
-    // const db = mongoose.connection.db;
-    // const accountsCollection = db.collection("accounts");
-
-    // const accountsChangeStream = accountsCollection.watch();
-
-    // accountsChangeStream.on("change", (change) => {
-    //   console.log(change.updateDescription.updatedFields);
-    //   io.emit("friendChangeStream", change.updateDescription.updatedFields);
-    // });
   })
   .catch((err) => {
     console.log(err);
@@ -67,7 +57,7 @@ io.on("connection", (socket) => {
     console.log("eto receiver", receiver);
     io.to(receiver.socketId).emit("getAddFriendNotification", {
       requestor,
-      notificationType: "addFriend"
+      notificationType: "addFriend",
     });
   });
 
