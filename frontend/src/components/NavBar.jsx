@@ -17,23 +17,24 @@ function NavBar({ socket }) {
   const [email, setEmail] = useState("");
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDropDownNotif, setShowDropDownNotif] = useState(false);
-  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
+  const [notifTemp, setNotifTemp] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket?.emit("newUser", email);
   }, [socket, email]);
 
   useEffect(() => {
-    console.log(socket);
     if (socket) {
       socket.on("getAddFriendNotification", (data) => {
         console.log(data);
         setNotifications([...notifications, data]);
+        setNotifTemp([...notifTemp, data]);
         storeNotifications(email, uid, data);
       });
     }
-  }, [notifications, socket, email, uid]);
+  }, [notifications, socket, email, uid, notifTemp]);
 
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
@@ -114,7 +115,15 @@ function NavBar({ socket }) {
                 setShowDropDownNotif(!showDropDownNotif);
               }}
             >
-              <FaRegBell size={20} className="text-blue-500" />
+              <div className="relative">
+                <FaRegBell size={20} className="text-blue-500" />
+                {console.log(notifTemp, notifTemp.length)}
+                {notifTemp.length ? (
+                  <div className="bg-red-500 rounded-full px-2 text-white absolute font-bold -top-6 left-4">
+                    {notifTemp.length}
+                  </div>
+                ) : null}
+              </div>
             </button>
             <div
               className={`z-10 ${
