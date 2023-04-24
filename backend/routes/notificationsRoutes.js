@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.post("/send-notification", sendNotification);
-router.get("/get-notifications", getNotifications);
+router.get("/get-notifications/:id", getNotifications);
 
 module.exports = router;

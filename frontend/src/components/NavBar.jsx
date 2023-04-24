@@ -26,6 +26,29 @@ function NavBar({ socket }) {
   }, [socket, email]);
 
   useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        await axios
+          .get(
+            process.env.REACT_APP_API_URI +
+              "/notifications/get-notifications/" +
+              uid.slice(1, 12)
+          )
+          .then((result) => {
+            console.log(result.data.userNotifs.notifications);
+            setNotifications([
+              ...notifications,
+              ...result.data.userNotifs.notifications,
+            ]);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getNotifications();
+  }, [uid]);
+
+  useEffect(() => {
     if (socket) {
       socket.on("getAddFriendNotification", (data) => {
         console.log(data);
@@ -117,7 +140,7 @@ function NavBar({ socket }) {
             >
               <div className="relative">
                 <FaRegBell size={20} className="text-blue-500" />
-                {console.log(notifTemp, notifTemp.length)}
+                {console.log(notifications)}
                 {notifTemp.length ? (
                   <div className="bg-red-500 rounded-full px-2 text-white absolute font-bold -top-6 left-4">
                     {notifTemp.length}
@@ -136,18 +159,20 @@ function NavBar({ socket }) {
                 </p>
                 {notifications.length ? (
                   notifications.map((i) => {
-                    if (i.notificationType === "addFriend") {
+                    if (i[0].notificationType === "addFriend") {
                       return (
                         <button
                           className="flex items-center gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
                           onClick={() => {
-                            navigate("/user/" + i.requestor.uid.slice(1, 12));
+                            navigate(
+                              "/user/" + i[0].requestor.uid.slice(1, 12)
+                            );
                             setShowDropDownNotif(!showDropDownNotif);
                           }}
                         >
                           <div className="relative">
                             <img
-                              src={i.requestor.img}
+                              src={i[0].requestor.img}
                               alt=""
                               className="w-24"
                             />
@@ -164,7 +189,7 @@ function NavBar({ socket }) {
                           <div className="text-left ">
                             <p className="text-blue-500">
                               <span className="font-semibold">
-                                {i.requestor.name + " "}
+                                {i[0].requestor.name + " "}
                               </span>
                               added you as a friend. You can accept it now.
                             </p>
