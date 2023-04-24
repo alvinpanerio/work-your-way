@@ -14,8 +14,9 @@ import LoadingProvider from "../context/LoadingContext";
 import Icons from "../assets/icons/Icons";
 import Arrow from "../assets/arrow-hand.svg";
 import SideBar from "../components/SideBar";
+import io from "socket.io-client";
 
-function Home({ addClass }) {
+function Home({ addClass, socket }) {
   const { isLogged, setIsLogged } = useContext(LoadingProvider);
   const [name, setName] = useState("");
   const [files, setFiles] = useState([]);

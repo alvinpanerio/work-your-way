@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { io } from "socket.io-client";
 import {
   FaCheck,
   FaBookReader,
@@ -12,7 +13,7 @@ import {
 } from "react-icons/fa";
 import SideBar from "../components/SideBar";
 
-function User() {
+function User({ socket }) {
   const [userInfo, SetUserInfo] = useState({});
   const [email, setEmail] = useState("");
   const [uid, setUid] = useState("");
@@ -21,6 +22,7 @@ function User() {
   const [friendsFinal, setFriendsFinal] = useState();
   const [isFriendNo, setIsFriendNo] = useState();
   const [reload, setReload] = useState(false);
+  const [requestorMe, setRequestorMe] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -59,6 +61,7 @@ function User() {
       friendsFinal?.[0]?.forEach((x, i) => {
         if (userInfo.email === x.email) {
           setIsFriendNo(x.isConfirmedFriend);
+          setRequestorMe(x.isRequestorMe);
         }
       });
     };
@@ -79,6 +82,7 @@ function User() {
       friendsFinal?.[0]?.forEach((x, i) => {
         if (userInfo.email === x.email) {
           setIsFriendNo(x.isConfirmedFriend);
+          setRequestorMe(x.isRequestorMe);
         }
       });
     };
@@ -137,6 +141,21 @@ function User() {
         })
         .then((result) => {
           setReload(!reload);
+          console.log(result);
+          socket.emit("addFriend", {
+            addedFriend: {
+              email: result.data.addedFriend.email,
+              name: result.data.addedFriend.profileDetails?.[0].name,
+              uid: result.data.addedFriend.profileDetails?.[0].uid,
+              img: result.data.addedFriend.profileDetails?.[0].profileAvatar,
+            },
+            requestor: {
+              email: result.data.requestor.email,
+              name: result.data.requestor.profileDetails?.[0].name,
+              uid: result.data.requestor.profileDetails?.[0].uid,
+              img: result.data.requestor.profileDetails?.[0].profileAvatar,
+            },
+          });
         });
     } catch (err) {
       console.log(err);
@@ -158,10 +177,17 @@ function User() {
               />
               {isFriendNo ? (
                 isFriendNo === 1 ? (
-                  <button className="h-full bg-orange-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
-                    <FaCheck />
-                    Added
-                  </button>
+                  requestorMe ? (
+                    <button className="h-full bg-orange-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
+                      <FaCheck />
+                      Added
+                    </button>
+                  ) : (
+                    <button className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
+                      <FaCheck />
+                      Confirm
+                    </button>
+                  )
                 ) : (
                   <button className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
                     <FaUserCheck />

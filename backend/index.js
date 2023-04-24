@@ -6,6 +6,7 @@ const cors = require("cors");
 const accountRoutes = require("./routes/accountRoutes");
 const filesRoutes = require("./routes/filesRoutes");
 const plannerRoutes = require("./routes/plannerRoutes");
+const notificationsRoutes = require("./routes/notificationsRoutes");
 
 const app = express();
 
@@ -25,19 +26,55 @@ mongoose
       console.log("connected to localhost:" + process.env.PORT + " and DB");
     });
 
-    const db = mongoose.connection.db;
-    const collection = db.collection("accounts");
+    // const db = mongoose.connection.db;
+    // const accountsCollection = db.collection("accounts");
 
-    const changeStream = collection.watch();
+    // const accountsChangeStream = accountsCollection.watch();
 
-    changeStream.on("change", (change) => {
-      console.log(change.updateDescription.updatedFields);
-      io.emit("notification", change.updateDescription.updatedFields);
-    });
+    // accountsChangeStream.on("change", (change) => {
+    //   console.log(change.updateDescription.updatedFields);
+    //   io.emit("friendChangeStream", change.updateDescription.updatedFields);
+    // });
   })
   .catch((err) => {
     console.log(err);
   });
+
+let onlineUsers = [];
+
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+io.on("connection", (socket) => {
+  socket.on("newUser", (email) => {
+    addNewUser(email, socket.id);
+  });
+
+  socket.on("addFriend", ({ addedFriend, requestor }) => {
+    console.log(onlineUsers);
+    const receiver = getUser(addedFriend.email);
+    console.log(addedFriend, requestor);
+    console.log("eto receiver", receiver);
+    io.to(receiver.socketId).emit("getAddFriendNotification", {
+      requestor,
+      notificationType: "addFriend"
+    });
+  });
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
 
 //middleware
 app.use(cors());
@@ -53,3 +90,4 @@ app.use((req, res, next) => {
 app.use("/", accountRoutes);
 app.use("/files", filesRoutes);
 app.use("/planner", plannerRoutes);
+app.use("/notifications", notificationsRoutes);

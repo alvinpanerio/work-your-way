@@ -335,7 +335,7 @@ const addFriendUser = async (req, res) => {
         }
       );
       //requestor
-      await Account.findOneAndUpdate(
+      const requestor = await Account.findOneAndUpdate(
         {
           "profileDetails.0.uid": uidRequestor,
         },
@@ -350,7 +350,7 @@ const addFriendUser = async (req, res) => {
           },
         }
       );
-      res.status(200).json({ reload: true });
+      res.status(200).json({ reload: true, addedFriend, requestor });
     } else {
       res.status(404).send("User not Found!");
     }

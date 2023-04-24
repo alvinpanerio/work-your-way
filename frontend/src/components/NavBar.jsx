@@ -3,12 +3,12 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaSignOutAlt, FaRegBell } from "react-icons/fa";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import { MdWorkspacesFilled } from "react-icons/md";
 
 import LoadingProvider from "../context/LoadingContext";
-import io from "socket.io-client";
 
-function NavBar() {
+function NavBar({ socket }) {
   const { isLogged, setIsLogged, setIsLoading } = useContext(LoadingProvider);
   const [isNavAllowed, setisNavAllowed] = useState(false);
   const [uid, setUid] = useState("");
@@ -16,15 +16,24 @@ function NavBar() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [showDropDown, setShowDropDown] = useState(false);
+  const [showDropDownNotif, setShowDropDownNotif] = useState(false);
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_API_URI);
-    socket.on("notification", (data) => {
-      setNotifications([...notifications, data]);
-    });
-  }, [notifications]);
+    socket?.emit("newUser", email);
+  }, [socket, email]);
+
+  useEffect(() => {
+    console.log(socket);
+    if (socket) {
+      socket.on("getAddFriendNotification", (data) => {
+        console.log(data);
+        setNotifications([...notifications, data]);
+        storeNotifications(email, uid, data);
+      });
+    }
+  }, [notifications, socket, email, uid]);
 
   useEffect(() => {
     let isAuth = localStorage.getItem("user");
@@ -35,6 +44,25 @@ function NavBar() {
       setIsLogged(false);
     }
   }, []);
+
+  const storeNotifications = async (e, u, d) => {
+    try {
+      await axios
+        .post(
+          process.env.REACT_APP_API_URI + "/notifications/send-notification",
+          {
+            e,
+            u,
+            d,
+          }
+        )
+        .then((result) => {
+          console.log(result);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getAccountDetails = async (user) => {
     try {
@@ -58,6 +86,7 @@ function NavBar() {
       setisNavAllowed(false);
     }
   };
+
   window.addEventListener("scroll", navbarMod);
 
   const logout = async () => {
@@ -75,13 +104,73 @@ function NavBar() {
         isNavAllowed ? "shadow-md backdrop-blur-3xl z-20" : null
       }`}
     >
-      {console.log(notifications)}
       <div className="container mx-auto flex justify-between">
         {isLogged ? (
           <div className="relative flex gap-7 justify-end w-full">
-            <button className="text-center">
+            <button
+              className="text-center bg-white rounded-lg px-3"
+              type="button"
+              onClick={() => {
+                setShowDropDownNotif(!showDropDownNotif);
+              }}
+            >
               <FaRegBell size={20} className="text-blue-500" />
             </button>
+            <div
+              className={`z-10 ${
+                showDropDownNotif ? "visible" : "hidden"
+              } font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-2xl w-3/12 absolute right-[72px] top-14`}
+            >
+              <div className="flex flex-col items-start gap-4 p-3">
+                <p className="text-2xl font-bold text-blue-500">
+                  Notifications
+                </p>
+                {notifications.length ? (
+                  notifications.map((i) => {
+                    if (i.notificationType === "addFriend") {
+                      return (
+                        <button
+                          className="flex items-center gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                          onClick={() => {
+                            navigate("/user/" + i.requestor.uid.slice(1, 12));
+                            setShowDropDownNotif(!showDropDownNotif);
+                          }}
+                        >
+                          <div className="relative">
+                            <img
+                              src={i.requestor.img}
+                              alt=""
+                              className="w-24"
+                            />
+                            <div
+                              className="p-1 w-max rounded-full absolute top-10 left-8"
+                              style={{
+                                backgroundImage:
+                                  "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                              }}
+                            >
+                              <AiOutlineUserAdd className="text-white" />
+                            </div>
+                          </div>
+                          <div className="text-left ">
+                            <p className="text-blue-500">
+                              <span className="font-semibold">
+                                {i.requestor.name + " "}
+                              </span>
+                              added you as a friend. You can accept it now.
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    }
+                  })
+                ) : (
+                  <p className="font-semibold text-blue-500">
+                    No notifications found
+                  </p>
+                )}
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => {

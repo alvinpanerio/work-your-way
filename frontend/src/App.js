@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -13,9 +14,20 @@ import Planner from "./pages/Planner";
 import User from "./pages/User";
 import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
+import io from "socket.io-client";
 
 function App() {
   const { isLoading } = useContext(LoadingProvider);
+  const [socket, setSocket] = useState(null);
+  const [email, setEmail] = useState(null);
+  
+  useEffect(() => {
+    setSocket(io(process.env.REACT_APP_API_URI));
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("newUser", email);
+  }, [socket, email]);
 
   return (
     <div className="select-none">
@@ -25,9 +37,9 @@ function App() {
         </div>
       ) : (
         <BrowserRouter>
-          <NavBar />
+          <NavBar socket={socket} />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home socket={socket} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot" element={<ForgotPassword />} />
@@ -36,7 +48,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/files" element={<Files />} />
             <Route path="/planner" element={<Planner />} />
-            <Route path="/user/:id" element={<User />} />
+            <Route path="/user/:id" element={<User socket={socket} />} />
           </Routes>
         </BrowserRouter>
       )}
