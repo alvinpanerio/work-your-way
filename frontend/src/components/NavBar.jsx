@@ -19,6 +19,7 @@ function NavBar({ socket }) {
   const [showDropDownNotif, setShowDropDownNotif] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [notifTemp, setNotifTemp] = useState([]);
+  const [isGet, setIsGet] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,35 +27,13 @@ function NavBar({ socket }) {
   }, [socket, email]);
 
   useEffect(() => {
-    const getNotifications = async () => {
-      try {
-        await axios
-          .get(
-            process.env.REACT_APP_API_URI +
-              "/notifications/get-notifications/" +
-              uid.slice(1, 12)
-          )
-          .then((result) => {
-            console.log(result.data.userNotifs.notifications);
-            setNotifications([
-              ...notifications,
-              ...result.data.userNotifs.notifications,
-            ]);
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getNotifications();
-  }, [uid]);
-
-  useEffect(() => {
     if (socket) {
       socket.on("getAddFriendNotification", (data) => {
         console.log(data);
-        setNotifications([...notifications, data]);
+        setNotifications((prevNotifications) => [...prevNotifications, data]);
         setNotifTemp([...notifTemp, data]);
         storeNotifications(email, uid, data);
+        setIsGet(true);
       });
     }
   }, [notifications, socket, email, uid, notifTemp]);
@@ -68,6 +47,34 @@ function NavBar({ socket }) {
       setIsLogged(false);
     }
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isGet) {
+        const getNotifications = async () => {
+          try {
+            await axios
+              .get(
+                process.env.REACT_APP_API_URI +
+                  "/notifications/get-notifications/" +
+                  uid.slice(1, 12)
+              )
+              .then((result) => {
+                console.log(result.data.userNotifs.notifications);
+                setNotifications([
+                  ...notifications,
+                  ...result.data.userNotifs.notifications,
+                ]);
+              });
+          } catch (err) {
+            console.log(err);
+          }
+        };
+        getNotifications();
+        setIsGet(false);
+      }
+    }, 600);
+  }, [uid, isGet, notifications]);
 
   const storeNotifications = async (e, u, d) => {
     try {
@@ -157,22 +164,23 @@ function NavBar({ socket }) {
                 <p className="text-2xl font-bold text-blue-500">
                   Notifications
                 </p>
+
                 {notifications.length ? (
                   notifications.map((i) => {
-                    if (i[0].notificationType === "addFriend") {
+                    if (i[0]?.notificationType === "addFriend") {
                       return (
                         <button
                           className="flex items-center gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
                           onClick={() => {
                             navigate(
-                              "/user/" + i[0].requestor.uid.slice(1, 12)
+                              "/user/" + i[0]?.requestor.uid.slice(1, 12)
                             );
                             setShowDropDownNotif(!showDropDownNotif);
                           }}
                         >
                           <div className="relative">
                             <img
-                              src={i[0].requestor.img}
+                              src={i[0]?.requestor.img}
                               alt=""
                               className="w-24"
                             />
@@ -189,7 +197,7 @@ function NavBar({ socket }) {
                           <div className="text-left ">
                             <p className="text-blue-500">
                               <span className="font-semibold">
-                                {i[0].requestor.name + " "}
+                                {i[0]?.requestor.name + " "}
                               </span>
                               added you as a friend. You can accept it now.
                             </p>
