@@ -13,6 +13,7 @@ const {
   visitUser,
   getUser,
   confirmUser,
+  getFriends,
 } = require("../controllers/accountsController");
 
 const router = express.Router();
@@ -30,5 +31,6 @@ router.post("/add-friend/:uid", addFriendUser);
 router.get("/user/:uid", visitUser);
 router.get("/find-user/:uid", getUser);
 router.post("/confirm-user/:uid", confirmUser);
+router.get("/get-friends/:uid", getFriends);
 
 module.exports = router;

@@ -61,6 +61,21 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("confirmedFriend", ({ receiver, sender }) => {
+    const receiverVar = getUser(receiver.email);
+    io.to(receiverVar.socketId).emit("getConfirmedFriendNotification", {
+      sender,
+      notificationType: "confirmedFriend",
+    });
+  });
+
+  socket.on("onlineFriends", ({ receiver }) => {
+    const receiverVar = getUser(receiver);
+    io.to(receiverVar.socketId).emit("getOnlineFriends", {
+      onlineUsers,
+    });
+  });
+
   socket.on("disconnect", () => {
     removeUser(socket.id);
   });

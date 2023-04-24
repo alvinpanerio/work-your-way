@@ -171,7 +171,20 @@ function User({ socket }) {
         })
         .then((result) => {
           setReload(!reload);
-          console.log(result);
+          socket.emit("confirmedFriend", {
+            receiver: {
+              email: result.data.secondUser.email,
+              name: result.data.secondUser.profileDetails?.[0].name,
+              uid: result.data.secondUser.profileDetails?.[0].uid,
+              img: result.data.secondUser.profileDetails?.[0].profileAvatar,
+            },
+            sender: {
+              email: result.data.user.email,
+              name: result.data.user.profileDetails?.[0].name,
+              uid: result.data.user.profileDetails?.[0].uid,
+              img: result.data.user.profileDetails?.[0].profileAvatar,
+            },
+          });
         });
     } catch (err) {
       console.log(err);

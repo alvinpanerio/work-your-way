@@ -14,7 +14,6 @@ import LoadingProvider from "../context/LoadingContext";
 import Icons from "../assets/icons/Icons";
 import Arrow from "../assets/arrow-hand.svg";
 import SideBar from "../components/SideBar";
-import io from "socket.io-client";
 
 function Home({ addClass, socket }) {
   const { isLogged, setIsLogged } = useContext(LoadingProvider);
@@ -25,10 +24,12 @@ function Home({ addClass, socket }) {
   const [uid, setUid] = useState(null);
   const [email, setEmail] = useState(null);
   const [reload, setReload] = useState(false);
+  const [isGetFriends, setIsGetFriend] = useState(true);
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState({});
-  const [no, setNo] = useState(0);
+  const [friendsArr, setFriendsArr] = useState([]);
+  const [onlineFriends, setOnlineFriends] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,7 +67,32 @@ function Home({ addClass, socket }) {
     if (!reload) {
       setReload(!reload);
     }
-  }, [users]);
+  }, [users, reload, uid]);
+
+  useEffect(() => {
+    if (uid && isGetFriends) {
+      const getFriends = async () => {
+        await axios
+          .get(
+            process.env.REACT_APP_API_URI + "/get-friends/" + uid.slice(1, 12)
+          )
+          .then((result) => {
+            setFriendsArr([...friendsArr, result.data.result.friends]);
+          });
+      };
+      getFriends();
+      socket.emit("onlineFriends", { receiver: email });
+      setIsGetFriend(false);
+    }
+  }, [uid, email, friendsArr, socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("getOnlineFriends", (data) => {
+        setOnlineFriends([data]);
+      });
+    }
+  }, [onlineFriends, socket]);
 
   const getRecentFiles = async (user) => {
     try {
@@ -125,18 +151,18 @@ function Home({ addClass, socket }) {
     }
   };
 
-  const handleAddUser = async (id) => {
-    try {
-      await axios
-        .post(process.env.REACT_APP_API_URI + "/add-friend/" + id, {
-          email,
-          uidRequestor: uid,
-        })
-        .then((result) => {});
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const handleAddUser = async (id) => {
+  //   try {
+  //     await axios
+  //       .post(process.env.REACT_APP_API_URI + "/add-friend/" + id, {
+  //         email,
+  //         uidRequestor: uid,
+  //       })
+  //       .then((result) => {});
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const handleVisitUser = async (id) => {
     try {
@@ -424,6 +450,21 @@ function Home({ addClass, socket }) {
                   return null;
                 }
               })}
+            </div>
+            <div>
+              <div>
+                {friendsArr.map((i, k) => {
+                  if (i["0"].isConfirmedFriend === 2) {
+                    return <p key={k}>{i["0"].email}</p>;
+                  }
+                })}
+              </div>
+              <p>online</p>
+              <div>
+                {onlineFriends["0"]?.onlineUsers.map((i, k) => {
+                  return <p key={k}>{i.username}</p>;
+                })}
+              </div>
             </div>
           </div>
         </div>

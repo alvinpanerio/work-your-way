@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaSignOutAlt, FaRegBell } from "react-icons/fa";
-import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
 import { MdWorkspacesFilled } from "react-icons/md";
 
 import LoadingProvider from "../context/LoadingContext";
@@ -29,6 +29,14 @@ function NavBar({ socket }) {
   useEffect(() => {
     if (socket) {
       socket.on("getAddFriendNotification", (data) => {
+        console.log(data);
+        setNotifications((prevNotifications) => [...prevNotifications, data]);
+        setNotifTemp([...notifTemp, data]);
+        storeNotifications(email, uid, data);
+        setIsGet(true);
+      });
+
+      socket.on("getConfirmedFriendNotification", (data) => {
         console.log(data);
         setNotifications((prevNotifications) => [...prevNotifications, data]);
         setNotifTemp([...notifTemp, data]);
@@ -170,7 +178,7 @@ function NavBar({ socket }) {
                     if (i[0]?.notificationType === "addFriend") {
                       return (
                         <button
-                          className="flex items-center gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                          className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
                           onClick={() => {
                             navigate(
                               "/user/" + i[0]?.requestor.uid.slice(1, 12)
@@ -178,11 +186,11 @@ function NavBar({ socket }) {
                             setShowDropDownNotif(!showDropDownNotif);
                           }}
                         >
-                          <div className="relative">
+                          <div className="relative w-2/12">
                             <img
                               src={i[0]?.requestor.img}
                               alt=""
-                              className="w-24"
+                              className=""
                             />
                             <div
                               className="p-1 w-max rounded-full absolute top-10 left-8"
@@ -194,12 +202,44 @@ function NavBar({ socket }) {
                               <AiOutlineUserAdd className="text-white" />
                             </div>
                           </div>
-                          <div className="text-left ">
+                          <div className="text-left w-10/12">
                             <p className="text-blue-500">
                               <span className="font-semibold">
                                 {i[0]?.requestor.name + " "}
                               </span>
                               added you as a friend. You can accept it now.
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    } else if (i[0]?.notificationType === "confirmedFriend") {
+                      return (
+                        <button
+                          className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                          onClick={() => {
+                            navigate("/user/" + i[0]?.sender.uid.slice(1, 12));
+                            setShowDropDownNotif(!showDropDownNotif);
+                          }}
+                        >
+                          <div className="relative w-2/12">
+                            <img src={i[0]?.sender.img} alt="" />
+                            <div
+                              className="p-1 w-max rounded-full absolute top-10 left-8"
+                              style={{
+                                backgroundImage:
+                                  "linear-gradient(to left top, #1cd8d2, #93edc7)",
+                              }}
+                            >
+                              <AiOutlineUser className="text-white" />
+                            </div>
+                          </div>
+                          <div className="text-left w-10/12">
+                            <p className="text-blue-500">
+                              <span className="font-semibold">
+                                {i[0]?.sender.name + " "}
+                              </span>
+                              accepted your friend request. You can now visit
+                              the profile.
                             </p>
                           </div>
                         </button>

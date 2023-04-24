@@ -439,12 +439,29 @@ const confirmUser = async (req, res) => {
           },
         }
       );
-      res.status(200).json({ reload: true });
+      res.status(200).json({ reload: true, secondUser, user });
     } else {
       res.status(404).send("User not Found!");
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+const getFriends = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    if (await Account.findOne({ "profileDetails.0.uid": "#" + uid })) {
+      await Account.findOne({ "profileDetails.0.uid": "#" + uid }).then(
+        (result) => {
+          res.status(200).json({ result });
+        }
+      );
+    } else {
+      res.status(404).send("User not Found!");
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -462,4 +479,5 @@ module.exports = {
   visitUser,
   getUser,
   confirmUser,
+  getFriends,
 };
