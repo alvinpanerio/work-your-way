@@ -24,6 +24,7 @@ function Home({ addClass, socket }) {
   const [uid, setUid] = useState(null);
   const [email, setEmail] = useState(null);
   const [reload, setReload] = useState(false);
+  const [reloadOnlineFriends, setReloadOnlineFriends] = useState(false);
   const [isGetFriends, setIsGetFriend] = useState(true);
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -81,10 +82,23 @@ function Home({ addClass, socket }) {
           });
       };
       getFriends();
-      socket.emit("onlineFriends", { receiver: email });
       setIsGetFriend(false);
     }
-  }, [uid, email, friendsArr, socket]);
+  }, [uid, email, friendsArr, socket, isGetFriends]);
+
+  useEffect(() => {
+    if (socket && email) {
+      setTimeout(() => {
+        setReloadOnlineFriends(!reloadOnlineFriends);
+      }, 200);
+    }
+  }, [email, socket, reloadOnlineFriends]);
+
+  useEffect(() => {
+    if (socket && email) {
+      socket.emit("onlineFriends", { receiver: email });
+    }
+  }, [socket, email, reloadOnlineFriends]);
 
   useEffect(() => {
     if (socket) {
@@ -92,7 +106,7 @@ function Home({ addClass, socket }) {
         setOnlineFriends([data]);
       });
     }
-  }, [onlineFriends, socket]);
+  }, [socket, onlineFriends]);
 
   const getRecentFiles = async (user) => {
     try {
@@ -452,18 +466,75 @@ function Home({ addClass, socket }) {
               })}
             </div>
             <div>
-              <div>
+              <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[240px]">
+                <p className="text-2xl font-bold text-blue-500 pb-5">Friends</p>
                 {friendsArr.map((i, k) => {
-                  if (i["0"].isConfirmedFriend === 2) {
-                    return <p key={k}>{i["0"].email}</p>;
+                  if (i["0"]?.isConfirmedFriend === 2) {
+                    return users.map((k, l) => {
+                      if (i[0]?.email === k?.email) {
+                        return (
+                          <div className="flex gap-3 pb-5 justify-center items-center">
+                            <div className="relative">
+                              <img
+                                src={k?.profileDetails[0]?.profileAvatar}
+                                alt=""
+                                className="w-[50px]"
+                              />
+                            </div>
+                            <div className="flex flex-col justify-between">
+                              <p className="font-semibold">
+                                {k?.profileDetails[0]?.name}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {k?.profileDetails[0]?.uid}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      }
+                    });
                   }
                 })}
               </div>
-              <p>online</p>
-              <div>
-                {onlineFriends["0"]?.onlineUsers.map((i, k) => {
-                  return <p key={k}>{i.username}</p>;
-                })}
+              <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[240px]">
+                <p className="text-2xl font-bold text-blue-500 pb-5">Online</p>
+                <div>
+                  {onlineFriends["0"]?.onlineUsers.map((i, k) => {
+                    return friendsArr.map((j, h) => {
+                      if (j[0]?.email === i?.username) {
+                        return users.map((k, l) => {
+                          if (j[0]?.email === k?.email) {
+                            return (
+                              <div className="flex gap-3 pb-5 justify-center items-center">
+                                <div className="relative">
+                                  <img
+                                    src={k?.profileDetails[0]?.profileAvatar}
+                                    alt=""
+                                    className="w-[50px]"
+                                  />
+                                  <div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-[1px] bottom-[1px] shadow-xl"></div>
+                                </div>
+                                <div className="flex flex-col justify-between">
+                                  <p className="font-semibold">
+                                    {k?.profileDetails[0]?.name}
+                                  </p>
+                                  <p className="text-xs text-gray-400">
+                                    {k?.profileDetails[0]?.uid}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          }
+                        });
+                      }
+                    });
+                  })}
+                  {/* // ) : ( //{" "}
+                  <p className="font-medium text-blue-500 pb-5">
+                    // No Online Friends //{" "}
+                  </p>
+                  // )} */}
+                </div>
               </div>
             </div>
           </div>

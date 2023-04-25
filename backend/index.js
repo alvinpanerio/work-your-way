@@ -78,6 +78,12 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     removeUser(socket.id);
+    console.log(onlineUsers);
+    onlineUsers.forEach((i) => {
+      io.to(i.socketId).emit("getOnlineFriends", {
+        onlineUsers,
+      });
+    });
   });
 });
 
