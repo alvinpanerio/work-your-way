@@ -96,9 +96,10 @@ function Home({ addClass, socket }) {
 
   useEffect(() => {
     if (socket && email) {
+      console.log(email);
       socket.emit("onlineFriends", { receiver: email });
     }
-  }, [socket, email, reloadOnlineFriends]);
+  }, [reloadOnlineFriends]);
 
   useEffect(() => {
     if (socket) {
@@ -466,22 +467,31 @@ function Home({ addClass, socket }) {
               })}
             </div>
             <div>
-              <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[240px]">
-                <p className="text-2xl font-bold text-blue-500 pb-5">Friends</p>
+              <div className="bg-white rounded-lg px-3 py-5 my-5 shadow-md w-[224px]">
+                <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
+                  Friends
+                </p>
                 {friendsArr.map((i, k) => {
                   if (i["0"]?.isConfirmedFriend === 2) {
                     return users.map((k, l) => {
                       if (i[0]?.email === k?.email) {
                         return (
-                          <div className="flex gap-3 pb-5 justify-center items-center">
-                            <div className="relative">
-                              <img
-                                src={k?.profileDetails[0]?.profileAvatar}
-                                alt=""
-                                className="w-[50px]"
-                              />
-                            </div>
-                            <div className="flex flex-col justify-between">
+                          <button
+                            type="button"
+                            className="flex gap-3 justify-center px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100"
+                            onClick={() => {
+                              navigate(
+                                "/user/" +
+                                  k?.profileDetails[0]?.uid.slice(1, 12)
+                              );
+                            }}
+                          >
+                            <img
+                              src={k?.profileDetails[0]?.profileAvatar}
+                              alt=""
+                              className="w-[50px]"
+                            />
+                            <div className="flex flex-col justify-between items-start">
                               <p className="font-semibold">
                                 {k?.profileDetails[0]?.name}
                               </p>
@@ -489,7 +499,7 @@ function Home({ addClass, socket }) {
                                 {k?.profileDetails[0]?.uid}
                               </p>
                             </div>
-                          </div>
+                          </button>
                         );
                       }
                     });
