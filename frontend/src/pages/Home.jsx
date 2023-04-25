@@ -211,7 +211,7 @@ function Home({ addClass, socket }) {
                 autocomplete="off"
               />
               <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
-              {search ? (
+              {search.trim() ? (
                 <div className="w-4/12 bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-xl">
                   {users.filter((i) => {
                     return search.length
@@ -454,7 +454,7 @@ function Home({ addClass, socket }) {
               })}
             </div>
             <div>
-              <div className="bg-white rounded-lg px-3 py-5 my-5 shadow-md w-[224px]">
+              <div className="bg-white rounded-lg px-3 py-5 my-5 shadow-md w-[240px]">
                 <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
                   Friends
                 </p>

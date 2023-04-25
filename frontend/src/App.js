@@ -51,6 +51,10 @@ function App() {
             <Route path="/planner" element={<Planner />} />
             <Route path="/user/:id" element={<User socket={socket} />} />
             <Route path="/chat" element={<Chat socket={socket} />} />
+            <Route
+              path="/chat/:groupChatID"
+              element={<Chat socket={socket} />}
+            />
           </Routes>
         </BrowserRouter>
       )}
