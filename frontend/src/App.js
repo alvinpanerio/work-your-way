@@ -15,6 +15,7 @@ import User from "./pages/User";
 import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
 import io from "socket.io-client";
+import Chat from "./pages/Chat";
 
 function App() {
   const { isLoading } = useContext(LoadingProvider);
@@ -49,6 +50,7 @@ function App() {
             <Route path="/files" element={<Files />} />
             <Route path="/planner" element={<Planner />} />
             <Route path="/user/:id" element={<User socket={socket} />} />
+            <Route path="/chat" element={<Chat socket={socket} />} />
           </Routes>
         </BrowserRouter>
       )}

@@ -205,7 +205,7 @@ function Files() {
       </div>
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px] ">
         <SideBar />
-        <div className="relative">
+        <div className="relative w-[1300px]">
           <input
             type="text"
             id="seacrh"

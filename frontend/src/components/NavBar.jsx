@@ -147,7 +147,7 @@ function NavBar({ socket }) {
         {isLogged ? (
           <div className="relative flex gap-7 justify-end w-full">
             <button
-              className="text-center bg-white rounded-lg px-3"
+              className="text-center bg-white rounded-lg px-3 z-50"
               type="button"
               onClick={() => {
                 setShowDropDown(false);

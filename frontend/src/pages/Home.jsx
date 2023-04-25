@@ -166,19 +166,6 @@ function Home({ addClass, socket }) {
     }
   };
 
-  // const handleAddUser = async (id) => {
-  //   try {
-  //     await axios
-  //       .post(process.env.REACT_APP_API_URI + "/add-friend/" + id, {
-  //         email,
-  //         uidRequestor: uid,
-  //       })
-  //       .then((result) => {});
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const handleVisitUser = async (id) => {
     try {
       await axios
@@ -212,7 +199,7 @@ function Home({ addClass, socket }) {
         <div className="2xl:pt-56 md:pt-48 bg-blue-100 w-full h-screen">
           <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
             <SideBar />
-            <div className="relative">
+            <div className="relative w-[1300px]">
               <input
                 type="text"
                 id="search"
@@ -471,14 +458,15 @@ function Home({ addClass, socket }) {
                 <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
                   Friends
                 </p>
-                {friendsArr.map((i, k) => {
-                  if (i["0"]?.isConfirmedFriend === 2) {
+                {friendsArr[0]?.map((i, j) => {
+                  if (i?.isConfirmedFriend === 2) {
                     return users.map((k, l) => {
-                      if (i[0]?.email === k?.email) {
+                      if (i?.email === k?.email) {
                         return (
                           <button
+                            key={l}
                             type="button"
-                            className="flex gap-3 justify-center px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100"
+                            className="flex gap-3 justify-start px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100 w-full"
                             onClick={() => {
                               navigate(
                                 "/user/" +
@@ -509,13 +497,13 @@ function Home({ addClass, socket }) {
               <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[240px]">
                 <p className="text-2xl font-bold text-blue-500 pb-5">Online</p>
                 <div>
-                  {onlineFriends["0"]?.onlineUsers.map((i, k) => {
-                    return friendsArr.map((j, h) => {
-                      if (j[0]?.email === i?.username) {
+                  {onlineFriends["0"]?.onlineUsers.map((i, z) => {
+                    return friendsArr[0]?.map((j, h) => {
+                      if (j?.email === i?.username) {
                         return users.map((k, l) => {
-                          if (j[0]?.email === k?.email) {
+                          if (j?.email === k?.email) {
                             return (
-                              <div className="flex gap-3 pb-5 justify-center items-center">
+                              <div className="flex gap-3 pb-5 justify-start items-center">
                                 <div className="relative">
                                   <img
                                     src={k?.profileDetails[0]?.profileAvatar}
