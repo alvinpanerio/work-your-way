@@ -262,276 +262,283 @@ function Home({ addClass, socket }) {
               ) : null}
             </div>
             <p className="text-2xl font-bold mt-8 mb-3 text-blue-500 text-4xl">{`Hello, ${name}!`}</p>
-            <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-1/2">
-              <p className=" border-b-2 pb-5">Recent Files</p>
-              <div className="flex justify-center gap-5">
-                <ul
-                  className={`flex ${
-                    files.length < 4 ? "justify-start" : "justify-between"
-                  } w-full`}
-                >
-                  {files
-                    .slice(0)
-                    .reverse()
-                    .map((i, n) => {
-                      if (n < 4) {
-                        if (i.fileName.split(".").pop() === "xlsx") {
-                          return (
-                            <li
+            <div className="flex gap-3 w-full">
+              <div className="w-8/12">
+                <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[917px]">
+                  <p className=" border-b-2 pb-5">Recent Files</p>
+                  <div className="flex justify-center gap-5">
+                    <ul
+                      className={`flex ${
+                        files.length < 4 ? "justify-start" : "justify-between"
+                      } w-full`}
+                    >
+                      {files
+                        .slice(0)
+                        .reverse()
+                        .map((i, n) => {
+                          if (n < 6) {
+                            if (i.fileName.split(".").pop() === "xlsx") {
+                              return (
+                                <li
+                                  key={n}
+                                  className="flex flex-col items-center py-8 px-1"
+                                >
+                                  <div className="bg-[#5cb85c] p-2 rounded-lg">
+                                    <SiMicrosoftexcel
+                                      size={20}
+                                      className="text-white"
+                                    />
+                                  </div>
+                                  <p className="truncate w-32 mt-3 text-center">
+                                    {i.fileName}
+                                  </p>
+                                </li>
+                              );
+                            } else if (
+                              i.fileName.split(".").pop() === "docx" ||
+                              i.fileName.split(".").pop() === "pdf"
+                            ) {
+                              return (
+                                <li
+                                  key={n}
+                                  className="flex flex-col items-center py-8 px-1"
+                                >
+                                  <div className="bg-[#0275d8] p-2 rounded-lg">
+                                    <SiMicrosoftword
+                                      size={20}
+                                      className="text-white"
+                                    />
+                                  </div>
+                                  <p className="truncate w-32 mt-3 text-center">
+                                    {i.fileName}
+                                  </p>
+                                </li>
+                              );
+                            } else if (i.fileName.split(".").pop() === "exe") {
+                              return (
+                                <li
+                                  key={n}
+                                  className="flex flex-col items-center py-8 px-1"
+                                >
+                                  <div className="bg-[#d9534f] p-2 rounded-lg">
+                                    <BsFiletypeExe
+                                      size={20}
+                                      className="text-white"
+                                    />
+                                  </div>
+                                  <p className="truncate w-32 mt-3 text-center">
+                                    {i.fileName}
+                                  </p>
+                                </li>
+                              );
+                            } else if (
+                              i.fileName.split(".").pop() === "png" ||
+                              i.fileName.split(".").pop() === "jpeg" ||
+                              i.fileName.split(".").pop() === "jpg"
+                            ) {
+                              return (
+                                <li
+                                  key={n}
+                                  className="flex flex-col items-center py-8"
+                                >
+                                  <div className="bg-[#6610f2] p-2 rounded-lg">
+                                    <BsFileEarmarkImage
+                                      size={20}
+                                      className="text-white"
+                                    />
+                                  </div>
+                                  <p className="truncate w-32 mt-3 text-center">
+                                    {i.fileName}
+                                  </p>
+                                </li>
+                              );
+                            } else {
+                              return (
+                                <li
+                                  key={n}
+                                  className="flex flex-col items-center py-8 px-1"
+                                >
+                                  <div className="bg-[#292b2c] p-2 rounded-lg">
+                                    <SiFiles size={20} className="text-white" />
+                                  </div>
+                                  <p className="truncate w-32 mt-3 text-center">
+                                    {i.fileName}
+                                  </p>
+                                </li>
+                              );
+                            }
+                          }
+                        })}
+                    </ul>
+                  </div>
+                </div>
+                <div className="max-h-[24rem] w-full">
+                  {plannerList.map((i, n) => {
+                    if (new Date() < new Date(i.taskDuration)) {
+                      if (n < 3) {
+                        return (
+                          <>
+                            <div
                               key={n}
-                              className="flex flex-col items-center py-8 px-1"
+                              className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
                             >
-                              <div className="bg-[#5cb85c] p-2 rounded-lg">
-                                <SiMicrosoftexcel
-                                  size={20}
-                                  className="text-white"
-                                />
-                              </div>
-                              <p className="truncate w-32 mt-3 text-center">
-                                {i.fileName}
-                              </p>
-                            </li>
-                          );
-                        } else if (
-                          i.fileName.split(".").pop() === "docx" ||
-                          i.fileName.split(".").pop() === "pdf"
-                        ) {
-                          return (
-                            <li
-                              key={n}
-                              className="flex flex-col items-center py-8 px-1"
-                            >
-                              <div className="bg-[#0275d8] p-2 rounded-lg">
-                                <SiMicrosoftword
-                                  size={20}
-                                  className="text-white"
-                                />
-                              </div>
-                              <p className="truncate w-32 mt-3 text-center">
-                                {i.fileName}
-                              </p>
-                            </li>
-                          );
-                        } else if (i.fileName.split(".").pop() === "exe") {
-                          return (
-                            <li
-                              key={n}
-                              className="flex flex-col items-center py-8 px-1"
-                            >
-                              <div className="bg-[#d9534f] p-2 rounded-lg">
-                                <BsFiletypeExe
-                                  size={20}
-                                  className="text-white"
-                                />
-                              </div>
-                              <p className="truncate w-32 mt-3 text-center">
-                                {i.fileName}
-                              </p>
-                            </li>
-                          );
-                        } else if (
-                          i.fileName.split(".").pop() === "png" ||
-                          i.fileName.split(".").pop() === "jpeg" ||
-                          i.fileName.split(".").pop() === "jpg"
-                        ) {
-                          return (
-                            <li
-                              key={n}
-                              className="flex flex-col items-center p-8"
-                            >
-                              <div className="bg-[#6610f2] p-2 rounded-lg">
-                                <BsFileEarmarkImage
-                                  size={20}
-                                  className="text-white"
-                                />
-                              </div>
-                              <p className="truncate w-32 mt-3 text-center">
-                                {i.fileName}
-                              </p>
-                            </li>
-                          );
-                        } else {
-                          return (
-                            <li
-                              key={n}
-                              className="flex flex-col items-center py-8 px-1"
-                            >
-                              <div className="bg-[#292b2c] p-2 rounded-lg">
-                                <SiFiles size={20} className="text-white" />
-                              </div>
-                              <p className="truncate w-32 mt-3 text-center">
-                                {i.fileName}
-                              </p>
-                            </li>
-                          );
-                        }
-                      }
-                    })}
-                </ul>
-              </div>
-            </div>
-            <div className="max-h-[24rem] w-2/3">
-              {plannerList.map((i, n) => {
-                if (new Date() < new Date(i.taskDuration)) {
-                  if (n < 3) {
-                    return (
-                      <>
-                        <div
-                          key={n}
-                          className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
-                        >
-                          <div
-                            className="w-[50px] h-[50px] rounded-lg"
-                            style={{
-                              backgroundImage:
-                                "linear-gradient(to left top, #3a7bd5, #00d2ff)",
-                            }}
-                          ></div>
-                          <div className="flex flex-col gap-1 w-3/12">
-                            <p className="font-bold">{i.taskName}</p>
-                            <p className="text-gray-400 text-sm text-ellipsis truncate">
-                              {i.taskDescription}
-                            </p>
-                          </div>
-                          <div className="w-4/12">
-                            <p className="text-gray-400">
-                              {`Created: ${
-                                month[new Date(i.createdAt).getMonth()]
-                              }
-                      ${new Date(i.createdAt).getDate()}, 
-                      ${new Date(i.createdAt).getFullYear()}`}
-                            </p>
-                            <p className="font-bold">
-                              {`Due: ${
-                                month[new Date(i.taskDuration).getMonth()]
-                              }
-                      ${new Date(i.taskDuration).getDate()}, 
-                      ${new Date(i.taskDuration).getFullYear()}`}
-                            </p>
-                          </div>
-                          <div className="w-3/12 flex flex-col gap-3 justify-end">
-                            <div className="flex justify-between">
-                              <p className="text-sm">Remaining</p>
-                              <p className="text-sm">
-                                {i.taskDurationNum >=
-                                new Date(
-                                  new Date(i.taskDuration) - new Date()
-                                ).getDate() -
-                                  1
-                                  ? new Date(
-                                      new Date(i.taskDuration) - new Date()
-                                    ).getDate() - 1
-                                  : 0}
-                                d
-                              </p>
-                            </div>
-                            <div className="rounded-lg h-2 bg-[#00d2ff]/20">
                               <div
-                                className="rounded-lg h-2"
+                                className="w-[50px] h-[50px] rounded-lg"
                                 style={{
                                   backgroundImage:
                                     "linear-gradient(to left top, #3a7bd5, #00d2ff)",
-                                  width: `${
-                                    (1 -
-                                      (new Date(
-                                        new Date(i.taskDuration) - new Date()
-                                      ).getDate() -
-                                        1) /
-                                        i.taskDurationNum) *
-                                    100
-                                  }%`,
                                 }}
                               ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    );
-                  }
-                } else {
-                  return null;
-                }
-              })}
-            </div>
-            <div>
-              <div className="bg-white rounded-lg px-3 py-5 my-5 shadow-md w-[240px]">
-                <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
-                  Friends
-                </p>
-                {friendsArr[0]?.map((i, j) => {
-                  if (i?.isConfirmedFriend === 2) {
-                    return users.map((k, l) => {
-                      if (i?.email === k?.email) {
-                        return (
-                          <button
-                            key={l}
-                            type="button"
-                            className="flex gap-3 justify-start px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100 w-full"
-                            onClick={() => {
-                              navigate(
-                                "/user/" +
-                                  k?.profileDetails[0]?.uid.slice(1, 12)
-                              );
-                            }}
-                          >
-                            <img
-                              src={k?.profileDetails[0]?.profileAvatar}
-                              alt=""
-                              className="w-[50px]"
-                            />
-                            <div className="flex flex-col justify-between items-start">
-                              <p className="font-semibold">
-                                {k?.profileDetails[0]?.name}
-                              </p>
-                              <p className="text-xs text-gray-400">
-                                {k?.profileDetails[0]?.uid}
-                              </p>
-                            </div>
-                          </button>
-                        );
-                      }
-                    });
-                  }
-                })}
-              </div>
-              <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[240px]">
-                <p className="text-2xl font-bold text-blue-500 pb-5">Online</p>
-                <div>
-                  {onlineFriends["0"]?.onlineUsers.map((i, z) => {
-                    return friendsArr[0]?.map((j, h) => {
-                      if (j?.email === i?.username) {
-                        return users.map((k, l) => {
-                          if (j?.email === k?.email) {
-                            return (
-                              <div className="flex gap-3 pb-5 justify-start items-center">
-                                <div className="relative">
-                                  <img
-                                    src={k?.profileDetails[0]?.profileAvatar}
-                                    alt=""
-                                    className="w-[50px]"
-                                  />
-                                  <div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-[1px] bottom-[1px] shadow-xl"></div>
+                              <div className="flex flex-col gap-1 w-3/12">
+                                <p className="font-bold">{i.taskName}</p>
+                                <p className="text-gray-400 text-sm text-ellipsis truncate">
+                                  {i.taskDescription}
+                                </p>
+                              </div>
+                              <div className="w-4/12">
+                                <p className="text-gray-400">
+                                  {`Created: ${
+                                    month[new Date(i.createdAt).getMonth()]
+                                  }
+                      ${new Date(i.createdAt).getDate()}, 
+                      ${new Date(i.createdAt).getFullYear()}`}
+                                </p>
+                                <p className="font-bold">
+                                  {`Due: ${
+                                    month[new Date(i.taskDuration).getMonth()]
+                                  }
+                      ${new Date(i.taskDuration).getDate()}, 
+                      ${new Date(i.taskDuration).getFullYear()}`}
+                                </p>
+                              </div>
+                              <div className="w-3/12 flex flex-col gap-3 justify-end">
+                                <div className="flex justify-between">
+                                  <p className="text-sm">Remaining</p>
+                                  <p className="text-sm">
+                                    {i.taskDurationNum >=
+                                    new Date(
+                                      new Date(i.taskDuration) - new Date()
+                                    ).getDate() -
+                                      1
+                                      ? new Date(
+                                          new Date(i.taskDuration) - new Date()
+                                        ).getDate() - 1
+                                      : 0}
+                                    d
+                                  </p>
                                 </div>
-                                <div className="flex flex-col justify-between">
-                                  <p className="font-semibold">
-                                    {k?.profileDetails[0]?.name}
-                                  </p>
-                                  <p className="text-xs text-gray-400">
-                                    {k?.profileDetails[0]?.uid}
-                                  </p>
+                                <div className="rounded-lg h-2 bg-[#00d2ff]/20">
+                                  <div
+                                    className="rounded-lg h-2"
+                                    style={{
+                                      backgroundImage:
+                                        "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                                      width: `${
+                                        (1 -
+                                          (new Date(
+                                            new Date(i.taskDuration) -
+                                              new Date()
+                                          ).getDate() -
+                                            1) /
+                                            i.taskDurationNum) *
+                                        100
+                                      }%`,
+                                    }}
+                                  ></div>
                                 </div>
                               </div>
-                            );
-                          }
-                        });
+                            </div>
+                          </>
+                        );
                       }
-                    });
+                    } else {
+                      return null;
+                    }
                   })}
-                  {/* // ) : ( //{" "}
+                </div>
+              </div>
+              <div className="w-4/12 flex items-end flex-col gap-3 mt-5">
+                <div className="bg-white rounded-lg px-3 py-5 shadow-md w-[240px]">
+                  <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
+                    Friends
+                  </p>
+                  {friendsArr[0]?.map((i, j) => {
+                    if (i?.isConfirmedFriend === 2) {
+                      return users.map((k, l) => {
+                        if (i?.email === k?.email) {
+                          return (
+                            <button
+                              key={l}
+                              type="button"
+                              className="flex gap-3 justify-start px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100 w-full"
+                              onClick={() => {
+                                navigate(
+                                  "/user/" +
+                                    k?.profileDetails[0]?.uid.slice(1, 12)
+                                );
+                              }}
+                            >
+                              <img
+                                src={k?.profileDetails[0]?.profileAvatar}
+                                alt=""
+                                className="w-[50px]"
+                              />
+                              <div className="flex flex-col justify-between items-start">
+                                <p className="font-semibold">
+                                  {k?.profileDetails[0]?.name}
+                                </p>
+                                <p className="text-xs text-gray-400">
+                                  {k?.profileDetails[0]?.uid}
+                                </p>
+                              </div>
+                            </button>
+                          );
+                        }
+                      });
+                    }
+                  })}
+                </div>
+                <div className="bg-white rounded-lg px-5 pt-5 shadow-md w-[240px]">
+                  <p className="text-2xl font-bold text-blue-500 pb-5">
+                    Online
+                  </p>
+                  <div>
+                    {onlineFriends["0"]?.onlineUsers.map((i, z) => {
+                      return friendsArr[0]?.map((j, h) => {
+                        if (j?.email === i?.username) {
+                          return users.map((k, l) => {
+                            if (j?.email === k?.email) {
+                              return (
+                                <div className="flex gap-3 pb-5 justify-start items-center">
+                                  <div className="relative">
+                                    <img
+                                      src={k?.profileDetails[0]?.profileAvatar}
+                                      alt=""
+                                      className="w-[50px]"
+                                    />
+                                    <div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-[1px] bottom-[1px] shadow-xl"></div>
+                                  </div>
+                                  <div className="flex flex-col justify-between">
+                                    <p className="font-semibold">
+                                      {k?.profileDetails[0]?.name}
+                                    </p>
+                                    <p className="text-xs text-gray-400">
+                                      {k?.profileDetails[0]?.uid}
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          });
+                        }
+                      });
+                    })}
+                    {/* // ) : ( //{" "}
                   <p className="font-medium text-blue-500 pb-5">
                     // No Online Friends //{" "}
                   </p>
                   // )} */}
+                  </div>
                 </div>
               </div>
             </div>

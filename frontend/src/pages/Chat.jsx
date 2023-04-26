@@ -444,10 +444,11 @@ function Chat({ socket }) {
           <input
             type="text"
             id="search"
+            value={search}
             onChange={(e) => {
               setSearch(e.target.value.trim());
             }}
-            placeholder="Search people..."
+            placeholder="Search group chat..."
             className="bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
             autocomplete="off"
           />
@@ -510,55 +511,62 @@ function Chat({ socket }) {
               </p>
               <div className="max-h-[390px] overflow-auto">
                 {messages.length ? (
-                  messages[0]?.map((i, k) => {
-                    return (
-                      <button
-                        type="button"
-                        key={k}
-                        className="flex gap-3 mb-3 p-2 hover:bg-gray-200 w-full rounded-lg transition duration-200"
-                        onClick={() => {
-                          navigate("/chat/" + i?.groupChatID);
-                          setTimeout(() => {
-                            setSelectConvo(!selectConvo);
-                          }, 200);
-                        }}
-                      >
-                        <div
-                          className="w-[50px] h-[50px] rounded-full text-white font-extrabold flex items-center justify-center text-3xl"
-                          style={{
-                            backgroundImage:
-                              "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                  messages[0]
+                    ?.filter((i) => {
+                      return search?.toLowerCase()
+                        ? i?.groupChatName?.toLowerCase()?.includes(search)
+                        : i;
+                    })
+                    ?.map((i, k) => {
+                      return (
+                        <button
+                          type="button"
+                          key={k}
+                          className="flex gap-3 mb-3 p-2 hover:bg-gray-200 w-full rounded-lg transition duration-200"
+                          onClick={() => {
+                            navigate("/chat/" + i?.groupChatID);
+                            setTimeout(() => {
+                              setSelectConvo(!selectConvo);
+                            }, 200);
                           }}
                         >
-                          {i?.groupChatName[0].toUpperCase()}
-                        </div>
-                        <div className="flex flex-col justify-between text-left w-[268px] h-[50px]">
-                          <p className="font-semibold text-blue-500">
-                            {i?.groupChatName}
-                          </p>
+                          <div
+                            className="w-[50px] h-[50px] rounded-full text-white font-extrabold flex items-center justify-center text-3xl"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                            }}
+                          >
+                            {i?.groupChatName[0].toUpperCase()}
+                          </div>
+                          <div className="flex flex-col justify-between text-left w-[268px] h-[50px]">
+                            <p className="font-semibold text-blue-500">
+                              {i?.groupChatName}
+                            </p>
 
-                          <p className="text-ellipsis truncate text-sm">
-                            <span className="font-medium">
-                              {messages[0].length
-                                ? i?.conversation[i?.conversation.length - 1]
-                                    ?.data?.name
-                                  ? i?.conversation[i?.conversation?.length - 1]
-                                      ?.data?.name + ": "
-                                  : null
-                                : i?.conversation[i?.conversation?.length - 1]
-                                    ?.data?.name + ": "}
-                            </span>
-                            <span className="text-gray-400">
-                              {
-                                i?.conversation[i?.conversation?.length - 1]
-                                  ?.data?.reply
-                              }
-                            </span>
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })
+                            <p className="text-ellipsis truncate text-sm">
+                              <span className="font-medium">
+                                {messages[0].length
+                                  ? i?.conversation[i?.conversation.length - 1]
+                                      ?.data?.name
+                                    ? i?.conversation[
+                                        i?.conversation?.length - 1
+                                      ]?.data?.name + ": "
+                                    : null
+                                  : i?.conversation[i?.conversation?.length - 1]
+                                      ?.data?.name + ": "}
+                              </span>
+                              <span className="text-gray-400">
+                                {
+                                  i?.conversation[i?.conversation?.length - 1]
+                                    ?.data?.reply
+                                }
+                              </span>
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })
                 ) : (
                   <p className="px-2 font-medium text-blue-500 pb-3">
                     No messages found.
