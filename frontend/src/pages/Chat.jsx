@@ -30,6 +30,9 @@ function Chat({ socket }) {
   const [reply, setReply] = useState("");
   const [tempReply, setTempReply] = useState(null);
   const [isReplyReady, setIsReplyReady] = useState(false);
+  const [selectConvo, setSelectConvo] = useState(false);
+  const [button, setButton] = useState(false);
+  const [isGetChat, setIsGetChat] = useState(true);
 
   const { groupChatID } = useParams();
   const navigate = useNavigate();
@@ -75,9 +78,25 @@ function Chat({ socket }) {
 
   useEffect(() => {
     if (uid) {
+      const getChats = async () => {
+        try {
+          await axios
+            .get(
+              process.env.REACT_APP_API_URI +
+                "/chat/get-chats/" +
+                uid.slice(1, 12)
+            )
+            .then((result) => {
+              setMessages([result.data.chats]);
+              setIsGetChat(false);
+            });
+        } catch (err) {
+          console.log(err);
+        }
+      };
       getChats();
     }
-  }, [uid, reload]);
+  }, [uid, isGetChat]);
 
   useEffect(() => {
     if (groupChatID) {
@@ -130,7 +149,7 @@ function Chat({ socket }) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, selectConvo]);
 
   const getAccountDetails = async (user) => {
     try {
@@ -164,7 +183,8 @@ function Chat({ socket }) {
     }
   };
 
-  const handleCreateGroupChat = async () => {
+  const handleCreateGroupChat = async (e) => {
+    e.preventDefault();
     try {
       if (addedFriendsToGC.length < 1) {
         setMessage("Add more user to the group chat!");
@@ -177,26 +197,12 @@ function Chat({ socket }) {
           groupChatName,
           addedFriendsToGC,
         });
+        setIsGetChat(true);
         setSearchFriendsForGC("");
         setGroupChatName("");
         setAddedFriendsToGC([]);
         setOpenModal(false);
-        setReload(!reload);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getChats = async () => {
-    try {
-      axios
-        .get(
-          process.env.REACT_APP_API_URI + "/chat/get-chats/" + uid.slice(1, 12)
-        )
-        .then((result) => {
-          setMessages([...messages, result.data.chats]);
-        });
     } catch (err) {
       console.log(err);
     }
@@ -205,24 +211,28 @@ function Chat({ socket }) {
   const handleSubmitMyReply = async (e) => {
     try {
       e.preventDefault();
-      const data = {
-        name,
-        uid,
-        email,
-        profileAvatar,
-        reply,
-      };
-      axios
-        .post(process.env.REACT_APP_API_URI + "/chat/send-reply", {
-          groupChatID,
-          data,
-        })
-        .then((result) => {
-          setMessages([...messages, result.data.chats]);
-          setReply("");
-          setReload(!reload);
-          setConversation([...conversation, { data }]);
-        });
+      if (button) {
+        const data = {
+          name,
+          uid,
+          email,
+          profileAvatar,
+          reply,
+        };
+        axios
+          .post(process.env.REACT_APP_API_URI + "/chat/send-reply", {
+            groupChatID,
+            data,
+          })
+          .then((result) => {
+            // setMessages([...messages, result.data.chats]);
+            setReply("");
+            setReload(!reload);
+            setConversation([...conversation, { data }]);
+            setButton(false);
+            setIsGetChat(!isGetChat);
+          });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -250,11 +260,7 @@ function Chat({ socket }) {
             </button>
           </div>
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleCreateGroupChat();
-              setReload(!reload);
-            }}
+            onSubmit={handleCreateGroupChat}
             className="flex flex-col gap-3"
           >
             <input
@@ -468,7 +474,7 @@ function Chat({ socket }) {
               <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
                 Messages
               </p>
-              <div>
+              <div className="max-h-[390px] overflow-auto">
                 {messages.length ? (
                   messages[0]?.map((i, k) => {
                     return (
@@ -478,27 +484,49 @@ function Chat({ socket }) {
                         className="flex gap-3 mb-3 p-2 hover:bg-gray-200 w-full rounded-lg transition duration-200"
                         onClick={() => {
                           navigate("/chat/" + i?.groupChatID);
+                          setTimeout(() => {
+                            setSelectConvo(!selectConvo);
+                          }, 200);
                         }}
                       >
-                        <img
-                          src="https://images.unsplash.com/photo-1682336017038-de632a4ec2b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                          alt=""
-                          className="w-[50px] h-[50px] rounded-full"
-                        />
+                        <div
+                          className="w-[50px] h-[50px] rounded-full text-white font-extrabold flex items-center justify-center text-3xl"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                          }}
+                        >
+                          {i?.groupChatName[0].toUpperCase()}
+                        </div>
                         <div className="flex flex-col justify-between text-left w-[268px] h-[50px]">
                           <p className="font-semibold text-blue-500">
                             {i?.groupChatName}
                           </p>
-                          <p className="text-ellipsis truncate text-gray-400 text-sm">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Nihil, amet.
+
+                          <p className="text-ellipsis truncate text-sm">
+                            <span className="font-medium">
+                              {messages[0].length
+                                ? i?.conversation[i?.conversation.length - 1]
+                                    ?.data?.name
+                                  ? i?.conversation[i?.conversation?.length - 1]
+                                      ?.data?.name + ": "
+                                  : null
+                                : i?.conversation[i?.conversation?.length - 1]
+                                    ?.data?.name + ": "}
+                            </span>
+                            <span className="text-gray-400">
+                              {
+                                i?.conversation[i?.conversation?.length - 1]
+                                  ?.data?.reply
+                              }
+                            </span>
                           </p>
                         </div>
                       </button>
                     );
                   })
                 ) : (
-                  <p className="px-2 font-medium text-blue-500">
+                  <p className="px-2 font-medium text-blue-500 pb-3">
                     No messages found.
                   </p>
                 )}
@@ -519,10 +547,46 @@ function Chat({ socket }) {
             <div className="w-full h-full rounded-lg shadow-md bg-white p-5">
               <div className="h-full">
                 {groupChatID ? (
-                  <div className="flex flex-col justify-between h-full overflow-y-auto">
-                    <div className="h-full overflow-y-auto">
+                  <div className="flex flex-col justify-between h-full overflow-auto">
+                    <div className="h-full overflow-y-auto flex flex-col">
                       {conversation?.map((i, k) => {
-                        return <p key={k}>{i?.data?.reply}</p>;
+                        return users?.map((j, l) => {
+                          if (i?.data?.email === j?.email) {
+                            if (i?.data?.email === email) {
+                              return (
+                                <div
+                                  className="flex gap-5 justify-end w-full mb-5"
+                                  key={l}
+                                >
+                                  <div className="break-words bg-blue-500 text-white w-max max-w-[250px] p-3 text-left rounded-b-2xl rounded-tl-2xl text-sm">
+                                    {i?.data?.reply}
+                                  </div>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div
+                                  className="flex gap-5 justify-start w-full mb-5"
+                                  key={l}
+                                >
+                                  <img
+                                    src={j?.profileDetails[0]?.profileAvatar}
+                                    alt=""
+                                    className="w-[40px] h-[40px]"
+                                  />
+                                  <div className="flex flex-col gap-2">
+                                    <p className="font-semibold text-blue-500">
+                                      {j?.profileDetails[0]?.name}
+                                    </p>
+                                    <div className="break-words bg-gray-200 w-max max-w-[250px] p-3 text-left rounded-b-2xl rounded-tr-2xl text-sm">
+                                      {i?.data?.reply}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          }
+                        });
                       })}
                       <div ref={bottomRef} />
                     </div>
@@ -539,7 +603,7 @@ function Chat({ socket }) {
                     </div> */}
                     <form
                       onSubmit={handleSubmitMyReply}
-                      className="flex gap-3 items-center relative pt-5"
+                      className="flex gap-3 items-center relative pt-5 w-full"
                     >
                       <input
                         type="text"
@@ -548,14 +612,21 @@ function Chat({ socket }) {
                         value={reply}
                         onChange={(e) => {
                           setReply(e.target.value);
+                          if (e.target.value.trim() === "") {
+                            setButton(false);
+                          } else {
+                            setButton(true);
+                          }
                         }}
                       />
-                      <button type="submit">
-                        <BsFillSendFill
-                          size={18}
-                          className="text-blue-500 absolute right-6 top-[32px]"
-                        />
-                      </button>
+                      {button ? (
+                        <button type="submit">
+                          <BsFillSendFill
+                            size={18}
+                            className="text-blue-500 absolute right-6 top-[32px]"
+                          />
+                        </button>
+                      ) : null}
                     </form>
                   </div>
                 ) : (
