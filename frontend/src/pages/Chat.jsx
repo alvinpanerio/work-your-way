@@ -453,8 +453,8 @@ function Chat({ socket }) {
           </div>
         </div>
         <div className="flex gap-3">
-          <div>
-            <div className="bg-white rounded-lg px-3 pt-5 pb-3 mb-3 mt-8 shadow-md w-[370px]">
+          <div className="w-[370px]">
+            <div className="bg-white rounded-lg px-3 pt-5 pb-3 mb-3 mt-8 shadow-md w-full ">
               <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
                 Online now
               </p>
@@ -485,7 +485,7 @@ function Chat({ socket }) {
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-lg px-3 pt-5 mb-3 shadow-md w-[370px]">
+            <div className="bg-white rounded-lg px-3 pt-5 mb-3 shadow-md w-full">
               <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
                 Messages
               </p>
@@ -551,7 +551,7 @@ function Chat({ socket }) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 mt-8 w-7/12 h-[600px]">
+          <div className="flex flex-col gap-3 mt-8 w-6/12 h-[600px]">
             {groupChatNameDisplay ? (
               <div className="w-full h-max rounded-lg shadow-md bg-white p-5">
                 <p className="text-2xl font-bold text-blue-500">
@@ -605,17 +605,6 @@ function Chat({ socket }) {
                       })}
                       <div ref={bottomRef} />
                     </div>
-                    {/* <div className="flex gap-5 ">
-                      <img
-                        src="/static/media/male-beard.a3ac13f49bdbbd68d9d7.png"
-                        alt=""
-                        className="w-[30px] h-[30px]"
-                      />
-                      <div>
-                        <p>Alvin Panerio</p>
-                        <div className=""></div>
-                      </div>
-                    </div> */}
                     <form
                       onSubmit={handleSubmitMyReply}
                       className="flex gap-3 items-center relative pt-5 w-full"
@@ -654,6 +643,69 @@ function Chat({ socket }) {
               </div>
             </div>
           </div>
+          {groupChatID ? (
+            <div className="w-3/12">
+              <div className="flex flex-col items-center gap-3 mt-8 w-full shadow-md rounded-lg px-3 py-5 mb-3 bg-white">
+                <div
+                  className="w-[60px] h-[60px] rounded-full text-white font-extrabold flex items-center justify-center text-4xl"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                  }}
+                >
+                  {groupChatNameDisplay[0]?.toUpperCase()}
+                </div>
+                <p className="text-blue-500 font-semibold  text-xl">
+                  {groupChatNameDisplay}
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 mt-3 w-full shadow-md rounded-lg px-3 pt-5 pb-3 mb-3 bg-white">
+                <div>
+                  {messages[0]?.map((i, k) => {
+                    if (i?.groupChatID === groupChatID) {
+                      return (
+                        <p
+                          key={k}
+                          className="text-2xl font-bold text-blue-500 pb-1 px-2"
+                        >
+                          {i?.groupMembers?.length + " participants"}
+                        </p>
+                      );
+                    }
+                  })}
+                </div>
+                <div className="w-full h-[192px] overflow-auto">
+                  {messages[0]?.map((i, k) => {
+                    if (i?.groupChatID === groupChatID) {
+                      return i?.groupMembers?.map((j, l) => {
+                        return (
+                          <button
+                            type="button"
+                            className="flex gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100 w-full"
+                            onClick={() => {
+                              navigate("/user/" + j[0]?.uid?.slice(1, 12));
+                            }}
+                          >
+                            <img
+                              src={j[0]?.profileAvatar}
+                              alt=""
+                              className="w-[40px] h-[40px]"
+                            />
+                            <div className="flex flex-col justify-between text-left">
+                              <p className="text-sm font-bold">{j[0]?.name}</p>
+                              <p className="text-xs text-gray-400">
+                                {j[0]?.uid}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      });
+                    }
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
