@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import { BsFillSendFill } from "react-icons/bs";
+import { BsFillSendFill, BsPaperclip, BsFileEarmarkPost } from "react-icons/bs";
 
 import axios from "axios";
 
@@ -33,10 +33,12 @@ function Chat({ socket }) {
   const [selectConvo, setSelectConvo] = useState(false);
   const [button, setButton] = useState(false);
   const [isGetChat, setIsGetChat] = useState(true);
+  const [file, setFile] = useState(null);
 
   const { groupChatID } = useParams();
   const navigate = useNavigate();
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (!localStorage.getItem("user")) {
@@ -219,27 +221,35 @@ function Chat({ socket }) {
   };
 
   const handleSubmitMyReply = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
+      const formData = new FormData();
+      formData.append("file", file);
       if (button) {
-        const data = {
+        let data = {
           name,
           uid,
           email,
           profileAvatar,
           reply,
         };
+        formData.append("n", name);
+        formData.append("u", uid);
+        formData.append("e", email);
+        formData.append("p", profileAvatar);
+        formData.append("r", reply);
+        formData.append("groupChatID", groupChatID);
         axios
-          .post(process.env.REACT_APP_API_URI + "/chat/send-reply", {
-            groupChatID,
-            data,
-          })
+          .post(process.env.REACT_APP_API_URI + "/chat/send-reply", formData)
           .then((result) => {
             setReply("");
             setReload(!reload);
+            console.log("dataaa", data);
+            data.file = result.data.data.file;
             setConversation([...conversation, { data }]);
             setButton(false);
             setIsGetChat(!isGetChat);
+            setFile(null);
             console.log(result);
             socket.emit("sendMessageNotif", {
               data,
@@ -250,6 +260,15 @@ function Chat({ socket }) {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleFile = async (e) => {
+    const fileObj = e.target.files && e.target.files[0];
+    setFile(fileObj);
+    if (!fileObj) {
+      setFile(null);
+      return;
     }
   };
 
@@ -573,8 +592,16 @@ function Chat({ socket }) {
                                   className="flex gap-5 justify-end w-full mb-5"
                                   key={l}
                                 >
-                                  <div className="break-words bg-blue-500 text-white w-max max-w-[250px] p-3 text-left rounded-b-2xl rounded-tl-2xl text-sm">
+                                  <div className="break-words bg-blue-500 text-white w-max max-w-[250px] p-3 text-left rounded-b-2xl  mr-3  rounded-tl-2xl text-sm">
                                     {i?.data?.reply}
+                                    {i?.data?.file?.originalname?.length ? (
+                                      <button className="flex gap-1 justify-center items-center bg-gray-200 p-2 rounded-lg mt-2 text-black w-full">
+                                        <BsFileEarmarkPost />
+                                        <p className="w-full text-ellipsis truncate">
+                                          {i?.data?.file?.originalname}
+                                        </p>
+                                      </button>
+                                    ) : null}
                                   </div>
                                 </div>
                               );
@@ -595,6 +622,14 @@ function Chat({ socket }) {
                                     </p>
                                     <div className="break-words bg-gray-200 w-max max-w-[250px] p-3 text-left rounded-b-2xl rounded-tr-2xl text-sm">
                                       {i?.data?.reply}
+                                      {i?.data?.file?.originalname?.length ? (
+                                        <button className="flex gap-1 justify-center items-center bg-gray-100 p-2 rounded-lg mt-2 text-black w-full">
+                                          <BsFileEarmarkPost />
+                                          <p className="w-full text-ellipsis truncate">
+                                            {i?.data?.file?.originalname}
+                                          </p>
+                                        </button>
+                                      ) : null}
                                     </div>
                                   </div>
                                 </div>
@@ -605,10 +640,33 @@ function Chat({ socket }) {
                       })}
                       <div ref={bottomRef} />
                     </div>
+                    <div className="flex flex-wrap gap-3">
+                      {file ? (
+                        <div className="w-2/12 bg-gray-200 p-1 rounded-lg flex gap-1">
+                          <p className="truncate text-ellipsis text-xs font-semibold">
+                            {file?.name}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFile(null);
+                            }}
+                          >
+                            <MdClose />
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
                     <form
                       onSubmit={handleSubmitMyReply}
                       className="flex gap-3 items-center relative pt-5 w-full"
                     >
+                      <input
+                        style={{ display: "none" }}
+                        ref={inputRef}
+                        type="file"
+                        onChange={handleFile}
+                      />
                       <input
                         type="text"
                         className="bg-gray-100 rounded-lg px-3 py-2 focus:outline-none w-full"
@@ -623,14 +681,42 @@ function Chat({ socket }) {
                           }
                         }}
                       />
-                      {button ? (
-                        <button type="submit">
+
+                      {button || file ? (
+                        <div className="">
+                          <button type="button">
+                            <BsPaperclip
+                              size={20}
+                              className="text-blue-500 absolute right-12 top-[31px]"
+                              onClick={() => {
+                                inputRef.current.click();
+                              }}
+                            />
+                          </button>
+                          <button type="submit">
+                            <BsFillSendFill
+                              size={18}
+                              className="text-blue-500 absolute right-6 top-[32px]"
+                            />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="">
+                          <button type="button">
+                            <BsPaperclip
+                              size={20}
+                              className="text-blue-500 absolute right-12 top-[31px]"
+                              onClick={() => {
+                                inputRef.current.click();
+                              }}
+                            />
+                          </button>
                           <BsFillSendFill
                             size={18}
-                            className="text-blue-500 absolute right-6 top-[32px]"
+                            className="text-gray-500 absolute right-6 top-[32px]"
                           />
-                        </button>
-                      ) : null}
+                        </div>
+                      )}
                     </form>
                   </div>
                 ) : (
@@ -674,7 +760,7 @@ function Chat({ socket }) {
                     }
                   })}
                 </div>
-                <div className="w-full h-[192px] overflow-auto">
+                <div className="w-full max-h-[192px] h-max overflow-auto">
                   {messages[0]?.map((i, k) => {
                     if (i?.groupChatID === groupChatID) {
                       return i?.groupMembers?.map((j, l) => {
@@ -700,6 +786,38 @@ function Chat({ socket }) {
                           </button>
                         );
                       });
+                    }
+                  })}
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 mt-3 w-full shadow-md rounded-lg px-3 pt-5 pb-3 mb-3 bg-white">
+                <p className="text-2xl font-bold text-blue-500 pb-1 px-2">
+                  Shared Files
+                </p>
+                <div className="w-full max-h-[168px] h-max overflow-auto">
+                  {messages[0]?.map((i, k) => {
+                    if (i?.groupChatID === groupChatID) {
+                      return i?.conversation
+                        ?.map((_, i, a) => a[a.length - 1 - i])
+                        .map((j, l) => {
+                          if (j?.data?.file?.originalname?.length) {
+                            return (
+                              <button
+                                type="button"
+                                className="flex gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100 w-full items-center"
+                                onClick={() => {}}
+                              >
+                                <BsFileEarmarkPost />
+                                <div className="flex flex-col justify-between text-left">
+                                  <p className="text-sm font-bold">
+                                    {j?.data?.file?.originalname}
+                                  </p>
+                                  <p className="text-xs text-gray-400"></p>
+                                </div>
+                              </button>
+                            );
+                          }
+                        });
                     }
                   })}
                 </div>

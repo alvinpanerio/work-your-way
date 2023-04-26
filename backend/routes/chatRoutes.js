@@ -5,6 +5,7 @@ const {
   getChats,
   checkChats,
   sendReply,
+  upload,
 } = require("../controllers/chatController");
 
 const router = express.Router();
@@ -12,6 +13,6 @@ const router = express.Router();
 router.post("/create-gc", createGroupChat);
 router.get("/get-chats/:id", getChats);
 router.post("/check-gc", checkChats);
-router.post("/send-reply", sendReply);
+router.post("/send-reply", upload.single("file"), sendReply);
 
 module.exports = router;

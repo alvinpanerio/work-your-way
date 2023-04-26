@@ -1,4 +1,5 @@
 const uniqid = require("uniqid");
+const multer = require("multer");
 
 const Chat = require("../models/chat");
 
@@ -66,10 +67,33 @@ const checkChats = async (req, res) => {
   }
 };
 
+//multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, process.env.FILE_STORAGE_PATH);
+  },
+  filename: function (req, file, cb) {
+    cb(null, "file-" + Date.now());
+  },
+});
+
+let upload = multer({ storage });
+
 const sendReply = async (req, res) => {
-  const { groupChatID, data } = req.body;
+  // const { groupChatID, data } = req.body;
+  let { file, groupChatID, n, u, e, p, r } = req.body;
+
   try {
+    const data = {
+      name: n,
+      uid: u,
+      email: e,
+      profileAvatar: p,
+      reply: r,
+    };
     data.date = new Date();
+    data.file = req.file;
+    console.log(data.uid, groupChatID);
     const gc = await Chat.find({
       groupChatID,
       groupMembers: { $elemMatch: { "0.uid": data.uid } },
@@ -88,7 +112,7 @@ const sendReply = async (req, res) => {
           },
         }
       );
-      res.status(200).json({ gc });
+      res.status(200).json({ gc, data });
     } else {
       res.status(404).send();
     }
@@ -102,4 +126,5 @@ module.exports = {
   getChats,
   checkChats,
   sendReply,
+  upload,
 };

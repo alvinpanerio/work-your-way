@@ -91,7 +91,6 @@ function Files() {
 
   const handleSendFile = async (e) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
       formData.append("file", inputRef.current.files[0]);
