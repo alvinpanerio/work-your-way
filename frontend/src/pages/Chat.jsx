@@ -61,6 +61,16 @@ function Chat({ socket }) {
   }, [reload]);
 
   useEffect(() => {
+    if (socket) {
+      socket.on("getMessageNotif", (data) => {
+        console.log(data);
+        setConversation([...conversation, data]);
+        setIsGetChat(!isGetChat);
+      });
+    }
+  }, [socket, conversation, isGetChat]);
+
+  useEffect(() => {
     if (uid && isGetFriends) {
       const getFriends = async () => {
         await axios
@@ -225,12 +235,17 @@ function Chat({ socket }) {
             data,
           })
           .then((result) => {
-            // setMessages([...messages, result.data.chats]);
             setReply("");
             setReload(!reload);
             setConversation([...conversation, { data }]);
             setButton(false);
             setIsGetChat(!isGetChat);
+            console.log(result);
+            socket.emit("sendMessageNotif", {
+              data,
+              email,
+              members: result.data.gc[0].groupMembers,
+            });
           });
       }
     } catch (err) {

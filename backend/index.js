@@ -77,6 +77,20 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("sendMessageNotif", ({ data, email, members }) => {
+    onlineUsers.forEach((i) => {
+      return members.forEach((j) => {
+        if (i.username !== email) {
+          if (j[0].email === i.username) {
+            io.to(i.socketId).emit("getMessageNotif", {
+              data,
+            });
+          }
+        }
+      });
+    });
+  });
+
   socket.on("disconnect", () => {
     removeUser(socket.id);
     console.log(onlineUsers);

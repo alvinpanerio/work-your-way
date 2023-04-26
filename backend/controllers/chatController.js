@@ -88,7 +88,7 @@ const sendReply = async (req, res) => {
           },
         }
       );
-      res.status(200).send();
+      res.status(200).json({ gc });
     } else {
       res.status(404).send();
     }
