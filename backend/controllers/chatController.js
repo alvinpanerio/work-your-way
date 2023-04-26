@@ -35,7 +35,7 @@ const createGroupChat = async (req, res) => {
 
 const getChats = async (req, res) => {
   const { id } = req.params;
-  console.log("sdasd");
+
   try {
     const chats = await Chat.find({
       groupMembers: { $elemMatch: { "0.uid": "#" + id } },
@@ -57,6 +57,37 @@ const checkChats = async (req, res) => {
     console.log(gc);
 
     if (gc.length) {
+      res.status(200).json({ gc });
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const sendReply = async (req, res) => {
+  const { groupChatID, data } = req.body;
+  try {
+    data.date = new Date();
+    const gc = await Chat.find({
+      groupChatID,
+      groupMembers: { $elemMatch: { "0.uid": data.uid } },
+    });
+
+    if (gc.length) {
+      await Chat.findOneAndUpdate(
+        {
+          groupChatID,
+        },
+        {
+          $push: {
+            conversation: {
+              data,
+            },
+          },
+        }
+      );
       res.status(200).send();
     } else {
       res.status(404).send();
@@ -70,4 +101,5 @@ module.exports = {
   createGroupChat,
   getChats,
   checkChats,
+  sendReply,
 };

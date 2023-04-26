@@ -1,8 +1,9 @@
 import SideBar from "../components/SideBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { BsFillSendFill } from "react-icons/bs";
 
 import axios from "axios";
 
@@ -15,6 +16,7 @@ function Chat({ socket }) {
   const [searchFriendsForGC, setSearchFriendsForGC] = useState("");
   const [message, setMessage] = useState("");
   const [groupChatName, setGroupChatName] = useState("");
+  const [groupChatNameDisplay, setGroupChatNameDisplay] = useState("");
   const [reload, setReload] = useState(false);
   const [isGetFriends, setIsGetFriend] = useState(true);
   const [reloadOnlineFriends, setReloadOnlineFriends] = useState(false);
@@ -24,9 +26,14 @@ function Chat({ socket }) {
   const [users, setUsers] = useState([]);
   const [addedFriendsToGC, setAddedFriendsToGC] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState([]);
+  const [reply, setReply] = useState("");
+  const [tempReply, setTempReply] = useState(null);
+  const [isReplyReady, setIsReplyReady] = useState(false);
 
   const { groupChatID } = useParams();
   const navigate = useNavigate();
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     if (!localStorage.getItem("user")) {
@@ -81,7 +88,8 @@ function Chat({ socket }) {
             uid: uid.slice(1, 12),
           })
           .then((result) => {
-            console.log(result);
+            setGroupChatNameDisplay(result.data.gc[0]?.groupChatName);
+            setConversation(result.data.gc[0]?.conversation);
           })
           .catch((err) => {
             navigate("/error");
@@ -112,6 +120,17 @@ function Chat({ socket }) {
       });
     }
   }, [socket, onlineFriends]);
+
+  useEffect(() => {
+    if (isReplyReady) {
+      setConversation([...conversation, tempReply]);
+      setIsReplyReady(false);
+    }
+  }, [isReplyReady, conversation, tempReply]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const getAccountDetails = async (user) => {
     try {
@@ -145,8 +164,7 @@ function Chat({ socket }) {
     }
   };
 
-  const handleCreateGroupChat = async (e) => {
-    e.preventDefault();
+  const handleCreateGroupChat = async () => {
     try {
       if (addedFriendsToGC.length < 1) {
         setMessage("Add more user to the group chat!");
@@ -163,6 +181,7 @@ function Chat({ socket }) {
         setGroupChatName("");
         setAddedFriendsToGC([]);
         setOpenModal(false);
+        setReload(!reload);
       }
     } catch (err) {
       console.log(err);
@@ -177,6 +196,32 @@ function Chat({ socket }) {
         )
         .then((result) => {
           setMessages([...messages, result.data.chats]);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSubmitMyReply = async (e) => {
+    try {
+      e.preventDefault();
+      const data = {
+        name,
+        uid,
+        email,
+        profileAvatar,
+        reply,
+      };
+      axios
+        .post(process.env.REACT_APP_API_URI + "/chat/send-reply", {
+          groupChatID,
+          data,
+        })
+        .then((result) => {
+          setMessages([...messages, result.data.chats]);
+          setReply("");
+          setReload(!reload);
+          setConversation([...conversation, { data }]);
         });
     } catch (err) {
       console.log(err);
@@ -205,7 +250,11 @@ function Chat({ socket }) {
             </button>
           </div>
           <form
-            onSubmit={handleCreateGroupChat}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCreateGroupChat();
+              setReload(!reload);
+            }}
             className="flex flex-col gap-3"
           >
             <input
@@ -347,7 +396,10 @@ function Chat({ socket }) {
         </div>
       </div>
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
-        <SideBar />
+        <SideBar
+          setGroupChatNameDisplay={setGroupChatNameDisplay}
+          groupChatNameDisplay={groupChatNameDisplay}
+        />
         <div className="relative w-[1300px]">
           <input
             type="text"
@@ -456,8 +508,65 @@ function Chat({ socket }) {
               </div>
             </div>
           </div>
-          <div className="w-7/12 h-[500px] rounded-lg mt-8 shadow-md bg-white">
-            {groupChatID ? groupChatID : <p>Select a conversation</p>}
+          <div className="flex flex-col gap-3 mt-8 w-7/12 h-[600px]">
+            {groupChatNameDisplay ? (
+              <div className="w-full h-max rounded-lg shadow-md bg-white p-5">
+                <p className="text-2xl font-bold text-blue-500">
+                  {groupChatNameDisplay}
+                </p>
+              </div>
+            ) : null}
+            <div className="w-full h-full rounded-lg shadow-md bg-white p-5">
+              <div className="h-full">
+                {groupChatID ? (
+                  <div className="flex flex-col justify-between h-full overflow-y-auto">
+                    <div className="h-full overflow-y-auto">
+                      {conversation?.map((i, k) => {
+                        return <p key={k}>{i?.data?.reply}</p>;
+                      })}
+                      <div ref={bottomRef} />
+                    </div>
+                    {/* <div className="flex gap-5 ">
+                      <img
+                        src="/static/media/male-beard.a3ac13f49bdbbd68d9d7.png"
+                        alt=""
+                        className="w-[30px] h-[30px]"
+                      />
+                      <div>
+                        <p>Alvin Panerio</p>
+                        <div className=""></div>
+                      </div>
+                    </div> */}
+                    <form
+                      onSubmit={handleSubmitMyReply}
+                      className="flex gap-3 items-center relative pt-5"
+                    >
+                      <input
+                        type="text"
+                        className="bg-gray-100 rounded-lg px-3 py-2 focus:outline-none w-full"
+                        placeholder="Aa..."
+                        value={reply}
+                        onChange={(e) => {
+                          setReply(e.target.value);
+                        }}
+                      />
+                      <button type="submit">
+                        <BsFillSendFill
+                          size={18}
+                          className="text-blue-500 absolute right-6 top-[32px]"
+                        />
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className="flex items-center w-full h-full justify-center">
+                    <p className="text-3xl font-bold text-blue-500">
+                      Select a conversation
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

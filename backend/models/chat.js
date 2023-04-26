@@ -8,6 +8,7 @@ const chatSchema = new mongoose.Schema({
   groupChatName: { type: String, required: true },
   groupChatID: { type: String, required: true },
   groupMembers: { type: Array, required: true },
+  conversation: { type: Array },
 });
 
 module.exports = mongoose.model("Chat", chatSchema);

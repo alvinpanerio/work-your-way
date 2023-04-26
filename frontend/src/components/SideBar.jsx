@@ -9,7 +9,7 @@ import {
 } from "react-icons/tb";
 
 import { MdWorkspacesFilled } from "react-icons/md";
-function SideBar() {
+function SideBar({ groupChatNameDisplay, setGroupChatNameDisplay }) {
   return (
     <nav className="z-30">
       <div className="fixed bg-blue-500 h-full w-[4%] top-0 left-0">
@@ -37,7 +37,14 @@ function SideBar() {
           </ul>
           <ul>
             <Link to={"/chat"}>
-              <button className="text-white hover:text-blue-500 hover:bg-white rounded-md p-2 transition duration-300">
+              <button
+                className="text-white hover:text-blue-500 hover:bg-white rounded-md p-2 transition duration-300"
+                onClick={() => {
+                  if (groupChatNameDisplay) {
+                    setGroupChatNameDisplay("");
+                  }
+                }}
+              >
                 <TbBrandHipchat size={25} />
               </button>
             </Link>
