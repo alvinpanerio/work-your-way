@@ -16,6 +16,7 @@ import LoadingProvider from "./context/LoadingContext";
 import RiseLoader from "react-spinners/RiseLoader";
 import io from "socket.io-client";
 import Chat from "./pages/Chat";
+import Leaderboards from "./pages/Leaderboards";
 
 function App() {
   const { isLoading } = useContext(LoadingProvider);
@@ -55,6 +56,7 @@ function App() {
               path="/chat/:groupChatID"
               element={<Chat socket={socket} />}
             />
+            <Route path="/leaderboards" element={<Leaderboards />} />
           </Routes>
         </BrowserRouter>
       )}

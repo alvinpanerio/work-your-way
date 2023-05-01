@@ -8,6 +8,7 @@ const filesRoutes = require("./routes/filesRoutes");
 const plannerRoutes = require("./routes/plannerRoutes");
 const notificationsRoutes = require("./routes/notificationsRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const leaderboardsRoutes = require("./routes/leaderboardsRoutes");
 
 const app = express();
 
@@ -118,3 +119,4 @@ app.use("/files", filesRoutes);
 app.use("/planner", plannerRoutes);
 app.use("/notifications", notificationsRoutes);
 app.use("/chat", chatRoutes);
+app.use("/leaderboards", leaderboardsRoutes);
