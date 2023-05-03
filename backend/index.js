@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const schedule = require("node-schedule");
 
 const accountRoutes = require("./routes/accountRoutes");
 const filesRoutes = require("./routes/filesRoutes");
@@ -13,6 +14,8 @@ const leaderboardsRoutes = require("./routes/leaderboardsRoutes");
 const app = express();
 
 const http = require("http");
+const leaderboards = require("./models/leaderboards");
+const planner = require("./models/planner");
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -120,3 +123,9 @@ app.use("/planner", plannerRoutes);
 app.use("/notifications", notificationsRoutes);
 app.use("/chat", chatRoutes);
 app.use("/leaderboards", leaderboardsRoutes);
+
+//cronjob
+schedule.scheduleJob("0 0 1 * *", async () => {
+  await leaderboards.deleteMany({});
+  await planner.deleteMany({});
+});

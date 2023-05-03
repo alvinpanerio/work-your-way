@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useScreenshot } from "use-screenshot-hook";
+import moment from "moment";
 import { FaPlus, FaSearch, FaShare, FaCamera } from "react-icons/fa";
 import SideBar from "../components/SideBar";
 import Borders from "../assets/borders/Borders";
@@ -22,12 +23,24 @@ function Leaderboards() {
   const [taskNum, setTaskNum] = useState(0);
   const [isPlanner, setIsPlanner] = useState(true);
   const [isFriendsInLB, setIsFriendsInLB] = useState(true);
+  const [isCountdown, setIsCountdown] = useState(true);
+  const [countdown, setCountdown] = useState("");
+  const [date, setDate] = useState("");
 
   const navigate = useNavigate();
 
   const divRef = useRef(null);
 
   const { image, takeScreenshot } = useScreenshot({ ref: divRef });
+
+  useEffect(() => {
+    calculateCountdown();
+    const intervalId = setInterval(() => {
+      calculateCountdown();
+    }, 60000);
+    setIsCountdown(!isCountdown);
+    return () => clearInterval(intervalId);
+  }, [countdown, isCountdown]);
 
   useEffect(() => {
     setPoints(0);
@@ -179,17 +192,32 @@ function Leaderboards() {
     takeScreenshot();
     setTimeout(() => {
       const link = document.createElement("a");
-      console.log(image);
       link.download = email + ".png";
       link.href = image;
       link.click();
-    }, 200);
+    }, 300);
   };
+
+  const calculateCountdown = () => {
+    const today = moment();
+    const endOfMonth = moment().endOf("month");
+    setDate(new Date(endOfMonth._d).toDateString());
+    const diff = endOfMonth.diff(today);
+    const duration = moment.duration(diff);
+    const days = Math.round(duration.asDays());
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+    setCountdown(
+      `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`
+    );
+  };
+
   return (
     <div className="lg:h-screen 2xl:pt-56 md:pt-48 bg-blue-100 sm:h-full">
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px] ">
         <SideBar />
-        <div className="relative w-[1300px]">
+        {/* <div className="relative w-[1300px]">
           <input
             type="text"
             id="search"
@@ -197,7 +225,7 @@ function Leaderboards() {
             className="bg-white text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
           />
           <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
-        </div>
+        </div> */}
         <div>
           <div>&nbsp;</div>
           <div className="flex mt-3">
@@ -252,10 +280,16 @@ function Leaderboards() {
                 Share
               </button>
             </div>
-            <div className="flex gap-5 w-1/3 bg-white p-5 rounded-lg shadow-md">
+            <div className="gap-5 w-1/3 bg-white p-5 rounded-lg shadow-md flex flex-col justify-between">
               <p className="text-blue-500 font-bold text-2xl">
-                Monthly Wrap-Up Countdown
+                Monthly Reset Countdown:
               </p>
+              <div>
+                <p className="text-red-500 text-2xl font-semibold">{date}</p>
+                <p className="text-red-500 text-lg font-semibold">
+                  {countdown} Remaining
+                </p>
+              </div>
             </div>
           </div>
           <div className="w-full bg-white rounded-lg shadow-md mt-3 px-10 py-5">
