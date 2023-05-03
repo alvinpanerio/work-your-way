@@ -21,6 +21,7 @@
     "react-spinners": "^0.13.8",
     "react-timer-hook": "^3.0.5",
     "socket.io-client": "^4.6.1",
+    "use-screenshot-hook": "^1.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

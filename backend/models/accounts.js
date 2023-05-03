@@ -43,6 +43,10 @@ const profileDetailsSchema = new mongoose.Schema({
     required: false,
     default: "n/a",
   },
+  border: {
+    type: String,
+    required: false,
+  },
 });
 
 const friendsSchema = new mongoose.Schema({
