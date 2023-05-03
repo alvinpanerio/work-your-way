@@ -440,7 +440,7 @@ function Chat({ socket }) {
           setGroupChatNameDisplay={setGroupChatNameDisplay}
           groupChatNameDisplay={groupChatNameDisplay}
         />
-        <div className="relative w-[1300px]">
+        <div className="relative w-[1300px] md:w-max">
           <input
             type="text"
             id="search"
@@ -449,19 +449,19 @@ function Chat({ socket }) {
               setSearch(e.target.value.trim());
             }}
             placeholder="Search group chat..."
-            className="bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+            className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
             autocomplete="off"
           />
           <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
         </div>
         <div>
           <div>&nbsp;</div>
-          <div className="flex mt-3">
-            <p className="text-blue-500 text-4xl font-bold mr-10">
+          <div className="flex mt-3 items-center">
+            <p className="text-blue-500 text-4xl font-bold mr-10 md:text-2xl">
               My Messages
             </p>
             <button
-              className="bg-white hover:bg-blue-200 font-medium rounded-lg 
+              className="md:px-4 md:py-2 md:text-sm bg-white hover:bg-blue-200 font-medium rounded-lg 
              px-5 py-2.5 text-center shadow-lg mr-5 flex items-center gap-2 text-md transition duration-200 text-blue-400 hover:text-white"
               onClick={() => {
                 setOpenModal(true);
