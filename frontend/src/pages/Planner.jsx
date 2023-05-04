@@ -795,7 +795,7 @@ function Planner() {
         </div>
         <div>
           <div>&nbsp;</div>
-          <div className="flex mt-3 items-center">
+          <div className="flex 2xl:mt-3 items-center">
             <p className="text-blue-500 font-bold mr-10 text-2xl 2xl:text-4xl">
               My Tasks
             </p>
@@ -813,7 +813,7 @@ function Planner() {
         </div>
         <div className="flex gap-5">
           <div className="w-2/3">
-            <div className="flex gap-5 my-3">
+            <div className="flex gap-5 2xl:my-3 items-center">
               <div
                 className="rounded-2xl p-5 my-5 shadow-xl w-max text-white"
                 style={{
@@ -822,11 +822,11 @@ function Planner() {
                 }}
               >
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-row gap-5 justify-center items-center">
+                  <div className="flex flex-row 2xl:gap-5 gap-3 justify-center items-center">
                     <div className="bg-white/30 rounded-lg p-2 h-max">
-                      <GiProgression size={28} />
+                      <GiProgression className="2xl:w-[28px] 2xl:h-[28px] w-[20px] h-[20px]" />
                     </div>
-                    <div className="font-semibold">
+                    <div className="font-semibold 2xl:text-base text-sm">
                       <p>Tasks</p>
                       <p>In Progress</p>
                     </div>
@@ -841,12 +841,12 @@ function Planner() {
                     "linear-gradient(to left top, #FF8008, #FFC837)",
                 }}
               >
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-row gap-5 justify-center items-center">
+                <div className="flex flex-col gap-3 ">
+                  <div className="flex flex-row 2xl:gap-5 gap-3 justify-center items-center">
                     <div className="bg-white/30 rounded-lg p-2 h-max font-extrabold">
-                      <GiPaperClip size={28} />
+                      <GiPaperClip className="2xl:w-[28px] 2xl:h-[28px] w-[20px] h-[20px]" />
                     </div>
-                    <div className="font-semibold">
+                    <div className="font-semibold 2xl:text-base text-sm">
                       <p>Tasks</p>
                       <p>New Assigned</p>
                     </div>
@@ -862,11 +862,11 @@ function Planner() {
                 }}
               >
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-row gap-5 justify-center items-center">
+                  <div className="flex flex-row 2xl:gap-5 gap-3 justify-center items-center">
                     <div className="bg-white/30 rounded-lg p-2 h-max">
-                      <GiCheckMark size={28} />
+                      <GiCheckMark className="2xl:w-[28px] 2xl:h-[28px] w-[20px] h-[20px]" />
                     </div>
-                    <div className="font-semibold">
+                    <div className="font-semibold 2xl:text-base text-sm">
                       <p>Tasks</p>
                       <p>Completed</p>
                     </div>
@@ -876,9 +876,11 @@ function Planner() {
               </div>
             </div>
             <div className="flex text-blue-500 gap-5 items-center">
-              <p className="font-semibold">Browse Tasks</p>
+              <p className="font-semibold 2xl:text-base text-sm">
+                Browse Tasks
+              </p>
             </div>
-            <div className="flex gap-10 bg-blue-200 rounded-lg pt-3 px-10 mt-5 mb-5 w-max">
+            <div className="flex gap-10 bg-blue-200 rounded-lg 2xl:pt-3 pt-2 px-10 mt-5 2xl:mb-5 mb-3 w-max">
               <input
                 type="radio"
                 id="inProgress"
@@ -892,7 +894,7 @@ function Planner() {
               />
               <label
                 htmlFor="inProgress"
-                className="border-blue-500 peer-checked/inProgress:border-b-8 peer-checked/inProgress:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                className="2xl:text-base text-sm border-blue-500 peer-checked/inProgress:border-b-8 peer-checked/inProgress:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
               >
                 In progress
               </label>
@@ -908,7 +910,7 @@ function Planner() {
               />
               <label
                 htmlFor="newAssigned"
-                className="border-blue-500 peer-checked/newAssigned:border-b-8 peer-checked/newAssigned:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                className="2xl:text-base text-sm border-blue-500 peer-checked/newAssigned:border-b-8 peer-checked/newAssigned:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
               >
                 New assigned
               </label>
@@ -924,13 +926,13 @@ function Planner() {
               />
               <label
                 htmlFor="completed"
-                className="border-blue-500 peer-checked/completed:border-b-8 peer-checked/completed:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                className="2xl:text-base text-sm border-blue-500 peer-checked/completed:border-b-8 peer-checked/completed:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
               >
                 Completed
               </label>
             </div>
             {showInProgress ? (
-              <div className="max-h-[24rem] overflow-y-scroll w-3/3">
+              <div className="2xl:max-h-[24rem] max-h-[14rem] overflow-y-scroll w-3/3">
                 {plannerList
                   .filter((i) => {
                     return search.toLowerCase()
@@ -943,30 +945,32 @@ function Planner() {
                         <>
                           <div
                             key={n}
-                            className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
+                            className="bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex items-center 2xl:mb-5 mb-3 shadow-md w-3/3"
                           >
                             <div
-                              className="w-[50px] h-[50px] rounded-lg"
+                              className="2xl:w-[50px] 2xl:h-[50px] w-[40px] h-[40px] rounded-lg"
                               style={{
                                 backgroundImage:
                                   "linear-gradient(to left top, #3a7bd5, #00d2ff)",
                               }}
                             ></div>
                             <div className="flex flex-col gap-1 w-3/12">
-                              <p className="font-bold">{i.taskName}</p>
-                              <p className="text-gray-400 text-sm text-ellipsis truncate">
+                              <p className="font-bold 2xl:text-base text-sm">
+                                {i.taskName}
+                              </p>
+                              <p className="text-gray-400 2xl:text-sm text-xs text-ellipsis truncate">
                                 {i.taskDescription}
                               </p>
                             </div>
                             <div className="w-4/12">
-                              <p className="text-gray-400">
+                              <p className="text-gray-400 2xl:text-base text-sm">
                                 {`Created: ${
                                   month[new Date(i.createdAt).getMonth()]
                                 }
                       ${new Date(i.createdAt).getDate()}, 
                       ${new Date(i.createdAt).getFullYear()}`}
                               </p>
-                              <p className="font-bold">
+                              <p className="font-bold 2xl:text-base text-sm">
                                 {`Due: ${
                                   month[new Date(i.taskDuration).getMonth()]
                                 }
@@ -976,8 +980,8 @@ function Planner() {
                             </div>
                             <div className="w-3/12 flex flex-col gap-3 justify-end">
                               <div className="flex justify-between">
-                                <p className="text-sm">Remaining</p>
-                                <p className="text-sm">
+                                <p className="2xl:text-sm text-xs">Remaining</p>
+                                <p className="2xl:text-sm text-xs">
                                   {i.taskDurationNum >=
                                   new Date(
                                     new Date(i.taskDuration) - new Date()
@@ -1022,7 +1026,7 @@ function Planner() {
                                   setModalId(i._id);
                                 }}
                               >
-                                <GoKebabVertical size={20} />
+                                <GoKebabVertical className="2xl:w-[20px] 2xl:h-[20px] w-[18px] h-[18px]" />
                               </button>
                             </div>
                           </div>
@@ -1034,9 +1038,8 @@ function Planner() {
                   })}
               </div>
             ) : null}
-
             {showNewAssigned ? (
-              <div className="max-h-[24rem] overflow-y-scroll w-3/3">
+              <div className="2xl:max-h-[24rem] max-h-[14rem] overflow-y-scroll w-3/3">
                 {plannerList
                   .filter((i) => {
                     return search.toLowerCase()
@@ -1057,30 +1060,32 @@ function Planner() {
                       return (
                         <div
                           key={n}
-                          className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
+                          className="bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex items-center 2xl:mb-5 mb-3 shadow-md w-3/3"
                         >
                           <div
-                            className="w-[50px] h-[50px] rounded-lg"
+                            className="2xl:w-[50px] 2xl:h-[50px] w-[40px] h-[40px] rounded-lg"
                             style={{
                               backgroundImage:
                                 "linear-gradient(to left top, #FF8008, #FFC837)",
                             }}
                           ></div>
                           <div className="flex flex-col gap-1 w-3/12">
-                            <p className="font-bold">{i.taskName}</p>
-                            <p className="text-gray-400 text-sm text-ellipsis truncate">
+                            <p className="font-bold 2xl:text-base text-sm">
+                              {i.taskName}
+                            </p>
+                            <p className="text-gray-400 2xl:text-sm text-xs text-ellipsis truncate">
                               {i.taskDescription}
                             </p>
                           </div>
                           <div className="w-4/12">
-                            <p className="text-gray-400">
+                            <p className="text-gray-400 2xl:text-base text-sm">
                               {`Created: ${
                                 month[new Date(i.createdAt).getMonth()]
                               }
                       ${new Date(i.createdAt).getDate()}, 
                       ${new Date(i.createdAt).getFullYear()}`}
                             </p>
-                            <p className="font-bold">
+                            <p className="font-bold 2xl:text-base text-sm">
                               {`Due: ${
                                 month[new Date(i.taskDuration).getMonth()]
                               }
@@ -1090,8 +1095,10 @@ function Planner() {
                           </div>
                           <div className="w-3/12 flex flex-col gap-3 justify-end">
                             <div className="flex text-[#FF8008] gap-5 items-center">
-                              <CgToday size={32} />
-                              <p className="text-sm text-black">Today</p>
+                              <CgToday className="2xl:w-[32px] 2xl:h-[32px] w-[28px] h-[28px]" />
+                              <p className="2xl:text-sm text-xs text-black">
+                                Today
+                              </p>
                             </div>
                           </div>
                           <div className="w-1/12 flex justify-end">
@@ -1107,7 +1114,7 @@ function Planner() {
                                 setModalId(i._id);
                               }}
                             >
-                              <GoKebabVertical size={20} />
+                              <GoKebabVertical className="2xl:w-[20px] 2xl:h-[20px] w-[18px] h-[18px]" />
                             </button>
                           </div>
                         </div>
@@ -1118,9 +1125,8 @@ function Planner() {
                   })}
               </div>
             ) : null}
-
             {showCompleted ? (
-              <div className="max-h-[24rem] overflow-y-scroll w-3/3">
+              <div className="2xl:max-h-[24rem] max-h-[14rem] overflow-y-scroll w-3/3">
                 {plannerList
                   .filter((i) => {
                     return search.toLowerCase()
@@ -1132,30 +1138,32 @@ function Planner() {
                       return (
                         <div
                           key={n}
-                          className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
+                          className="bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex items-center 2xl:mb-5 mb-3 shadow-md w-3/3"
                         >
                           <div
-                            className="w-[50px] h-[50px] rounded-lg"
+                            className="2xl:w-[50px] 2xl:h-[50px] w-[40px] h-[40px] rounded-lg"
                             style={{
                               backgroundImage:
                                 "linear-gradient(to left top, #1cd8d2, #93edc7)",
                             }}
                           ></div>
                           <div className="flex flex-col gap-1 w-3/12">
-                            <p className="font-bold">{i.taskName}</p>
-                            <p className="text-gray-400 text-sm text-ellipsis truncate">
+                            <p className="font-bold 2xl:text-base text-sm">
+                              {i.taskName}
+                            </p>
+                            <p className="text-gray-400 2xl:text-sm text-xs text-ellipsis truncate">
                               {i.taskDescription}
                             </p>
                           </div>
                           <div className="w-4/12">
-                            <p className="text-gray-400">
+                            <p className="text-gray-400 2xl:text-base text-sm">
                               {`Created: ${
                                 month[new Date(i.createdAt).getMonth()]
                               }
                     ${new Date(i.createdAt).getDate()}, 
                     ${new Date(i.createdAt).getFullYear()}`}
                             </p>
-                            <p className="font-bold">
+                            <p className="font-bold 2xl:text-base text-sm">
                               {`Due: ${
                                 month[new Date(i.taskDuration).getMonth()]
                               }
@@ -1165,7 +1173,7 @@ function Planner() {
                           </div>
                           <div className="w-3/12 flex flex-col gap-3 justify-end">
                             <div className="flex justify-between items-center">
-                              <p className="text-sm">Completed</p>
+                              <p className="2xl:text-sm text-xs">Completed</p>
                               <p className="text-sm text-[#1cd8d2]">
                                 <TbDiscountCheckFilled size={20} />
                               </p>
@@ -1196,7 +1204,7 @@ function Planner() {
                                 setModalId(i._id);
                               }}
                             >
-                              <GoKebabVertical size={20} />
+                              <GoKebabVertical className="2xl:w-[20px] 2xl:h-[20px] w-[18px] h-[18px]" />
                             </button>
                           </div>
                         </div>
@@ -1208,9 +1216,9 @@ function Planner() {
               </div>
             ) : null}
           </div>
-          <div className="w-1/3 ml-4 border-l border-gray-300 pl-4">
+          <div className="w-1/3 2xl:ml-4 border-l border-gray-300 pl-4">
             <div className="flex flex-col items-center justify-center">
-              <div className="flex gap-5 bg-blue-200 rounded-lg pt-3 px-5 mt-5 mb-5 w-max">
+              <div className="flex 2xl:gap-5 gap-1 bg-blue-200 rounded-lg 2xl:pt-3 pt-2 2xl:px-5 2xl:mt-5 2xl:mb-5 mb-3 w-max">
                 <input
                   type="radio"
                   id="pomodoro"
@@ -1225,7 +1233,7 @@ function Planner() {
                 />
                 <label
                   htmlFor="pomodoro"
-                  className="border-blue-500 peer-checked/pomodoro:border-b-8 peer-checked/pomodoro:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                  className="2xl:text-base text-sm border-blue-500 peer-checked/pomodoro:border-b-8 peer-checked/pomodoro:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
                 >
                   Pomodoro
                 </label>
@@ -1242,7 +1250,7 @@ function Planner() {
                 />
                 <label
                   htmlFor="short"
-                  className="border-blue-500 peer-checked/short:border-b-8 peer-checked/short:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                  className="2xl:text-base text-sm border-blue-500 peer-checked/short:border-b-8 peer-checked/short:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
                 >
                   Short Break
                 </label>
@@ -1259,13 +1267,13 @@ function Planner() {
                 />
                 <label
                   htmlFor="long"
-                  className="border-blue-500 peer-checked/long:border-b-8 peer-checked/long:font-bold cursor-pointer w-[120px] pb-5 text-center"
+                  className="2xl:text-base text-sm border-blue-500 peer-checked/long:border-b-8 peer-checked/long:font-bold cursor-pointer w-[120px] 2xl:pb-5 pb-3 text-center"
                 >
                   Long Break
                 </label>
               </div>
               <div
-                className="rounded-[2rem] p-5 shadow-xl w-max text-white text-9xl"
+                className="2xl:rounded-[2rem] rounded-[1.5rem] 2xl:p-5 p-3 shadow-xl w-max text-white 2xl:text-9xl text-8xl"
                 style={{
                   backgroundImage:
                     "linear-gradient(to right bottom, #b06ab3, #4568dc)",
@@ -1276,7 +1284,7 @@ function Planner() {
               </div>
               <div className="flex gap-3 mt-3">
                 <button
-                  className={`text-white p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
+                  className={`text-white p-2 h-max bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
                     timerState === "play"
                       ? "bg-gradient-to-br from-[#b06ab3] to-[#4568dc] text-white"
                       : "bg-gray-300"
@@ -1287,10 +1295,10 @@ function Planner() {
                     resume();
                   }}
                 >
-                  <CiPlay1 size={36} />
+                  <CiPlay1 className="2xl:w-[36px] 2xl:h-[36px] w-[24px] h-[24px]" />
                 </button>
                 <button
-                  className={`text-white p-2 bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
+                  className={`text-white p-2 h-max bg-gray-300 rounded-lg hover:bg-gradient-to-br from-[#b06ab3] hover:text-white to-[#4568dc] ${
                     timerState === "pause"
                       ? "bg-gradient-to-br from-[#b06ab3] to-[#4568dc] text-white"
                       : "bg-gray-300"
@@ -1301,10 +1309,10 @@ function Planner() {
                     pause();
                   }}
                 >
-                  <CiPause1 size={36} />
+                  <CiPause1 className="2xl:w-[36px] 2xl:h-[36px] w-[24px] h-[24px]" />
                 </button>
                 <button
-                  className="p-2 rounded-lg text-white"
+                  className="p-2 h-max rounded-lg text-white"
                   style={{
                     backgroundImage:
                       "linear-gradient(to right bottom, #b06ab3, #4568dc)",
@@ -1319,16 +1327,18 @@ function Planner() {
                     }
                   }}
                 >
-                  <CiRedo size={36} />
+                  <CiRedo className="2xl:w-[36px] 2xl:h-[36px] w-[24px] h-[24px]" />
                 </button>
               </div>
             </div>
-            <div className="flex text-blue-500 gap-5 mt-5 flex-col justify-start">
-              <p className="font-semibold">Browse Todo List</p>
+            <div className="flex text-blue-500 2xl:gap-5 gap-3 2xl:mt-5 mt-3 flex-col justify-start">
+              <p className="font-semibold 2xl:text-base text-sm">
+                Browse Todo List
+              </p>
               <div>
                 <button
-                  className="bg-white hover:bg-blue-200 font-medium rounded-lg 
-             px-5 py-2.5 text-center shadow-lg mr-5 flex items-center gap-2 text-md transition duration-200 text-blue-400 hover:text-white w-full justify-center"
+                  className="2xl:px-5 2xl:py-2.5 2xl:text-base bg-white hover:bg-blue-200 font-medium rounded-lg 
+                  px-4 py-2 text-sm text-center shadow-lg mr-5 flex items-center gap-2 text-md transition duration-200 text-blue-400 hover:text-white w-full justify-center"
                   onClick={() => {
                     setOpenModalTodo(!openModalTodo);
                   }}
@@ -1336,11 +1346,11 @@ function Planner() {
                   Add Todo
                   <FaPlus className="ml-2" />
                 </button>
-                <div className="max-h-[12.5rem] overflow-y-scroll w-full mt-5">
+                <div className="2xl:max-h-[12.5rem] max-h-[7rem] overflow-y-scroll w-full 2xl:mt-5 mt-3">
                   {todoList.map((i) => {
                     return (
                       <button
-                        className="relative bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-full"
+                        className="relative bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex items-center 2xl:mb-5 mb-3 shadow-md w-full"
                         onClick={(e) => {
                           handleMarkTodoDone(e, !i.markDone, i._id);
                         }}
@@ -1357,7 +1367,7 @@ function Planner() {
                             <TbDiscountCheck className="text-gray-400 ml-3 text-2xl" />
                           )}
                         </div>
-                        <p className="text-black font-medium break-all">
+                        <p className="text-black font-medium break-all 2xl:text-base text-sm">
                           {i.todoDescription}
                         </p>
                         <button
