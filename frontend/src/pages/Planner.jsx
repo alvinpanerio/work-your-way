@@ -786,7 +786,7 @@ function Planner() {
         <div className="relative w-[1300px] md:w-max">
           <input
             type="text"
-            id="seacrh"
+            id="search"
             placeholder="Search task name..."
             className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 2xl:py-2.5 px-10 py-2 focus:shadow-md focus:outline-none"
             onChange={handleSearch}

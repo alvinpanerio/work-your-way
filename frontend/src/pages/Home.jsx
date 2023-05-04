@@ -199,7 +199,7 @@ function Home({ addClass, socket }) {
         <div className="2xl:pt-56 md:pt-48 bg-blue-100 w-full h-screen">
           <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
             <SideBar />
-            <div className="relative w-[1300px]">
+            <div className="relative w-[1300px] md:w-max">
               <input
                 type="text"
                 id="search"
@@ -207,12 +207,12 @@ function Home({ addClass, socket }) {
                   setSearch(e.target.value.trim());
                 }}
                 placeholder="Search people..."
-                className="bg-white text-gray-900 text-sm rounded-lg block w-4/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+                className="md:w-[300px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 2xl:py-2.5 px-10 py-2 focus:shadow-md focus:outline-none"
                 autocomplete="off"
               />
               <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
               {search.trim() ? (
-                <div className="w-4/12 bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-xl">
+                <div className="w-full bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-xl">
                   {users.filter((i) => {
                     return search.length
                       ? i.profileDetails[0].name.toLowerCase().includes(search)
@@ -234,7 +234,7 @@ function Home({ addClass, socket }) {
                         return (
                           <button
                             key={i}
-                            className="flex flex-wrap items-center justify-between gap-5 w-full mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                            className="w-full flex flex-wrap items-center justify-between gap-5 mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
                             onClick={() => {
                               handleVisitUser(
                                 user.profileDetails[0].uid.slice(1, 12)
