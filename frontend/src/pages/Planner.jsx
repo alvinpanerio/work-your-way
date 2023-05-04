@@ -788,20 +788,20 @@ function Planner() {
             type="text"
             id="seacrh"
             placeholder="Search task name..."
-            className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+            className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 2xl:py-2.5 px-10 py-2 focus:shadow-md focus:outline-none"
             onChange={handleSearch}
           />
-          <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
+          <FaSearch className="absolute left-3.5 2xl:top-3.5 top-3   opacity-20" />
         </div>
         <div>
           <div>&nbsp;</div>
           <div className="flex mt-3 items-center">
-            <p className="text-blue-500 text-4xl font-bold mr-10 md:text-2xl">
+            <p className="text-blue-500 font-bold mr-10 text-2xl 2xl:text-4xl">
               My Tasks
             </p>
             <button
-              className="md:px-4 md:py-2 md:text-sm bg-white hover:bg-blue-200 font-medium rounded-lg 
-             px-5 py-2.5 text-center shadow-lg mr-5 flex items-center gap-2 text-md transition duration-200 text-blue-400 hover:text-white"
+              className="2xl:px-5 2xl:py-2.5 2xl:text-base bg-white hover:bg-blue-200 font-medium rounded-lg 
+              px-4 py-2 text-sm text-center shadow-lg mr-5 flex items-center gap-2 transition duration-200 text-blue-400 hover:text-white"
               onClick={() => {
                 setOpenModal(!openModal);
               }}

@@ -139,7 +139,7 @@ function NavBar({ socket }) {
 
   return (
     <nav
-      className={`fixed left-1/2 -translate-x-2/4 py-12 w-screen text-[#102c54] ${
+      className={`fixed left-1/2 -translate-x-2/4 pt-12 w-screen text-[#102c54] ${
         isNavAllowed ? "shadow-md backdrop-blur-3xl z-20" : null
       }`}
     >

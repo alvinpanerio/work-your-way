@@ -217,19 +217,10 @@ function Leaderboards() {
     <div className="lg:h-screen 2xl:pt-56 md:pt-48 bg-blue-100 sm:h-full">
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px] ">
         <SideBar />
-        {/* <div className="relative w-[1300px]">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search files..."
-            className="bg-white text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
-          />
-          <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
-        </div> */}
         <div>
           <div>&nbsp;</div>
           <div className="flex mt-3">
-            <p className="text-blue-500 text-4xl font-bold mr-10">
+            <p className="text-blue-500 text-2xl 2xl:text-4xl font-bold mr-10">
               Leaderboards
             </p>
           </div>

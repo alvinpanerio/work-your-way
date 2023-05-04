@@ -209,10 +209,10 @@ function Files() {
             type="text"
             id="seacrh"
             placeholder="Search files..."
-            className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 px-10 py-2.5 focus:shadow-md focus:outline-none"
+            className="md:w-[700px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 2xl:py-2.5 px-10 py-2 focus:shadow-md focus:outline-none"
             onChange={handleSearch}
           />
-          <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
+          <FaSearch className="absolute left-3.5 2xl:top-3.5 top-3 opacity-20" />
         </div>
         <div>
           <div>&nbsp;</div>
@@ -222,7 +222,7 @@ function Files() {
             type="file"
             onChange={handleFileChange}
           />
-          <div className="flex mt-3 items-center">
+          <div className="flex 2xl:mt-3 items-center">
             <p className="text-2xl 2xl:text-4xl text-blue-500 font-bold mr-10">
               My Files
             </p>
@@ -256,8 +256,10 @@ function Files() {
               </div>
             ) : null}
           </div>
-          <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md">
-            <p className=" border-b-2 pb-5">Recent Files</p>
+          <div className="bg-white rounded-lg 2xl:px-5 2xl:pt-5 2xl:my-5 px-4 pt-4 my-5 shadow-md">
+            <p className="2xl:border-b-2 border-b-[1px] 2xl:pb-5 pb-4 2xl:text-base text-sm">
+              Recent Files
+            </p>
             <div className="flex justify-center gap-5">
               <ul
                 className={`flex ${
@@ -273,15 +275,12 @@ function Files() {
                         return (
                           <li
                             key={n}
-                            className="flex flex-col items-center p-8"
+                            className="flex flex-col items-center 2xl:p-8 p-4"
                           >
-                            <div className="bg-[#5cb85c] p-3 rounded-lg">
-                              <SiMicrosoftexcel
-                                size={32}
-                                className="text-white"
-                              />
+                            <div className="bg-[#5cb85c] 2xl:p-3 p-2 rounded-lg">
+                              <SiMicrosoftexcel className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                             </div>
-                            <p className="truncate w-32 mt-3 text-center">
+                            <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                               {i.fileName}
                             </p>
                           </li>
@@ -293,15 +292,12 @@ function Files() {
                         return (
                           <li
                             key={n}
-                            className="flex flex-col items-center p-8"
+                            className="flex flex-col items-center 2xl:p-8 p-4"
                           >
-                            <div className="bg-[#0275d8] p-3 rounded-lg">
-                              <SiMicrosoftword
-                                size={32}
-                                className="text-white"
-                              />
+                            <div className="bg-[#0275d8] 2xl:p-3 p-2 rounded-lg">
+                              <SiMicrosoftword className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                             </div>
-                            <p className="truncate w-32 mt-3 text-center">
+                            <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                               {i.fileName}
                             </p>
                           </li>
@@ -310,12 +306,12 @@ function Files() {
                         return (
                           <li
                             key={n}
-                            className="flex flex-col items-center p-8"
+                            className="flex flex-col items-center 2xl:p-8 p-4"
                           >
-                            <div className="bg-[#d9534f] p-3 rounded-lg">
-                              <BsFiletypeExe size={32} className="text-white" />
+                            <div className="bg-[#d9534f] 2xl:p-3 p-2 rounded-lg">
+                              <BsFiletypeExe className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                             </div>
-                            <p className="truncate w-32 mt-3 text-center">
+                            <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                               {i.fileName}
                             </p>
                           </li>
@@ -328,15 +324,12 @@ function Files() {
                         return (
                           <li
                             key={n}
-                            className="flex flex-col items-center p-8"
+                            className="flex flex-col items-center 2xl:p-8 p-4"
                           >
-                            <div className="bg-[#6610f2] p-3 rounded-lg">
-                              <BsFileEarmarkImage
-                                size={32}
-                                className="text-white"
-                              />
+                            <div className="bg-[#6610f2] 2xl:p-3 p-2 rounded-lg">
+                              <BsFileEarmarkImage className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                             </div>
-                            <p className="truncate w-32 mt-3 text-center">
+                            <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                               {i.fileName}
                             </p>
                           </li>
@@ -345,12 +338,12 @@ function Files() {
                         return (
                           <li
                             key={n}
-                            className="flex flex-col items-center p-8"
+                            className="flex flex-col items-center 2xl:p-8 p-4"
                           >
-                            <div className="bg-[#292b2c] p-3 rounded-lg">
-                              <SiFiles size={32} className="text-white" />
+                            <div className="bg-[#292b2c] 2xl:p-3 p-2 rounded-lg">
+                              <SiFiles className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                             </div>
-                            <p className="truncate w-32 mt-3 text-center">
+                            <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                               {i.fileName}
                             </p>
                           </li>
@@ -362,8 +355,8 @@ function Files() {
             </div>
           </div>
           <div className="flex text-blue-500 gap-5 items-center">
-            <p className="font-semibold">Browse Files</p>
-            <div className="flex gap-5">
+            <p className="font-semibold 2xl:text-base text-sm">Browse Files</p>
+            <div className="flex 2xl:gap-5 gap-3">
               <button
                 className="bg-white p-1 rounded-lg"
                 onClick={() => {
@@ -376,9 +369,9 @@ function Files() {
                 }}
               >
                 {alphabetical ? (
-                  <AiOutlineSortAscending size={24} />
+                  <AiOutlineSortAscending className="2xl:w-[24px] 2xl:h-[24px] w-[18px] h-[18px]" />
                 ) : (
-                  <AiOutlineSortDescending size={24} />
+                  <AiOutlineSortDescending className="2xl:w-[24px] 2xl:h-[24px] w-[18px] h-[18px]" />
                 )}
               </button>
               <button
@@ -393,24 +386,32 @@ function Files() {
                 }}
               >
                 {newest ? (
-                  <FcGenericSortingAsc size={24} />
+                  <FcGenericSortingAsc className="2xl:w-[24px] 2xl:h-[24px] w-[18px] h-[18px]" />
                 ) : (
-                  <FcGenericSortingDesc size={24} />
+                  <FcGenericSortingDesc className="2xl:w-[24px] 2xl:h-[24px] w-[18px] h-[18px]" />
                 )}
               </button>
             </div>
           </div>
           <table class="table-fixed w-full">
             <thead>
-              <tr className="bg-blue-200 rounded-lg py-3 px-16 mt-5 flex justify-between items-center mb-5">
-                <th className="w-[200px] flex justify-start">File Name</th>
-                <th className="w-[200px] flex justify-center">Date Uploaded</th>
-                <th className="w-[200px] flex justify-center">File Size</th>
-                <th className="w-[200px] flex justify-end">Options</th>
+              <tr className="bg-blue-200 rounded-lg 2xl:py-3 py-2 px-16 2xl:my-5 my-3 flex justify-between items-center">
+                <th className="w-[200px] flex justify-start 2xl:text-base text-sm">
+                  File Name
+                </th>
+                <th className="w-[200px] flex justify-center 2xl:text-base text-sm">
+                  Date Uploaded
+                </th>
+                <th className="w-[200px] flex justify-center 2xl:text-base text-sm">
+                  File Size
+                </th>
+                <th className="w-[200px] flex justify-end 2xl:text-base text-sm">
+                  Options
+                </th>
               </tr>
             </thead>
             <tbody className="">
-              <div className="max-h-[24rem] overflow-y-scroll">
+              <div className="2xl:max-h-[24rem] max-h-[12rem] overflow-y-scroll">
                 {(() => {
                   if (alphabetical === true) {
                     return (
@@ -426,17 +427,17 @@ function Files() {
                           .map((i, n) => {
                             if (i.fileName.split(".").pop() === "xlsx") {
                               return (
-                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                <tr className="bg-white rounded-lg px-16 2xl:py-4 py-2 mb-3 flex justify-between items-center 2xl:mb-5 shadow-md">
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#5cb85c] p-1 rounded-md">
-                                      <SiMicrosoftexcel className="text-white" />
+                                      <SiMicrosoftexcel className="text-white 2xl:w-[16px] 2xl:h-[16px] w-[12px] h-[12px]" />
                                     </div>
-                                    <p className="truncate pl-2">
+                                    <p className="truncate pl-2 2xl:text-base text-xs">
                                       {i.fileName}
                                     </p>
                                   </td>
                                   <td className="w-[200px] flex justify-center text-center gap-1">
-                                    <p className="text-blue-500 font-bold">
+                                    <p className="text-blue-500 font-bold 2xl:text-base text-xs">
                                       {new Date(
                                         i.updatedAt
                                       ).toLocaleDateString() ===
@@ -446,19 +447,19 @@ function Files() {
                                             i.updatedAt
                                           ).toLocaleDateString()},`}
                                     </p>
-
-                                    {`${new Date(
-                                      i.updatedAt
-                                    ).toLocaleTimeString()}`}
+                                    <p className="2xl:text-base text-xs">
+                                      {`${new Date(
+                                        i.updatedAt
+                                      ).toLocaleTimeString()}`}
+                                    </p>
                                   </td>
-                                  <td className="w-[200px] flex justify-center">
+                                  <td className="w-[200px] flex justify-center 2xl:text-base text-xs">
                                     {i.fileSize}
                                   </td>
                                   <td className="w-[200px] flex justify-end gap-5 items-center">
                                     <button>
                                       <FaCloudDownloadAlt
-                                        size={22}
-                                        className="text-[#5cb85c]"
+                                        className="text-[#5cb85c] 2xl:h-[22px] 2xl:w-[22px] h-[18px] w-[18px]"
                                         onClick={() => {
                                           handleDownloadFile(
                                             i.file.filename,
@@ -469,8 +470,7 @@ function Files() {
                                     </button>
                                     <button>
                                       <FaTrash
-                                        size={18}
-                                        className="text-[#d9534f]"
+                                        className="text-[#d9534f] 2xl:h-[18px] 2xl:w-[18px] h-[14px] w-[14px]"
                                         onClick={() => {
                                           handleDeleteFileToDb(
                                             i.file.filename,
@@ -487,17 +487,17 @@ function Files() {
                               i.fileName.split(".").pop() === "pdf"
                             ) {
                               return (
-                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                <tr className="bg-white rounded-lg px-16 2xl:py-4 py-2 mb-3 flex justify-between items-center 2xl:mb-5 shadow-md">
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#0275d8] p-1 rounded-md">
-                                      <SiMicrosoftword className="text-white" />
+                                      <SiMicrosoftword className="text-white 2xl:w-[16px] 2xl:h-[16px] w-[12px] h-[12px]" />
                                     </div>
-                                    <p className="truncate pl-2">
+                                    <p className="truncate pl-2 2xl:text-base text-xs">
                                       {i.fileName}
                                     </p>
                                   </td>
                                   <td className="w-[200px] flex justify-center text-center gap-1">
-                                    <p className="text-blue-500 font-bold">
+                                    <p className="text-blue-500 font-bold 2xl:text-base text-xs">
                                       {new Date(
                                         i.updatedAt
                                       ).toLocaleDateString() ===
@@ -507,19 +507,19 @@ function Files() {
                                             i.updatedAt
                                           ).toLocaleDateString()},`}
                                     </p>
-
-                                    {`${new Date(
-                                      i.updatedAt
-                                    ).toLocaleTimeString()}`}
+                                    <p className="2xl:text-base text-xs">
+                                      {`${new Date(
+                                        i.updatedAt
+                                      ).toLocaleTimeString()}`}
+                                    </p>
                                   </td>
-                                  <td className="w-[200px] flex justify-center">
+                                  <td className="w-[200px] flex justify-center 2xl:text-base text-xs">
                                     {i.fileSize}
                                   </td>
                                   <td className="w-[200px] flex justify-end gap-5 items-center">
                                     <button>
                                       <FaCloudDownloadAlt
-                                        size={22}
-                                        className="text-[#5cb85c]"
+                                        className="text-[#5cb85c] 2xl:h-[22px] 2xl:w-[22px] h-[18px] w-[18px]"
                                         onClick={() => {
                                           handleDownloadFile(
                                             i.file.filename,
@@ -530,8 +530,7 @@ function Files() {
                                     </button>
                                     <button>
                                       <FaTrash
-                                        size={18}
-                                        className="text-[#d9534f]"
+                                        className="text-[#d9534f] 2xl:h-[18px] 2xl:w-[18px] h-[14px] w-[14px]"
                                         onClick={() => {
                                           handleDeleteFileToDb(
                                             i.file.filename,
@@ -545,17 +544,17 @@ function Files() {
                               );
                             } else if (i.fileName.split(".").pop() === "exe") {
                               return (
-                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                <tr className="bg-white rounded-lg px-16 2xl:py-4 py-2 mb-3 flex justify-between items-center 2xl:mb-5 shadow-md">
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#d9534f] p-1 rounded-md">
-                                      <BsFiletypeExe className="text-white" />
+                                      <BsFiletypeExe className="text-white 2xl:w-[16px] 2xl:h-[16px] w-[12px] h-[12px]" />
                                     </div>
-                                    <p className="truncate pl-2">
+                                    <p className="truncate pl-2 2xl:text-base text-xs">
                                       {i.fileName}
                                     </p>
                                   </td>
                                   <td className="w-[200px] flex justify-center text-center gap-1">
-                                    <p className="text-blue-500 font-bold">
+                                    <p className="text-blue-500 font-bold 2xl:text-base text-xs">
                                       {new Date(
                                         i.updatedAt
                                       ).toLocaleDateString() ===
@@ -565,19 +564,19 @@ function Files() {
                                             i.updatedAt
                                           ).toLocaleDateString()},`}
                                     </p>
-
-                                    {`${new Date(
-                                      i.updatedAt
-                                    ).toLocaleTimeString()}`}
+                                    <p className="2xl:text-base text-xs">
+                                      {`${new Date(
+                                        i.updatedAt
+                                      ).toLocaleTimeString()}`}
+                                    </p>
                                   </td>
-                                  <td className="w-[200px] flex justify-center">
+                                  <td className="w-[200px] flex justify-center 2xl:text-base text-xs">
                                     {i.fileSize}
                                   </td>
                                   <td className="w-[200px] flex justify-end gap-5 items-center">
                                     <button>
                                       <FaCloudDownloadAlt
-                                        size={22}
-                                        className="text-[#5cb85c]"
+                                        className="text-[#5cb85c] 2xl:h-[22px] 2xl:w-[22px] h-[18px] w-[18px]"
                                         onClick={() => {
                                           handleDownloadFile(
                                             i.file.filename,
@@ -588,8 +587,7 @@ function Files() {
                                     </button>
                                     <button>
                                       <FaTrash
-                                        size={18}
-                                        className="text-[#d9534f]"
+                                        className="text-[#d9534f] 2xl:h-[18px] 2xl:w-[18px] h-[14px] w-[14px]"
                                         onClick={() => {
                                           handleDeleteFileToDb(
                                             i.file.filename,
@@ -607,17 +605,17 @@ function Files() {
                               i.fileName.split(".").pop() === "jpg"
                             ) {
                               return (
-                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                <tr className="bg-white rounded-lg px-16 2xl:py-4 py-2 mb-3 flex justify-between items-center 2xl:mb-5 shadow-md">
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#6610f2] p-1 rounded-md">
-                                      <BsFileEarmarkImage className="text-white" />
+                                      <BsFileEarmarkImage className="text-white 2xl:w-[16px] 2xl:h-[16px] w-[12px] h-[12px]" />
                                     </div>
-                                    <p className="truncate pl-2">
+                                    <p className="truncate pl-2 2xl:text-base text-xs">
                                       {i.fileName}
                                     </p>
                                   </td>
                                   <td className="w-[200px] flex justify-center text-center gap-1">
-                                    <p className="text-blue-500 font-bold">
+                                    <p className="text-blue-500 font-bold 2xl:text-base text-xs">
                                       {new Date(
                                         i.updatedAt
                                       ).toLocaleDateString() ===
@@ -627,19 +625,19 @@ function Files() {
                                             i.updatedAt
                                           ).toLocaleDateString()},`}
                                     </p>
-
-                                    {`${new Date(
-                                      i.updatedAt
-                                    ).toLocaleTimeString()}`}
+                                    <p className="2xl:text-base text-xs">
+                                      {`${new Date(
+                                        i.updatedAt
+                                      ).toLocaleTimeString()}`}
+                                    </p>
                                   </td>
-                                  <td className="w-[200px] flex justify-center">
+                                  <td className="w-[200px] flex justify-center 2xl:text-base text-xs">
                                     {i.fileSize}
                                   </td>
                                   <td className="w-[200px] flex justify-end gap-5 items-center">
                                     <button>
                                       <FaCloudDownloadAlt
-                                        size={22}
-                                        className="text-[#5cb85c]"
+                                        className="text-[#5cb85c] 2xl:h-[22px] 2xl:w-[22px] h-[18px] w-[18px]"
                                         onClick={() => {
                                           handleDownloadFile(
                                             i.file.filename,
@@ -650,8 +648,7 @@ function Files() {
                                     </button>
                                     <button>
                                       <FaTrash
-                                        size={18}
-                                        className="text-[#d9534f]"
+                                        className="text-[#d9534f] 2xl:h-[18px] 2xl:w-[18px] h-[14px] w-[14px]"
                                         onClick={() => {
                                           handleDeleteFileToDb(
                                             i.file.filename,
@@ -665,17 +662,17 @@ function Files() {
                               );
                             } else {
                               return (
-                                <tr className="bg-white rounded-lg px-16 py-4 flex justify-between items-center mb-5 shadow-md">
+                                <tr className="bg-white rounded-lg px-16 2xl:py-4 py-2 mb-3 flex justify-between items-center 2xl:mb-5 shadow-md">
                                   <td className="w-[200px] flex justify-start items-center gap-3 relative">
                                     <div className="bg-[#292b2c] p-1 rounded-md">
-                                      <SiFiles className="text-white" />
+                                      <SiFiles className="text-white 2xl:w-[16px] 2xl:h-[16px] w-[12px] h-[12px]" />
                                     </div>
-                                    <p className="truncate pl-2">
+                                    <p className="truncate pl-2 2xl:text-base text-xs">
                                       {i.fileName}
                                     </p>
                                   </td>
                                   <td className="w-[200px] flex justify-center text-center gap-1">
-                                    <p className="text-blue-500 font-bold">
+                                    <p className="text-blue-500 font-bold 2xl:text-base text-xs">
                                       {new Date(
                                         i.updatedAt
                                       ).toLocaleDateString() ===
@@ -685,19 +682,19 @@ function Files() {
                                             i.updatedAt
                                           ).toLocaleDateString()},`}
                                     </p>
-
-                                    {`${new Date(
-                                      i.updatedAt
-                                    ).toLocaleTimeString()}`}
+                                    <p className="2xl:text-base text-xs">
+                                      {`${new Date(
+                                        i.updatedAt
+                                      ).toLocaleTimeString()}`}
+                                    </p>
                                   </td>
-                                  <td className="w-[200px] flex justify-center">
+                                  <td className="w-[200px] flex justify-center 2xl:text-base text-xs">
                                     {i.fileSize}
                                   </td>
                                   <td className="w-[200px] flex justify-end gap-5 items-center">
                                     <button>
                                       <FaCloudDownloadAlt
-                                        size={22}
-                                        className="text-[#5cb85c]"
+                                        className="text-[#5cb85c] 2xl:h-[22px] 2xl:w-[22px] h-[18px] w-[18px]"
                                         onClick={() => {
                                           handleDownloadFile(
                                             i.file.filename,
@@ -708,8 +705,7 @@ function Files() {
                                     </button>
                                     <button>
                                       <FaTrash
-                                        size={18}
-                                        className="text-[#d9534f]"
+                                        className="text-[#d9534f] 2xl:h-[18px] 2xl:w-[18px] h-[14px] w-[14px]"
                                         onClick={() => {
                                           handleDeleteFileToDb(
                                             i.file.filename,
