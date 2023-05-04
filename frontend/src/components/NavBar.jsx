@@ -147,7 +147,7 @@ function NavBar({ socket }) {
         {isLogged ? (
           <div className="relative flex gap-7 justify-end w-full">
             <button
-              className="text-center bg-white rounded-lg px-3 z-50"
+              className="text-center bg-white rounded-lg px-3 h-max py-3 z-50"
               type="button"
               onClick={() => {
                 setShowDropDown(false);
@@ -155,7 +155,7 @@ function NavBar({ socket }) {
               }}
             >
               <div className="relative">
-                <FaRegBell size={20} className="text-blue-500" />
+                <FaRegBell className="text-blue-500 2xl:w-[20px] 2xl:h-[20px] w-[16px] h-[16px]" />
                 {notifTemp.length ? (
                   <div className="bg-red-500 rounded-full px-2 text-white absolute font-bold -top-6 left-4">
                     {notifTemp.length}
@@ -168,89 +168,96 @@ function NavBar({ socket }) {
                 showDropDownNotif ? "visible" : "hidden"
               } font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-2xl w-3/12 absolute right-[72px] top-14`}
             >
-              <div className="flex flex-col items-start gap-4 p-3">
-                <p className="text-2xl font-bold text-blue-500">
+              <div className="flex flex-col items-start 2xl:gap-4 gap-2 p-3">
+                <p className="2xl:text-2xl text-xl font-bold text-blue-500">
                   Notifications
                 </p>
-
-                {notifications.length ? (
-                  notifications.map((i) => {
-                    if (i[0]?.notificationType === "addFriend") {
-                      return (
-                        <button
-                          className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
-                          onClick={() => {
-                            navigate(
-                              "/user/" + i[0]?.requestor.uid.slice(1, 12)
-                            );
-                            setShowDropDownNotif(!showDropDownNotif);
-                          }}
-                        >
-                          <div className="relative w-2/12">
-                            <img
-                              src={i[0]?.requestor.img}
-                              alt=""
-                              className=""
-                            />
-                            <div
-                              className="p-1 w-max rounded-full absolute top-10 left-8"
-                              style={{
-                                backgroundImage:
-                                  "linear-gradient(to left top, #3a7bd5, #00d2ff)",
-                              }}
-                            >
-                              <AiOutlineUserAdd className="text-white" />
+                <div className="2xl:max-h-[700px] max-h-[400px] overflow-auto">
+                  {notifications.length ? (
+                    notifications.map((i) => {
+                      if (i[0]?.notificationType === "addFriend") {
+                        return (
+                          <button
+                            className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                            onClick={() => {
+                              navigate(
+                                "/user/" + i[0]?.requestor.uid.slice(1, 12)
+                              );
+                              setShowDropDownNotif(!showDropDownNotif);
+                            }}
+                          >
+                            <div className="relative w-2/12">
+                              <img
+                                src={i[0]?.requestor.img}
+                                alt=""
+                                className="2xl:w-[54px] 2xl:h-[54px] 2xl:w-[40px] 2xl:h-[40px]"
+                              />
+                              <div
+                                className="p-1 w-max rounded-full absolute 2xl:top-10 2xl:left-8 top-8 left-6"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                                }}
+                              >
+                                <AiOutlineUserAdd className="text-white" />
+                              </div>
                             </div>
-                          </div>
-                          <div className="text-left w-10/12">
-                            <p className="text-blue-500">
-                              <span className="font-semibold">
-                                {i[0]?.requestor.name + " "}
-                              </span>
-                              added you as a friend. You can accept it now.
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    } else if (i[0]?.notificationType === "confirmedFriend") {
-                      return (
-                        <button
-                          className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
-                          onClick={() => {
-                            navigate("/user/" + i[0]?.sender.uid.slice(1, 12));
-                            setShowDropDownNotif(!showDropDownNotif);
-                          }}
-                        >
-                          <div className="relative w-2/12">
-                            <img src={i[0]?.sender.img} alt="" />
-                            <div
-                              className="p-1 w-max rounded-full absolute top-10 left-8"
-                              style={{
-                                backgroundImage:
-                                  "linear-gradient(to left top, #1cd8d2, #93edc7)",
-                              }}
-                            >
-                              <AiOutlineUser className="text-white" />
+                            <div className="text-left w-10/12">
+                              <p className="text-blue-500 2xl:text-base text-sm">
+                                <span className="font-semibold">
+                                  {i[0]?.requestor.name + " "}
+                                </span>
+                                added you as a friend. You can accept it now.
+                              </p>
                             </div>
-                          </div>
-                          <div className="text-left w-10/12">
-                            <p className="text-blue-500">
-                              <span className="font-semibold">
-                                {i[0]?.sender.name + " "}
-                              </span>
-                              accepted your friend request. You can now visit
-                              the profile.
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    }
-                  })
-                ) : (
-                  <p className="font-semibold text-blue-500">
-                    No notifications found
-                  </p>
-                )}
+                          </button>
+                        );
+                      } else if (i[0]?.notificationType === "confirmedFriend") {
+                        return (
+                          <button
+                            className="flex items-center gap-5 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                            onClick={() => {
+                              navigate(
+                                "/user/" + i[0]?.sender.uid.slice(1, 12)
+                              );
+                              setShowDropDownNotif(!showDropDownNotif);
+                            }}
+                          >
+                            <div className="relative w-2/12">
+                              <img
+                                src={i[0]?.sender.img}
+                                alt=""
+                                className="2xl:w-[54px] 2xl:h-[54px] 2xl:w-[40px] 2xl:h-[40px]"
+                              />
+                              <div
+                                className="p-1 w-max rounded-full absolute 2xl:top-10 2xl:left-8 top-8 left-6"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(to left top, #1cd8d2, #93edc7)",
+                                }}
+                              >
+                                <AiOutlineUser className="text-white" />
+                              </div>
+                            </div>
+                            <div className="text-left w-10/12">
+                              <p className="text-blue-500 2xl:text-base text-sm">
+                                <span className="font-semibold">
+                                  {i[0]?.sender.name + " "}
+                                </span>
+                                accepted your friend request. You can now visit
+                                the profile.
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      }
+                    })
+                  ) : (
+                    <p className="font-semibold text-blue-500">
+                      No notifications found
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <button
@@ -263,7 +270,7 @@ function NavBar({ socket }) {
               <img
                 src={avatar}
                 alt=""
-                className="w-[48px] h-[48px] hover:ring-blue-200 hover:ring-4 rounded-full"
+                className="2xl:w-[48px] 2xl:h-[48px] w-[42px] h-[42px] hover:ring-blue-200 hover:ring-4 rounded-full"
               />
             </button>
             <div
@@ -279,7 +286,11 @@ function NavBar({ socket }) {
                     setShowDropDown(!showDropDown);
                   }}
                 >
-                  <img src={avatar} alt="" className="w-[64px] h-[64px]" />
+                  <img
+                    src={avatar}
+                    alt=""
+                    className="2xl:w-[64px] 2xl:h-[64px] w-[48px] h-[48px]"
+                  />
                 </Link>
                 <div>
                   <Link
@@ -289,17 +300,19 @@ function NavBar({ socket }) {
                       setShowDropDown(!showDropDown);
                     }}
                   >
-                    <p className="font-medium text-base gap-3 text-[#102c54]">
+                    <p className="font-medium 2xl:text-base text-sm gap-3 text-[#102c54]">
                       {name}
                     </p>
                   </Link>
-                  <p className="font-normal text-sm text-[#102c54]">{uid}</p>
-                  <p className="text-sm text-[#102c54]">{email}</p>
+                  <p className="font-normal 2xl:text-sm text-xs text-[#102c54]">
+                    {uid}
+                  </p>
+                  <p className="2xl:text-sm text-xs text-[#102c54]">{email}</p>
                 </div>
               </div>
               <button
                 className="flex flex-start items-center hover:gap-5 gap-2 duration-300 w-full px-5 py-3 font-medium 
-              text-sm hover:bg-blue-500 hover:text-white hover:rounded-b-lg"
+              2xl:text-sm text-xs hover:bg-blue-500 hover:text-white hover:rounded-b-lg"
                 onClick={logout}
               >
                 Log Out <FaSignOutAlt />
