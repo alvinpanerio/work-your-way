@@ -202,18 +202,18 @@ function User({ socket }) {
               <img
                 src={userInfo.profileDetails?.[0].profileAvatar}
                 alt=""
-                className="w-[100px] mb-10"
+                className="2xl:w-[100px] w-[80px] 2xl:mb-10 mb-5"
               />
               {isFriendNo ? (
                 isFriendNo === 1 ? (
                   requestorMe ? (
-                    <button className="h-full bg-orange-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
+                    <button className="h-full bg-orange-500 rounded-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center">
                       <FaCheck />
                       Added
                     </button>
                   ) : (
                     <button
-                      className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center"
+                      className="h-full bg-green-500 rounded-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center"
                       onClick={() => {
                         handleConfirmUser(
                           userInfo.profileDetails[0].uid.slice(1, 12)
@@ -225,14 +225,14 @@ function User({ socket }) {
                     </button>
                   )
                 ) : (
-                  <button className="h-full bg-green-500 rounded-lg py-3 px-5 text-white flex gap-3 items-center">
+                  <button className="h-full bg-green-500 rounded-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center">
                     <FaUserCheck />
                     Friend
                   </button>
                 )
               ) : (
                 <button
-                  className="h-full bg-blue-500 rounded-lg py-3 px-5 text-white hover:bg-gray-100 hover:text-blue-500 transition duration-10 flex gap-3 items-center"
+                  className="h-full bg-blue-500 rounded-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white hover:bg-gray-100 hover:text-blue-500 transition duration-10 flex gap-3 items-center"
                   onClick={() => {
                     handleAddUser(userInfo.profileDetails[0].uid.slice(1, 12));
                   }}
@@ -243,41 +243,40 @@ function User({ socket }) {
               )}
             </div>
             <div className="flex gap-5 mb-3 items-center">
-              <p className="text-blue-500 font-bold text-2xl">
+              <p className="text-blue-500 font-bold 2xl:text-2xl text-xl">
                 {userInfo.profileDetails?.[0].name}
               </p>
-              <p className="font-medium">{userInfo.profileDetails?.[0].uid}</p>
+              <p className="font-medium 2xl:text-base text-sm">
+                {userInfo.profileDetails?.[0].uid}
+              </p>
             </div>
-            <p className="mb-8 flex gap-3 items-center w-6/12">
+            <p className="mb-8 flex gap-3 items-center w-6/12 2xl:text-base text-sm break-all">
               {userInfo.profileDetails?.[0].bio}
             </p>
             <div className="border-b-2 mb-8 w-2/12"></div>
-            <p className="text-gray-400 mb-3 flex gap-3 items-center">
+            <p className="text-gray-400 mb-3 flex gap-3 items-center 2xl:text-base text-sm 2xl:text-base text-sm">
               <FaLocationArrow className="text-green-500" />
               {userInfo.profileDetails?.[0].address}
             </p>
-            <p className="mb-3 flex gap-3 items-center">
+            <p className="mb-3 flex gap-3 items-center 2xl:text-base text-sm">
               <FaPhoneAlt className="text-yellow-500" />
               {userInfo.profileDetails?.[0].contactNo}
             </p>
-            <div className="flex gap-3 mb-3">
-              <p className="flex gap-3 items-center ">
-                <FaBirthdayCake className="text-red-500 " />
+            <div className="flex gap-3 mb-3 items-center">
+              <p className="flex gap-3 items-center 2xl:text-base text-sm">
+                <FaBirthdayCake className="text-red-500" />
                 {userInfo.profileDetails?.[0].bday}
               </p>
               <p className="text-gray-300">•</p>
-              <p className="font-medium flex gap-3 items-center ">
-                <FaBookReader className="text-blue-500" />
+              <p className="font-medium flex gap-3 w-[350px] items-center 2xl:text-base text-sm">
+                <FaBookReader className="text-blue-500 w-[32px] h-[32px]" />
                 {userInfo.profileDetails?.[0].course}
               </p>
               <p className="text-gray-300">•</p>
-              <p className="text-gray-400 ">
+              <p className="text-gray-400 2xl:text-base text-sm">
                 {userInfo.profileDetails?.[0].status}
               </p>
             </div>
-          </div>
-          <div className="w-2/3 bg-white rounded-2xl shadow-md p-10 mx-auto">
-            <p className="text-blue-500 text-3xl font-bold">Achievements</p>
           </div>
         </div>
       </div>

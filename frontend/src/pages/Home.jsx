@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   FaLongArrowAltRight,
   FaSearch,
@@ -26,11 +26,16 @@ function Home({ addClass, socket }) {
   const [reload, setReload] = useState(false);
   const [reloadOnlineFriends, setReloadOnlineFriends] = useState(false);
   const [isGetFriends, setIsGetFriend] = useState(true);
+  const [isFriendsInLB, setIsFriendsInLB] = useState(true);
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState({});
   const [friendsArr, setFriendsArr] = useState([]);
   const [onlineFriends, setOnlineFriends] = useState([]);
+  const [leaderboardsList, setLeaderboardsList] = useState([]);
+  const [friendsInLb, setFriendsInLb] = useState([]);
+  const [top, setTop] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +44,7 @@ function Home({ addClass, socket }) {
       getAccountDetails(JSON.parse(isAuth).id);
       getRecentFiles(JSON.parse(isAuth).email);
       handleGetUsers();
+      getLeaderboards();
       setIsLogged(true);
     } else {
       setIsLogged(false);
@@ -52,6 +58,7 @@ function Home({ addClass, socket }) {
         getRecentFiles(JSON.parse(isAuth).email);
         getPlannerList(JSON.parse(isAuth).email);
         handleGetUsers();
+        getLeaderboards();
         setReload(!reload);
       }
     }
@@ -96,7 +103,6 @@ function Home({ addClass, socket }) {
 
   useEffect(() => {
     if (socket && email) {
-      console.log(email);
       socket.emit("onlineFriends", { receiver: email });
     }
   }, [reloadOnlineFriends]);
@@ -108,6 +114,13 @@ function Home({ addClass, socket }) {
       });
     }
   }, [socket, onlineFriends]);
+
+  useEffect(() => {
+    if (leaderboardsList.length > 0 && friendsArr.length > 0 && isFriendsInLB) {
+      getFriendsInLb();
+      setIsFriendsInLB(false);
+    }
+  }, [leaderboardsList, friends, isFriendsInLB]);
 
   const getRecentFiles = async (user) => {
     try {
@@ -178,6 +191,40 @@ function Home({ addClass, socket }) {
     }
   };
 
+  const getLeaderboards = async () => {
+    try {
+      await axios
+        .get(process.env.REACT_APP_API_URI + "/leaderboards/get-leaderboards")
+        .then((result) => {
+          setLeaderboardsList([...result?.data?.leaderboards]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getFriendsInLb = () => {
+    if (leaderboardsList) {
+      leaderboardsList
+        .sort((a, b) => b.points - a.points)
+        .forEach((i, n) => {
+          if (i?.email === email) {
+            setFriendsInLb((prev) => [...prev, i]);
+            setTop(n + 1);
+          } else {
+            friendsArr.forEach((j) => {
+              if (i?.email === j?.email) {
+                setFriendsInLb((prev) => [...prev, i]);
+              }
+            });
+          }
+        });
+    }
+  };
+
   const month = [
     "Jan",
     "Feb",
@@ -210,62 +257,80 @@ function Home({ addClass, socket }) {
                 className="md:w-[300px] bg-white text-gray-900 text-sm rounded-lg block w-6/12 2xl:py-2.5 px-10 py-2 focus:shadow-md focus:outline-none"
                 autocomplete="off"
               />
-              <FaSearch className="absolute left-3.5 top-3.5 opacity-20" />
+              <FaSearch className="absolute left-3.5 2xl:top-3.5 top-3 opacity-20" />
+
               {search.trim() ? (
-                <div className="w-full bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-xl">
-                  {users.filter((i) => {
-                    return search.length
-                      ? i.profileDetails[0].name.toLowerCase().includes(search)
-                      : i;
-                  }).length === 0 ? (
-                    <p className="font-bold mb-3 px-2 py-3">
-                      No searched results
-                    </p>
-                  ) : (
-                    users
-                      .filter((i) => {
-                        return search.length
-                          ? i.profileDetails[0].name
-                              .toLowerCase()
-                              .includes(search)
-                          : i;
-                      })
-                      .map((user, i) => {
-                        return (
-                          <button
-                            key={i}
-                            className="w-full flex flex-wrap items-center justify-between gap-5 mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
-                            onClick={() => {
-                              handleVisitUser(
-                                user.profileDetails[0].uid.slice(1, 12)
-                              );
-                            }}
-                          >
-                            <div className="flex flex-wrap items-center gap-5">
-                              <img
-                                src={user.profileDetails[0].profileAvatar}
-                                alt=""
-                                className="w-[50px] h-[50px]"
-                              />
-                              <div className="flex items-start flex-col">
-                                <p className="font-bold">
-                                  {user.profileDetails[0].name}
-                                </p>
-                                <p>{user.profileDetails[0].uid}</p>
+                <div className="w-full bg-white rounded-lg px-3 absolute py-3 mt-1 shadow-xl">
+                  <div className="2xl:h-[500px] h-[360px] overflow-auto">
+                    {users.filter((i) => {
+                      return search.length
+                        ? i.profileDetails[0].name
+                            .toLowerCase()
+                            .includes(search)
+                        : i;
+                    }).length === 0 ? (
+                      <p className="font-bold mb-3 px-2 py-3">
+                        No searched results
+                      </p>
+                    ) : (
+                      users
+                        .filter((i) => {
+                          return search.length
+                            ? i.profileDetails[0].name
+                                .toLowerCase()
+                                .includes(search)
+                            : i;
+                        })
+                        .map((user, i) => {
+                          return (
+                            <button
+                              key={i}
+                              className="w-full flex flex-wrap items-center justify-between gap-5 mb-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100"
+                              onClick={() => {
+                                handleVisitUser(
+                                  user.profileDetails[0].uid.slice(1, 12)
+                                );
+                              }}
+                            >
+                              <div className="flex flex-wrap items-center gap-5">
+                                <img
+                                  src={user.profileDetails[0].profileAvatar}
+                                  alt=""
+                                  className="2xl:w-[50px] 2xl:h-[50px] w-[40px] h-[40px]"
+                                />
+                                <div className="flex items-start flex-col">
+                                  <p className="font-bold 2xl:text-base text-sm">
+                                    {user.profileDetails[0].name}
+                                  </p>
+                                  <p className="2xl:text-base text-sm">
+                                    {user.profileDetails[0].uid}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          </button>
-                        );
-                      })
-                  )}
+                            </button>
+                          );
+                        })
+                    )}
+                  </div>
                 </div>
               ) : null}
             </div>
-            <p className="text-2xl font-bold mt-8 mb-3 text-blue-500 text-4xl">{`Hello, ${name}!`}</p>
+            <div>&nbsp;</div>
+            <p className="text-2xl 2xl:text-4xl text-blue-500 font-bold mr-10">{`Hello, ${name}!`}</p>
             <div className="flex gap-3 w-full">
               <div className="w-8/12">
-                <div className="bg-white rounded-lg px-5 pt-5 my-5 shadow-md w-[917px]">
-                  <p className=" border-b-2 pb-5">Recent Files</p>
+                <div className="bg-white rounded-lg 2xl:px-5 2xl:pt-5 2xl:my-5 px-4 pt-4 my-5 shadow-md">
+                  <Link
+                    to={"/files"}
+                    className="hover:text-blue-500 flex 2xl:border-b-2 border-b-[1px] hover:gap-4 transition-all duration-100"
+                  >
+                    <p className="2xl:pb-5 pb-4 2xl:text-base text-sm">
+                      Recent Files
+                    </p>
+                    <p className="2xl:pb-5 pb-4 2xl:text-base text-sm">
+                      &nbsp; →
+                    </p>
+                  </Link>
                   <div className="flex justify-center gap-5">
                     <ul
                       className={`flex ${
@@ -276,20 +341,17 @@ function Home({ addClass, socket }) {
                         .slice(0)
                         .reverse()
                         .map((i, n) => {
-                          if (n < 6) {
+                          if (n < 4) {
                             if (i.fileName.split(".").pop() === "xlsx") {
                               return (
                                 <li
                                   key={n}
-                                  className="flex flex-col items-center py-8 px-1"
+                                  className="flex flex-col items-center 2xl:p-8 p-4"
                                 >
-                                  <div className="bg-[#5cb85c] p-2 rounded-lg">
-                                    <SiMicrosoftexcel
-                                      size={20}
-                                      className="text-white"
-                                    />
+                                  <div className="bg-[#5cb85c] 2xl:p-3 p-2 rounded-lg">
+                                    <SiMicrosoftexcel className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                                   </div>
-                                  <p className="truncate w-32 mt-3 text-center">
+                                  <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                                     {i.fileName}
                                   </p>
                                 </li>
@@ -301,15 +363,12 @@ function Home({ addClass, socket }) {
                               return (
                                 <li
                                   key={n}
-                                  className="flex flex-col items-center py-8 px-1"
+                                  className="flex flex-col items-center 2xl:p-8 p-4"
                                 >
-                                  <div className="bg-[#0275d8] p-2 rounded-lg">
-                                    <SiMicrosoftword
-                                      size={20}
-                                      className="text-white"
-                                    />
+                                  <div className="bg-[#0275d8] 2xl:p-3 p-2 rounded-lg">
+                                    <SiMicrosoftword className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                                   </div>
-                                  <p className="truncate w-32 mt-3 text-center">
+                                  <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                                     {i.fileName}
                                   </p>
                                 </li>
@@ -318,15 +377,12 @@ function Home({ addClass, socket }) {
                               return (
                                 <li
                                   key={n}
-                                  className="flex flex-col items-center py-8 px-1"
+                                  className="flex flex-col items-center 2xl:p-8 p-4"
                                 >
-                                  <div className="bg-[#d9534f] p-2 rounded-lg">
-                                    <BsFiletypeExe
-                                      size={20}
-                                      className="text-white"
-                                    />
+                                  <div className="bg-[#d9534f] 2xl:p-3 p-2 rounded-lg">
+                                    <BsFiletypeExe className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                                   </div>
-                                  <p className="truncate w-32 mt-3 text-center">
+                                  <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                                     {i.fileName}
                                   </p>
                                 </li>
@@ -339,15 +395,12 @@ function Home({ addClass, socket }) {
                               return (
                                 <li
                                   key={n}
-                                  className="flex flex-col items-center py-8"
+                                  className="flex flex-col items-center 2xl:p-8 p-4"
                                 >
-                                  <div className="bg-[#6610f2] p-2 rounded-lg">
-                                    <BsFileEarmarkImage
-                                      size={20}
-                                      className="text-white"
-                                    />
+                                  <div className="bg-[#6610f2] 2xl:p-3 p-2 rounded-lg">
+                                    <BsFileEarmarkImage className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                                   </div>
-                                  <p className="truncate w-32 mt-3 text-center">
+                                  <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                                     {i.fileName}
                                   </p>
                                 </li>
@@ -356,12 +409,12 @@ function Home({ addClass, socket }) {
                               return (
                                 <li
                                   key={n}
-                                  className="flex flex-col items-center py-8 px-1"
+                                  className="flex flex-col items-center 2xl:p-8 p-4"
                                 >
-                                  <div className="bg-[#292b2c] p-2 rounded-lg">
-                                    <SiFiles size={20} className="text-white" />
+                                  <div className="bg-[#292b2c] 2xl:p-3 p-2 rounded-lg">
+                                    <SiFiles className="text-white 2xl:w-[32px] 2xl:h-[32px] w-[18px] h-[18px]" />
                                   </div>
-                                  <p className="truncate w-32 mt-3 text-center">
+                                  <p className="truncate w-32 mt-3 text-center 2xl:text-base text-xs">
                                     {i.fileName}
                                   </p>
                                 </li>
@@ -373,171 +426,225 @@ function Home({ addClass, socket }) {
                   </div>
                 </div>
                 <div className="max-h-[24rem] w-full">
-                  {plannerList.map((i, n) => {
-                    if (new Date() < new Date(i.taskDuration)) {
-                      if (n < 3) {
-                        return (
-                          <>
-                            <div
-                              key={n}
-                              className="bg-white rounded-lg p-5 gap-5 flex items-center mb-5 shadow-md w-3/3"
-                            >
+                  {plannerList
+                    .slice(0)
+                    .reverse()
+                    .map((i, n) => {
+                      if (new Date() < new Date(i.taskDuration)) {
+                        if (n < 2) {
+                          return (
+                            <Link to={"/planner"}>
                               <div
-                                className="w-[50px] h-[50px] rounded-lg"
-                                style={{
-                                  backgroundImage:
-                                    "linear-gradient(to left top, #3a7bd5, #00d2ff)",
-                                }}
-                              ></div>
-                              <div className="flex flex-col gap-1 w-3/12">
-                                <p className="font-bold">{i.taskName}</p>
-                                <p className="text-gray-400 text-sm text-ellipsis truncate">
-                                  {i.taskDescription}
-                                </p>
-                              </div>
-                              <div className="w-4/12">
-                                <p className="text-gray-400">
-                                  {`Created: ${
-                                    month[new Date(i.createdAt).getMonth()]
-                                  }
-                      ${new Date(i.createdAt).getDate()}, 
-                      ${new Date(i.createdAt).getFullYear()}`}
-                                </p>
-                                <p className="font-bold">
-                                  {`Due: ${
-                                    month[new Date(i.taskDuration).getMonth()]
-                                  }
-                      ${new Date(i.taskDuration).getDate()}, 
-                      ${new Date(i.taskDuration).getFullYear()}`}
-                                </p>
-                              </div>
-                              <div className="w-3/12 flex flex-col gap-3 justify-end">
-                                <div className="flex justify-between">
-                                  <p className="text-sm">Remaining</p>
-                                  <p className="text-sm">
-                                    {i.taskDurationNum >=
-                                    new Date(
-                                      new Date(i.taskDuration) - new Date()
-                                    ).getDate() -
-                                      1
-                                      ? new Date(
-                                          new Date(i.taskDuration) - new Date()
-                                        ).getDate() - 1
-                                      : 0}
-                                    d
+                                key={n}
+                                className="bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex items-center 2xl:mb-5 mb-3 shadow-md w-3/3 hover:bg-gray-100 transition-all duration-100"
+                              >
+                                <div
+                                  className="2xl:w-[50px] 2xl:h-[50px] w-[40px] h-[40px] rounded-lg"
+                                  style={{
+                                    backgroundImage:
+                                      "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                                  }}
+                                ></div>
+                                <div className="flex flex-col gap-1 w-3/12">
+                                  <p className="font-bold 2xl:text-base text-sm">
+                                    {i.taskName}
+                                  </p>
+                                  <p className="text-gray-400 2xl:text-sm text-xs text-ellipsis truncate">
+                                    {i.taskDescription}
                                   </p>
                                 </div>
-                                <div className="rounded-lg h-2 bg-[#00d2ff]/20">
-                                  <div
-                                    className="rounded-lg h-2"
-                                    style={{
-                                      backgroundImage:
-                                        "linear-gradient(to left top, #3a7bd5, #00d2ff)",
-                                      width: `${
-                                        (1 -
-                                          (new Date(
+                                <div className="w-4/12">
+                                  <p className="text-gray-400 2xl:text-base text-sm">
+                                    {`Created: ${
+                                      month[new Date(i.createdAt).getMonth()]
+                                    }
+                      ${new Date(i.createdAt).getDate()}, 
+                      ${new Date(i.createdAt).getFullYear()}`}
+                                  </p>
+                                  <p className="font-bold 2xl:text-base text-sm">
+                                    {`Due: ${
+                                      month[new Date(i.taskDuration).getMonth()]
+                                    }
+                      ${new Date(i.taskDuration).getDate()}, 
+                      ${new Date(i.taskDuration).getFullYear()}`}
+                                  </p>
+                                </div>
+                                <div className="w-3/12 flex flex-col gap-3 justify-end">
+                                  <div className="flex justify-between">
+                                    <p className="2xl:text-sm text-xs">
+                                      Remaining
+                                    </p>
+                                    <p className="2xl:text-sm text-xs">
+                                      {i.taskDurationNum >=
+                                      new Date(
+                                        new Date(i.taskDuration) - new Date()
+                                      ).getDate() -
+                                        1
+                                        ? new Date(
                                             new Date(i.taskDuration) -
                                               new Date()
-                                          ).getDate() -
-                                            1) /
-                                            i.taskDurationNum) *
-                                        100
-                                      }%`,
-                                    }}
-                                  ></div>
+                                          ).getDate() - 1
+                                        : 0}
+                                      d
+                                    </p>
+                                  </div>
+                                  <div className="rounded-lg h-2 bg-[#00d2ff]/20">
+                                    <div
+                                      className="rounded-lg h-2"
+                                      style={{
+                                        backgroundImage:
+                                          "linear-gradient(to left top, #3a7bd5, #00d2ff)",
+                                        width: `${
+                                          (1 -
+                                            (new Date(
+                                              new Date(i.taskDuration) -
+                                                new Date()
+                                            ).getDate() -
+                                              1) /
+                                              i.taskDurationNum) *
+                                          100
+                                        }%`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        }
+                      } else {
+                        return null;
+                      }
+                    })}
+                </div>
+                <Link to={"/leaderboards"}>
+                  <div className="bg-white rounded-lg 2xl:p-5 p-3 gap-5 flex justify-center items-center 2xl:mb-5 mb-3 shadow-md w-3/3 hover:bg-gray-100 transition-all duration-100">
+                    {friendsInLb
+                      ?.sort((a, b) => b?.points - a?.points)
+                      ?.map((i, z) => {
+                        if (z === 0) {
+                          return (
+                            <div className="flex justify-center gap-10" key={z}>
+                              <img
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/trophy-number-one-8616537-6815626.png"
+                                alt=""
+                                className="2xl:h-[70px] h-[50px]"
+                              />
+                              <div className="rounded-full bg-blue-100 w-[485px] 2xl:w-[540px] flex items-center justify-between pr-10">
+                                <div className="flex gap-5 items-center">
+                                  <img
+                                    src={i?.profileAvatar}
+                                    className="2xl:w-[70px] 2xl:h-[70px] w-[60px] h-[60px]"
+                                    alt=""
+                                  />
+
+                                  <div className="flex flex-col gap-2">
+                                    <p className="text-blue-500 2xl:text-base text-sm font-bold">
+                                      {i?.name}
+                                    </p>
+                                    <p className="2xl:text-sm text-xs text-gray-500">
+                                      {i?.uid}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex gap-5 items-center">
+                                  <p className="2xl:text-base text-sm text-green-500 font-bold">
+                                    {i?.taskNum} accomplished tasks
+                                  </p>
+                                  <p className="2xl:text-2xl text-xl text-blue-500 font-bold">
+                                    {i?.points}
+                                  </p>
                                 </div>
                               </div>
                             </div>
-                          </>
-                        );
-                      }
-                    } else {
-                      return null;
-                    }
-                  })}
-                </div>
-              </div>
-              <div className="w-4/12 flex items-end flex-col gap-3 mt-5">
-                <div className="bg-white rounded-lg px-3 py-5 shadow-md w-[240px]">
-                  <p className="text-2xl font-bold text-blue-500 pb-5 px-2">
-                    Friends
-                  </p>
-                  {friendsArr[0]?.map((i, j) => {
-                    if (i?.isConfirmedFriend === 2) {
-                      return users.map((k, l) => {
-                        if (i?.email === k?.email) {
-                          return (
-                            <button
-                              key={l}
-                              type="button"
-                              className="flex gap-3 justify-start px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100 w-full"
-                              onClick={() => {
-                                navigate(
-                                  "/user/" +
-                                    k?.profileDetails[0]?.uid.slice(1, 12)
-                                );
-                              }}
-                            >
-                              <img
-                                src={k?.profileDetails[0]?.profileAvatar}
-                                alt=""
-                                className="w-[50px]"
-                              />
-                              <div className="flex flex-col justify-between items-start">
-                                <p className="font-semibold">
-                                  {k?.profileDetails[0]?.name}
-                                </p>
-                                <p className="text-xs text-gray-400">
-                                  {k?.profileDetails[0]?.uid}
-                                </p>
-                              </div>
-                            </button>
                           );
                         }
-                      });
-                    }
-                  })}
+                      })}
+                  </div>
+                </Link>
+              </div>
+              <div className="w-4/12 flex items-end flex-col gap-3 mt-5">
+                <div className="bg-white rounded-lg 2xl:px-3 2xl:py-5 px-2 py-3 shadow-md w-[240px] h-max">
+                  <p className="ml-1 text-blue-500 text-xl 2xl:text-2xl font-bold 2xl:mb-7 2xl:mb-5 mb-3">
+                    Friends
+                  </p>
+                  <div className="overflow-auto h-[131px] 2xl:h-[180px]">
+                    {friendsArr[0]?.map((i, j) => {
+                      if (i?.isConfirmedFriend === 2) {
+                        return users.map((k, l) => {
+                          if (i?.email === k?.email) {
+                            return (
+                              <button
+                                key={l}
+                                type="button"
+                                className="flex gap-3 justify-start px-2 py-3 items-center hover:bg-gray-200 rounded-lg transition duration-100 w-full"
+                                onClick={() => {
+                                  navigate(
+                                    "/user/" +
+                                      k?.profileDetails[0]?.uid.slice(1, 12)
+                                  );
+                                }}
+                              >
+                                <img
+                                  src={k?.profileDetails[0]?.profileAvatar}
+                                  alt=""
+                                  className="w-[40px] h-[40px]"
+                                />
+                                <div className="flex flex-col justify-between items-start">
+                                  <p className="text-sm font-bold">
+                                    {k?.profileDetails[0]?.name}
+                                  </p>
+                                  <p className="text-xs text-gray-400">
+                                    {k?.profileDetails[0]?.uid}
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          }
+                        });
+                      }
+                    })}
+                  </div>
                 </div>
-                <div className="bg-white rounded-lg px-5 pt-5 shadow-md w-[240px]">
-                  <p className="text-2xl font-bold text-blue-500 pb-5">
+                <div className="bg-white rounded-lg 2xl:px-3 2xl:py-5 px-2 py-3 shadow-md w-[240px] h-max">
+                  <p className="ml-1 text-blue-500 text-xl 2xl:text-2xl font-bold 2xl:mb-7 2xl:mb-5 mb-3">
                     Online
                   </p>
                   <div>
-                    {onlineFriends["0"]?.onlineUsers.map((i, z) => {
-                      return friendsArr[0]?.map((j, h) => {
-                        if (j?.email === i?.username) {
-                          return users.map((k, l) => {
-                            if (j?.email === k?.email) {
-                              return (
-                                <div className="flex gap-3 pb-5 justify-start items-center">
-                                  <div className="relative">
-                                    <img
-                                      src={k?.profileDetails[0]?.profileAvatar}
-                                      alt=""
-                                      className="w-[50px]"
-                                    />
-                                    <div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-[1px] bottom-[1px] shadow-xl"></div>
+                    <div className="overflow-auto h-[131px] 2xl:h-[180px]">
+                      {onlineFriends["0"]?.onlineUsers.map((i, z) => {
+                        return friendsArr[0]?.map((j, h) => {
+                          if (j?.email === i?.username) {
+                            return users.map((k, l) => {
+                              if (j?.email === k?.email) {
+                                return (
+                                  <div className="flex gap-3 pb-5 justify-start px-2 items-center">
+                                    <div className="relative">
+                                      <img
+                                        src={
+                                          k?.profileDetails[0]?.profileAvatar
+                                        }
+                                        alt=""
+                                        className="w-[40px] h-[40px]"
+                                      />
+                                      <div className="w-[12px] h-[12px] bg-green-500 rounded-full absolute right-[1px] bottom-[1px] shadow-xl"></div>
+                                    </div>
+                                    <div className="flex flex-col justify-between">
+                                      <p className="text-sm font-bold">
+                                        {k?.profileDetails[0]?.name}
+                                      </p>
+                                      <p className="text-xs text-gray-400">
+                                        {k?.profileDetails[0]?.uid}
+                                      </p>
+                                    </div>
                                   </div>
-                                  <div className="flex flex-col justify-between">
-                                    <p className="font-semibold">
-                                      {k?.profileDetails[0]?.name}
-                                    </p>
-                                    <p className="text-xs text-gray-400">
-                                      {k?.profileDetails[0]?.uid}
-                                    </p>
-                                  </div>
-                                </div>
-                              );
-                            }
-                          });
-                        }
-                      });
-                    })}
-                    {/* // ) : ( //{" "}
-                  <p className="font-medium text-blue-500 pb-5">
-                    // No Online Friends //{" "}
-                  </p>
-                  // )} */}
+                                );
+                              }
+                            });
+                          }
+                        });
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -270,10 +270,6 @@ function Leaderboards() {
                   </div>
                 </div>
               </div>
-              {/* <button className="rounded-lg bg-blue-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center h-max">
-                <FaShare className="text-white" />
-                Share
-              </button> */}
             </div>
             <div className="2xl:gap-5 gap-4 w-1/3 bg-white p-5 rounded-lg shadow-md flex flex-col justify-between">
               <p className="text-blue-500 font-bold 2xl:text-2xl text-xl">
@@ -313,7 +309,7 @@ function Leaderboards() {
                           alt=""
                           className="2xl:h-[70px] h-[50px]"
                         />
-                        <div className="rounded-full bg-blue-100 w-[485px] flex items-center justify-between pr-10">
+                        <div className="rounded-full bg-blue-100 w-[485px] 2xl:w-[540px] flex items-center justify-between pr-10">
                           <div className="flex gap-5 items-center">
                             <img
                               src={i?.profileAvatar}
@@ -349,7 +345,7 @@ function Leaderboards() {
                           alt=""
                           className="2xl:h-[70px] h-[50px]"
                         />
-                        <div className="rounded-full bg-blue-100 w-[485px] flex items-center justify-between pr-10">
+                        <div className="rounded-full bg-blue-100 w-[485px] 2xl:w-[540px] flex items-center justify-between pr-10">
                           <div className="flex gap-5 items-center">
                             <img
                               src={i?.profileAvatar}
@@ -384,7 +380,7 @@ function Leaderboards() {
                           alt=""
                           className="2xl:h-[70px] h-[50px]"
                         />
-                        <div className="rounded-full bg-blue-100 w-[485px] flex items-center justify-between pr-10">
+                        <div className="rounded-full bg-blue-100 w-[485px] 2xl:w-[540px] flex items-center justify-between pr-10">
                           <div className="flex gap-5 items-center">
                             <img
                               src={i?.profileAvatar}
@@ -420,7 +416,7 @@ function Leaderboards() {
                         <p className="text-blue-500 font-bold text-2xl 2xl:w-[70px] w-[50px] flex justify-center">
                           {z + 1}
                         </p>
-                        <div className="rounded-full bg-blue-100 w-[485px] flex items-center justify-between pr-10">
+                        <div className="rounded-full bg-blue-100 w-[485px] 2xl:w-[540px] flex items-center justify-between pr-10">
                           <div className="flex gap-5 items-center">
                             <img
                               src={i?.profileAvatar}

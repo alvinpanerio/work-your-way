@@ -256,18 +256,24 @@ function Profile() {
       </div>
       <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
         <SideBar />
-        <div className="flex mt-3 mb-10">
-          <p className="text-blue-500 text-4xl font-bold mr-10">Profile</p>
+        <div className="flex mt-3 2xl:mb-10 mb-5">
+          <p className="text-blue-500 text-2xl 2xl:text-4xl font-bold mr-10">
+            Profile
+          </p>
         </div>
         {isEdit ? (
           <form
-            className="w-2/3 bg-white rounded-2xl shadow-md p-10 mx-auto"
+            className="w-2/3 bg-white rounded-2xl shadow-md 2xl:p-10 p-5 mx-auto"
             onSubmit={handleUpdateInfo}
           >
             <div className="flex justify-between">
               <div className="flex gap-10">
                 <div className="relative">
-                  <img src={image} alt="" className="w-[100px] h-[100px]" />
+                  <img
+                    src={image}
+                    alt=""
+                    className="2xl:w-[100px] 2xl:h-[100px] w-[80px] h-[80px]"
+                  />
                   <div className="absolute right-0 top-0">
                     <button
                       className="rounded-full bg-blue-500 text-white p-2 shadow-lg"
@@ -276,7 +282,7 @@ function Profile() {
                       }}
                       type="button"
                     >
-                      <FaRegEdit />
+                      <FaRegEdit className="" />
                     </button>
                   </div>
                 </div>
@@ -292,22 +298,22 @@ function Profile() {
                       setNameLeft(e.target.value);
                     }}
                     maxLength="16"
-                    className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none"
+                    className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm rounded-lg focus:outline-none"
                   />
-                  <p className="">{uid}</p>
-                  <p className="">{email}</p>
+                  <p className="2xl:text-base text-sm">{uid}</p>
+                  <p className="2xl:text-base text-sm">{email}</p>
                 </div>
               </div>
               <div className="h-full flex gap-3">
                 <button
-                  className="rounded-lg bg-green-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
+                  className="rounded-lg bg-green-500 shadow-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center"
                   type="submit"
                 >
                   <FaCheck />
                   Update
                 </button>
                 <button
-                  className="rounded-lg bg-red-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
+                  className="rounded-lg bg-red-500 shadow-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center"
                   onClick={() => {
                     setCancel(!cancel);
                     setNameLeft("");
@@ -321,19 +327,19 @@ function Profile() {
                 </button>
               </div>
             </div>
-            <div className="mt-10 flex justify-between">
-              <p className="text-blue-500 text-3xl font-bold">
+            <div className="2xl:mt-10 mt-5 flex justify-between">
+              <p className="text-blue-500 2xl:text-3xl text-2xl font-bold">
                 Personal Information
               </p>
-              <div className="border-t-2 w-7/12 mt-5"></div>
+              <div className="border-t-2 w-7/12 2xl:mt-5 mt-4"></div>
             </div>
-            <div className="mt-10">
-              <div className="flex gap-10 mb-5">
+            <div className="2xl:mt-10 mt-5">
+              <div className="flex gap-10 2xl:mb-5 mb-3">
                 <div className="w-1/2">
-                  <p className="font-bold text-lg">Course</p>
+                  <p className="font-bold 2xl:text-lg text-base">Course</p>
                   <div className="relative">
                     <select
-                      className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none cursor-pointer"
+                      className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 2xl:pr-7 pr-10 2xl:text-base text-sm rounded-lg focus:outline-none cursor-pointer"
                       style={{ appearance: "none" }}
                       onChange={(e) => {
                         setCourse(e.target.value);
@@ -348,14 +354,14 @@ function Profile() {
                         </option>
                       ))}
                     </select>
-                    <div className="absolute right-4 top-4">
+                    <div className="absolute right-4 2xl:top-4 top-3">
                       <FaAngleDown />
                     </div>
                   </div>
                 </div>
                 <div className="w-1/2">
                   <div className="flex gap-5 items-center">
-                    <p className="font-bold text-lg">Address</p>
+                    <p className="font-bold 2xl:text-lg text-base">Address</p>
                     <p className="text-xs text-blue-500">
                       {50 - addressLeft.length} character(s) left
                     </p>
@@ -364,7 +370,7 @@ function Profile() {
                     type="text"
                     placeholder={address}
                     maxLength={50}
-                    className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none"
+                    className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm rounded-lg focus:outline-none"
                     onChange={(e) => {
                       setAddress(e.target.value);
                       setAddressLeft(e.target.value);
@@ -372,13 +378,15 @@ function Profile() {
                   />
                 </div>
               </div>
-              <div className="flex gap-10 mb-5">
+              <div className="flex gap-10 2xl:mb-5 mb-3">
                 <div className="w-1/2">
-                  <p className="font-bold text-lg">Contact Number</p>
+                  <p className="font-bold 2xl:text-lg text-base">
+                    Contact Number
+                  </p>
                   <input
                     type="tel"
                     placeholder={!contactNo ? "e.g. 09510123456" : contactNo}
-                    className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none"
+                    className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm rounded-lg focus:outline-none"
                     pattern="[0]{1}[9]{1}[0-9]{9}"
                     onChange={(e) => {
                       setContactNo(e.target.value);
@@ -386,11 +394,11 @@ function Profile() {
                   />
                 </div>
                 <div className="w-1/2">
-                  <p className="font-bold text-lg">Birthday</p>
+                  <p className="font-bold 2xl:text-lg text-base">Birthday</p>
                   <input
                     type="date"
                     placeholder={bday}
-                    className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none"
+                    className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm rounded-lg focus:outline-none"
                     max="2003-12-31"
                     min="2000-01-01"
                     onChange={(e) => {
@@ -399,11 +407,11 @@ function Profile() {
                   />
                 </div>
               </div>
-              <div className="mb-5 w-1/2">
-                <p className="font-bold text-lg">Status</p>
+              <div className="2xl:mb-5 mb-3 w-1/2">
+                <p className="font-bold 2xl:text-lg text-base">Status</p>
                 <div className="relative">
                   <select
-                    className="w-full bg-gray-200 p-3 pr-10 rounded-lg focus:outline-none cursor-pointer"
+                    className="w-full bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm rounded-lg focus:outline-none cursor-pointer"
                     style={{ appearance: "none" }}
                     onChange={(e) => {
                       setStatus(e.target.value);
@@ -435,21 +443,21 @@ function Profile() {
                       😴 Sleeping
                     </option>
                   </select>
-                  <div className="absolute right-4 top-4">
+                  <div className="absolute right-4 2xl:top-4 top-3">
                     <FaAngleDown />
                   </div>
                 </div>
               </div>
-              <div className="mb-5">
+              <div className="2xl:mb-5 mb-0">
                 <div className="flex gap-5 items-center">
-                  <p className="font-bold text-lg">Bio</p>
+                  <p className="font-bold 2xl:text-lg text-base">Bio</p>
                   <p className="text-xs text-blue-500">
                     {100 - bioLeft.length} character(s) left
                   </p>
                 </div>
                 <textarea
                   type="text"
-                  className="border rounded-lg bg-gray-200 p-3 h-32 w-full focus:outline-none"
+                  className="border rounded-lg bg-gray-200 2xl:p-3 2xl:pr-10 p-2 pr-7 2xl:text-base text-sm 2xl:h-32 h-20 w-full focus:outline-none"
                   placeholder={bio}
                   style={{ resize: "none" }}
                   onChange={(e) => {
@@ -462,21 +470,27 @@ function Profile() {
             </div>
           </form>
         ) : (
-          <div className="w-2/3 bg-white rounded-2xl shadow-md p-10 mx-auto">
+          <div className="w-2/3 bg-white rounded-2xl shadow-md 2xl:p-10 p-7 mx-auto">
             <div className="flex justify-between">
               <div className="flex gap-10">
                 <div>
-                  <img src={image} alt="" className="w-[100px] h-[100px]" />
+                  <img
+                    src={image}
+                    alt=""
+                    className="2xl:w-[100px] 2xl:h-[100px] w-[80px] h-[80px]"
+                  />
                 </div>
                 <div className="flex flex-col justify-between">
-                  <p className="text-blue-500 text-2xl font-bold">{name}</p>
-                  <p className="">{uid}</p>
-                  <p className="">{email}</p>
+                  <p className="text-blue-500 2xl:text-2xl text-xl font-bold">
+                    {name}
+                  </p>
+                  <p className="2xl:text-base text-sm">{uid}</p>
+                  <p className="2xl:text-base text-sm">{email}</p>
                 </div>
               </div>
               <div className="flex gap-3 h-full">
                 <button
-                  className="rounded-lg bg-blue-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
+                  className="rounded-lg bg-blue-500 shadow-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center"
                   onClick={() => {
                     setIsEdit(true);
                   }}
@@ -485,7 +499,7 @@ function Profile() {
                   Edit Info
                 </button>
                 <button
-                  className="rounded-lg bg-red-500 shadow-lg py-3 px-5 text-white flex gap-3 items-center"
+                  className="rounded-lg bg-red-500 shadow-lg 2xl:py-3 2xl:px-5 py-2 px-4 2xl:text-base text-xs text-white flex gap-3 items-center"
                   onClick={() => {
                     setOpenDeleteAccModal(true);
                   }}
@@ -495,58 +509,58 @@ function Profile() {
                 </button>
               </div>
             </div>
-            <div className="mt-10 flex justify-between">
-              <p className="text-blue-500 text-3xl font-bold">
+            <div className="2xl:mt-10 mt-5 flex justify-between">
+              <p className="text-blue-500 2xl:text-3xl text-2xl font-bold">
                 Personal Information
               </p>
-              <div className="border-t-2 w-7/12 mt-5"></div>
+              <div className="border-t-2 w-7/12 2xl:mt-5 mt-4"></div>
             </div>
-            <div className="mt-10">
-              <div className="flex gap-10 mb-5">
+            <div className="2xl:mt-10 mt-5">
+              <div className="flex gap-10 2xl:mb-5 mb-3">
                 <div className="w-1/2">
-                  <p className="font-bold text-lg flex gap-3 items-center">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                     <FaBookReader className="text-blue-500" />
                     Course
                   </p>
-                  <p>{course}</p>
+                  <p className="2xl:text-base text-sm">{course}</p>
                 </div>
                 <div className="w-1/2">
-                  <p className="font-bold text-lg flex gap-3 items-center">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                     <FaLocationArrow className="text-green-500" />
                     Address
                   </p>
-                  <p>{address}</p>
+                  <p className="2xl:text-base text-sm break-words">{address}</p>
                 </div>
               </div>
-              <div className="flex gap-10 mb-5">
+              <div className="flex gap-10 2xl:mb-5 mb-3 ">
                 <div className="w-1/2">
-                  <p className="font-bold text-lg flex gap-3 items-center">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                     <FaPhoneAlt className="text-yellow-500" />
                     Contact Number
                   </p>
-                  <p>{contactNo}</p>
+                  <p className="2xl:text-base text-sm">{contactNo}</p>
                 </div>
                 <div className="w-1/2">
-                  <p className="font-bold text-lg flex gap-3 items-center">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                     <FaBirthdayCake className="text-red-500" />
                     Birthday
                   </p>
-                  <p>{bday}</p>
+                  <p className="2xl:text-base text-sm">{bday}</p>
                 </div>
               </div>
               <div className="mb-5">
-                <p className="font-bold text-lg flex gap-3 items-center">
+                <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                   <FaCircleNotch className="text-orange-500" />
                   Status
                 </p>
-                <p>{status}</p>
+                <p className="2xl:text-base text-sm">{status}</p>
               </div>
               <div className="mb-5">
-                <p className="font-bold text-lg flex gap-3 items-center">
+                <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
                   <FaPenAlt className="text-purple-500" />
                   Bio
                 </p>
-                <p>{bio}</p>
+                <p className="2xl:text-base text-sm break-words">{bio}</p>
               </div>
             </div>
           </div>

@@ -31,6 +31,8 @@ const getNotifications = async (req, res) => {
     if (await Notifications.findOne({ uid: "#" + id })) {
       const userNotifs = await Notifications.findOne({ uid: "#" + id });
       res.json({ userNotifs }).status(200);
+    } else {
+      res.json({ userNotifs }).status(200);
     }
   } catch (err) {
     console.log(err);
