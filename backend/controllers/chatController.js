@@ -1,5 +1,6 @@
 const uniqid = require("uniqid");
 const multer = require("multer");
+const fs = require("fs"); 
 
 const Chat = require("../models/chat");
 
@@ -121,10 +122,51 @@ const sendReply = async (req, res) => {
   }
 };
 
+const downloadFile = async (req, res) => {
+  const { groupChatID, fileName } = req.params;
+  try {
+    console.log(groupChatID, fileName);
+    const gc = await Chat.findOne({
+      groupChatID,
+    });
+
+    await gc.conversation.forEach((i) => {
+      if (i?.data?.file?.filename == fileName) {
+        res.setHeader("Content-Type", "application/octet-stream");
+        res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=" + i?.data?.file?.filename
+        );
+        const fileStream = fs.createReadStream(i?.data?.file?.path);
+        return i?.data?.file?.filename == fileName
+          ? // ? res.download(`./${i.file.path}`)
+            fileStream.pipe(res)
+          : null;
+      }
+    });
+    //   const path = await user.files.forEach((i) => {
+    //     res.setHeader("Content-Type", "application/octet-stream");
+    //     res.setHeader(
+    //       "Content-Disposition",
+    //       "attachment; filename=" + i.file.filename
+    //     );
+
+    //     const fileStream = fs.createReadStream(i.file.path);
+    //     return i.file.filename === fileName
+    //       ? // ? res.download(`./${i.file.path}`)
+    //         fileStream.pipe(res)
+    //       : null;
+    //   });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   createGroupChat,
   getChats,
   checkChats,
   sendReply,
   upload,
+  downloadFile,
 };

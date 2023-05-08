@@ -5,6 +5,8 @@ import { FaSearch, FaPlus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { BsFillSendFill, BsPaperclip, BsFileEarmarkPost } from "react-icons/bs";
 
+import download from "downloadjs";
+
 import axios from "axios";
 
 function Chat({ socket }) {
@@ -272,6 +274,28 @@ function Chat({ socket }) {
     }
   };
 
+  const handleDownloadFile = async (fileName, origFileName) => {
+    try {
+      await axios
+        .get(
+          process.env.REACT_APP_API_URI +
+            "/chat/download/" +
+            groupChatID +
+            "/" +
+            fileName,
+          {
+            responseType: "blob",
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          download(res.data, origFileName);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="2xl:pt-56 md:pt-48 bg-blue-100 w-full h-screen">
       <div
@@ -321,7 +345,6 @@ function Chat({ socket }) {
                   setMessage("");
                 }}
               />
-              {/* {console.log(friendsArr)} */}
               {searchFriendsForGC.trim() ? (
                 <div
                   className={`w-8/12 bg-white rounded-lg px-3 absolute pt-3 mt-1 shadow-2xl overflow-auto ${
@@ -331,9 +354,7 @@ function Chat({ socket }) {
                   {friendsArr[0]
                     ?.filter((i) => {
                       return users?.map((j, k) => {
-                        // console.log(j?.email, i?.email);
                         if (j?.email === i?.email) {
-                          // console.log(j?.email, i?.email);
                           if (
                             j?.profileDetails[0]?.name
                               .toLowerCase()
@@ -601,10 +622,19 @@ function Chat({ socket }) {
                                   className="flex gap-5 justify-end w-full 2xl:mb-5 mb-3"
                                   key={l}
                                 >
+                                  {/* {console.log(i?.data?.file, i?.data)} */}
                                   <div className="break-words bg-blue-500 text-white w-max 2xl:max-w-[250px] max-w-[200px] p-3 text-left rounded-b-2xl mr-3 rounded-tl-2xl 2xl:text-sm text-xs">
                                     {i?.data?.reply}
                                     {i?.data?.file?.originalname?.length ? (
-                                      <button className="flex gap-1 justify-center items-center bg-blue-100 p-2 rounded-lg mt-2 text-black w-full">
+                                      <button
+                                        className="flex gap-1 justify-center items-center bg-blue-100 p-2 rounded-lg mt-2 text-black w-full"
+                                        onClick={() => {
+                                          handleDownloadFile(
+                                            i?.data?.file?.filename,
+                                            i?.data?.file?.originalname
+                                          );
+                                        }}
+                                      >
                                         <BsFileEarmarkPost />
                                         <p className="w-full text-ellipsis truncate ">
                                           {i?.data?.file?.originalname}
@@ -632,7 +662,15 @@ function Chat({ socket }) {
                                     <div className="break-words bg-gray-200 w-max 2xl:max-w-[250px] max-w-[200px] p-3 text-left rounded-b-2xl rounded-tr-2xl 2xl:text-sm text-xs">
                                       {i?.data?.reply}
                                       {i?.data?.file?.originalname?.length ? (
-                                        <button className="flex gap-1 justify-center items-center bg-gray-100 p-2 rounded-lg mt-2 text-black w-full">
+                                        <button
+                                          className="flex gap-1 justify-center items-center bg-gray-100 p-2 rounded-lg mt-2 text-black w-full"
+                                          onClick={() => {
+                                            handleDownloadFile(
+                                              i?.data?.file?.filename,
+                                              i?.data?.file?.originalname
+                                            );
+                                          }}
+                                        >
                                           <BsFileEarmarkPost />
                                           <p className="w-full text-ellipsis truncate">
                                             {i?.data?.file?.originalname}
@@ -651,7 +689,7 @@ function Chat({ socket }) {
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {file ? (
-                        <div className="w-2/12 bg-gray-200 p-1 rounded-lg flex gap-1">
+                        <div className="max-w-2/12 bg-gray-200 p-1 mt-2 rounded-lg flex gap-1">
                           <p className="truncate text-ellipsis text-xs font-semibold">
                             {file?.name}
                           </p>
@@ -769,27 +807,36 @@ function Chat({ socket }) {
                   {messages[0]?.map((i, k) => {
                     if (i?.groupChatID === groupChatID) {
                       return i?.groupMembers?.map((j, l) => {
-                        return (
-                          <button
-                            type="button"
-                            className="flex gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100 w-full"
-                            onClick={() => {
-                              navigate("/user/" + j[0]?.uid?.slice(1, 12));
-                            }}
-                          >
-                            <img
-                              src={j[0]?.profileAvatar}
-                              alt=""
-                              className="w-[40px] h-[40px]"
-                            />
-                            <div className="flex flex-col justify-between text-left">
-                              <p className="text-sm font-bold">{j[0]?.name}</p>
-                              <p className="text-xs text-gray-400">
-                                {j[0]?.uid}
-                              </p>
-                            </div>
-                          </button>
-                        );
+                        return users?.map((z) => {
+                          if (j[0]?.email === z?.email) {
+                            return (
+                              <button
+                                type="button"
+                                className="flex gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100 w-full"
+                                onClick={() => {
+                                  navigate(
+                                    "/user/" +
+                                      z?.profileDetails[0]?.uid?.slice(1, 12)
+                                  );
+                                }}
+                              >
+                                <img
+                                  src={z?.profileDetails[0]?.profileAvatar}
+                                  alt=""
+                                  className="w-[40px] h-[40px]"
+                                />
+                                <div className="flex flex-col justify-between text-left">
+                                  <p className="text-sm font-bold">
+                                    {z?.profileDetails[0]?.name}
+                                  </p>
+                                  <p className="text-xs text-gray-400">
+                                    {z?.profileDetails[0]?.uid}
+                                  </p>
+                                </div>
+                              </button>
+                            );
+                          }
+                        });
                       });
                     }
                   })}
@@ -810,7 +857,12 @@ function Chat({ socket }) {
                               <button
                                 type="button"
                                 className="flex gap-3 hover:bg-gray-200 px-2 py-3 rounded-lg transition duration-100 w-full items-center"
-                                onClick={() => {}}
+                                onClick={() => {
+                                  handleDownloadFile(
+                                    j?.data?.file?.filename,
+                                    j?.data?.file?.originalname
+                                  );
+                                }}
                               >
                                 <BsFileEarmarkPost />
                                 <div className="flex flex-col justify-between text-left">

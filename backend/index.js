@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
     const receiver = getUser(addedFriend.email);
     console.log(addedFriend, requestor);
     console.log("eto receiver", receiver);
-    io.to(receiver.socketId).emit("getAddFriendNotification", {
+    io.to(receiver?.socketId).emit("getAddFriendNotification", {
       requestor,
       notificationType: "addFriend",
     });
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
 
   socket.on("confirmedFriend", ({ receiver, sender }) => {
     const receiverVar = getUser(receiver.email);
-    io.to(receiverVar.socketId).emit("getConfirmedFriendNotification", {
+    io.to(receiverVar?.socketId).emit("getConfirmedFriendNotification", {
       sender,
       notificationType: "confirmedFriend",
     });
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
 
   socket.on("onlineFriends", ({ receiver }) => {
     const receiverVar = getUser(receiver);
-    io.to(receiverVar.socketId).emit("getOnlineFriends", {
+    io.to(receiverVar?.socketId).emit("getOnlineFriends", {
       onlineUsers,
     });
   });
@@ -86,7 +86,7 @@ io.on("connection", (socket) => {
       return members.forEach((j) => {
         if (i.username !== email) {
           if (j[0].email === i.username) {
-            io.to(i.socketId).emit("getMessageNotif", {
+            io.to(i?.socketId).emit("getMessageNotif", {
               data,
             });
           }
@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     console.log(onlineUsers);
     onlineUsers.forEach((i) => {
-      io.to(i.socketId).emit("getOnlineFriends", {
+      io.to(i?.socketId).emit("getOnlineFriends", {
         onlineUsers,
       });
     });
