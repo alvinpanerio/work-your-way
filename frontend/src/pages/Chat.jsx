@@ -562,7 +562,7 @@ function Chat({ socket }) {
                           >
                             {i?.groupChatName[0].toUpperCase()}
                           </div>
-                          <div className="flex flex-col justify-between text-left 2xl:w-[268px] w-[248px] 2xl:h-[50px] h-[40px]">
+                          <div className="flex flex-col justify-between text-left w-[248px] 2xl:h-[50px] h-[40px]">
                             <p className="font-semibold text-blue-500 2xl:text-base text-sm">
                               {i?.groupChatName}
                             </p>

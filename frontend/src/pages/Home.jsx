@@ -243,7 +243,7 @@ function Home({ addClass, socket }) {
   return (
     <>
       {isLogged ? (
-        <div className="2xl:pt-56 md:pt-48 bg-blue-100 w-full h-screen">
+        <div className="2xl:pt-56 pt-[10.5rem] bg-blue-100 w-full h-screen">
           <div className="container flex flex-col mx-auto font-roboto px-20  2xl:-mt-[175px] md:-mt-[140px]">
             <SideBar />
             <div className="relative w-[1300px] md:w-max">
@@ -652,27 +652,27 @@ function Home({ addClass, socket }) {
           </div>
         </div>
       ) : (
-        <div className="2xl:pt-56 md:pt-48">
+        <div className="2xl:pt-56 pt-[10.5rem]">
           <div className="container flex flex-col mx-auto font-roboto px-20">
             <div className="pr-20 flex justify-between flex-wrap">
               <div>
-                <p className="font-semibold text-6xl w-[38rem] text-[#102c54]">
+                <p className="font-semibold 2xl:text-6xl text-5xl w-[38rem] text-[#102c54]">
                   Work
                   <br />
                   Your Way
                   <br />
                   <p className="relative mt-5">
-                    <div className="absolute bg-[#102c54] py-5 w-[620px] h-[88px] -rotate-1 -top-3 -right-1"></div>
+                    <div className="absolute bg-[#102c54] py-5 2xl:w-[645px] w-[525px] 2xl:h-[88px] h-[80px] -rotate-1 -top-3 2xl:-right-1 -left-5"></div>
                     <p className="text-white absolute">Personal Workspace</p>
                   </p>
                 </p>
-                <p className="font-base text-gray-600 text-lg mt-32">
+                <p className="font-base text-gray-600 2xl:text-lg text-base mt-[7.5rem]">
                   Organize, Create, and Thrive in Your Haven. Be productive as
                   always!
                 </p>
                 <button
                   className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg 
-            text-sm px-5 py-2.5 text-center drop-shadow-xl shadow-blue-300 mr-5 mt-5 flex items-center"
+            text-sm 2xl:px-5 px-3 2xl:py-2.5 py-2 text-center drop-shadow-xl shadow-blue-300 mr-5 mt-5 flex items-center"
                   onClick={() => {
                     navigate("/signup");
                   }}
@@ -689,60 +689,60 @@ function Home({ addClass, socket }) {
                 <img
                   src={Arrow}
                   alt=""
-                  className="absolute -top-4 -left-64 w-[100px] rotate-12"
+                  className="absolute 2xl:-top-4 -top-7 2xl:-left-64 -left-52 2xl:w-[100px] w-[70px] rotate-12"
                 />
-                <p className="text-[#102c54] absolute -left-52 -top-1 font-medium text-xl -rotate-2">
+                <p className="text-[#102c54] absolute 2xl:-left-52 -left-44 2xl:-top-1 -top-6 font-medium 2xl:text-xl text-base -rotate-2">
                   Features
                 </p>
-                <div className="relative w-[200px] h-[200px] bg-blue-500 rounded-3xl mr-20 -ml-[50px] shadow-2xl shadow-sky-500/50">
+                <div className="relative 2xl:w-[200px] w-[150px] 2xl:h-[200px] h-[150px] bg-blue-500 rounded-3xl mr-20 -ml-[50px] shadow-2xl shadow-sky-500/50">
                   <img
                     src={Icons[1]}
                     alt=""
-                    className="absolute w-[170px] -top-14 left-20 z-10"
+                    className="absolute 2xl:w-[170px] w-[130px] 2xl:-top-14 -top-12 2xl:left-20 left-16 z-10"
                   />
-                  <p className="absolute -top-16 w-full left-14 text-white/10 text-[250px]">
+                  <p className="absolute -top-16 w-full 2xl:left-14 left-10 text-white/10 2xl:text-[250px] text-[200px]">
                     2
                   </p>
-                  <p className="absolute bottom-5 left-5 w-full text-white text-[16px]">
+                  <p className="absolute bottom-5 left-5 w-full text-white 2xl:text-[16px] text-[12px]">
                     File Upload
                   </p>
                 </div>
-                <div className="relative w-[200px] h-[200px] bg-blue-500 rounded-3xl -ml-[300px] shadow-2xl shadow-sky-500/50 -mt-[100px]">
+                <div className="relative 2xl:w-[200px] w-[150px] 2xl:h-[200px] h-[150px] bg-blue-500 rounded-3xl 2xl:-ml-[300px] -ml-[240px] shadow-2xl shadow-sky-500/50 -mt-[100px]">
                   <img
                     src={Icons[0]}
                     alt=""
-                    className="w-[170px] absolute -top-12 -left-10 z-10"
+                    className="2xl:w-[170px] w-[130px] absolute 2xl:-top-12 -top-10 2xl:-left-10 -left-8 z-10"
                   />
-                  <p className="absolute -top-8 w-full left-20 text-white/10 text-[250px]">
+                  <p className="absolute -top-8 w-full 2xl:left-20 left-14 text-white/10 2xl:text-[250px] text-[200px]">
                     1
                   </p>
-                  <p className="absolute bottom-5 left-5 w-full text-white text-[16px]">
+                  <p className="absolute bottom-5 left-5 w-full text-white 2xl:text-[16px] text-[12px]">
                     Chat
                   </p>
                 </div>
-                <div className="relative w-[200px] h-[200px] bg-blue-500 rounded-3xl -ml-[200px] shadow-2xl shadow-sky-500/50 mt-[50px]">
+                <div className="relative 2xl:w-[200px] w-[150px] 2xl:h-[200px] h-[150px] bg-blue-500 rounded-3xl 2xl:-ml-[200px] -ml-[160px] shadow-2xl shadow-sky-500/50 2xl:mt-[50px] mt-[40px]">
                   <img
                     src={Icons[2]}
                     alt=""
-                    className="absolute w-[170px] -bottom-14 right-20 z-10"
+                    className="absolute 2xl:w-[170px] w-[130px] 2xl:-bottom-14 -bottom-10 2xl:right-20 right-16 z-10"
                   />
-                  <p className="absolute -top-12 w-full left-10 text-white/10 text-[250px]">
+                  <p className="absolute -top-12 w-full 2xl:left-10 left-4 text-white/10 2xl:text-[250px] text-[200px]">
                     4
                   </p>
-                  <p className="absolute top-5 left-20 w-full text-white text-[16px]">
+                  <p className="absolute top-5 2xl:left-20 left-14 w-full text-white 2xl:text-[16px] text-[12px]">
                     Leaderboards
                   </p>
                 </div>
-                <div className="relative w-[200px] h-[200px] bg-blue-500 rounded-3xl ml-[50px] shadow-2xl shadow-sky-500/50 -mt-[300px]">
+                <div className="relative 2xl:w-[200px] w-[150px] 2xl:h-[200px] h-[150px] bg-blue-500 rounded-3xl 2xl:ml-[50px] ml-[30px] shadow-2xl shadow-sky-500/50 2xl:-mt-[300px] -mt-[200px]">
                   <img
                     src={Icons[3]}
                     alt=""
-                    className="w-[170px] absolute -bottom-12 -right-10 z-10"
+                    className="2xl:w-[170px] w-[130px] absolute 2xl:-bottom-12 -bottom-9 2xl:-right-10 -right-8 z-10"
                   />
-                  <p className="absolute -top-16 w-full left-3 text-white/10 text-[250px]">
+                  <p className="absolute 2xl:-top-16 -top-14 w-full 2xl:left-3 left-1 text-white/10 2xl:text-[250px] text-[200px]">
                     3
                   </p>
-                  <p className="absolute top-5 left-5 w-full text-white text-[16px]">
+                  <p className="absolute top-5 left-5 w-full text-white 2xl:text-[16px] text-[12px]">
                     Planner
                   </p>
                 </div>

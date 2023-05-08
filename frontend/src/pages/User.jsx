@@ -10,6 +10,8 @@ import {
   FaBirthdayCake,
   FaUserPlus,
   FaUserCheck,
+  FaCircleNotch,
+  FaPenAlt,
 } from "react-icons/fa";
 import SideBar from "../components/SideBar";
 
@@ -199,11 +201,22 @@ function User({ socket }) {
         <div className="mt-3 mb-10">
           <div className="w-2/3 bg-white rounded-2xl shadow-md p-10 mx-auto mb-5">
             <div className="flex justify-between">
-              <img
-                src={userInfo.profileDetails?.[0].profileAvatar}
-                alt=""
-                className="2xl:w-[100px] w-[80px] 2xl:mb-10 mb-5"
-              />
+              <div className="flex gap-10">
+                <img
+                  src={userInfo.profileDetails?.[0].profileAvatar}
+                  alt=""
+                  className="2xl:w-[100px] 2xl:h-[100px] w-[80px] h-[80px]"
+                />
+                <div className="flex flex-col justify-between">
+                  <p className="text-blue-500 2xl:text-2xl text-xl font-bold">
+                    {userInfo.profileDetails?.[0].name}
+                  </p>
+                  <p className="2xl:text-base text-sm">
+                    {userInfo.profileDetails?.[0].uid}
+                  </p>
+                  <p className="2xl:text-base text-sm">{userInfo.email}</p>
+                </div>
+              </div>
               {isFriendNo ? (
                 isFriendNo === 1 ? (
                   requestorMe ? (
@@ -242,40 +255,73 @@ function User({ socket }) {
                 </button>
               )}
             </div>
-            <div className="flex gap-5 mb-3 items-center">
-              <p className="text-blue-500 font-bold 2xl:text-2xl text-xl">
-                {userInfo.profileDetails?.[0].name}
+            <div className="2xl:mt-10 mt-5 flex justify-between">
+              <p className="text-blue-500 2xl:text-3xl text-2xl font-bold">
+                Personal Information
               </p>
-              <p className="font-medium 2xl:text-base text-sm">
-                {userInfo.profileDetails?.[0].uid}
-              </p>
+              <div className="border-t-2 w-7/12 2xl:mt-5 mt-4"></div>
             </div>
-            <p className="mb-8 flex gap-3 items-center w-6/12 2xl:text-base text-sm break-all">
-              {userInfo.profileDetails?.[0].bio}
-            </p>
-            <div className="border-b-2 mb-8 w-2/12"></div>
-            <p className="text-gray-400 mb-3 flex gap-3 items-center 2xl:text-base text-sm 2xl:text-base text-sm">
-              <FaLocationArrow className="text-green-500" />
-              {userInfo.profileDetails?.[0].address}
-            </p>
-            <p className="mb-3 flex gap-3 items-center 2xl:text-base text-sm">
-              <FaPhoneAlt className="text-yellow-500" />
-              {userInfo.profileDetails?.[0].contactNo}
-            </p>
-            <div className="flex gap-3 mb-3 items-center">
-              <p className="flex gap-3 items-center 2xl:text-base text-sm">
-                <FaBirthdayCake className="text-red-500" />
-                {userInfo.profileDetails?.[0].bday}
-              </p>
-              <p className="text-gray-300">•</p>
-              <p className="font-medium flex gap-3 w-[350px] items-center 2xl:text-base text-sm">
-                <FaBookReader className="text-blue-500 w-[32px] h-[32px]" />
-                {userInfo.profileDetails?.[0].course}
-              </p>
-              <p className="text-gray-300">•</p>
-              <p className="text-gray-400 2xl:text-base text-sm">
-                {userInfo.profileDetails?.[0].status}
-              </p>
+
+            <div className="2xl:mt-10 mt-5">
+              <div className="flex gap-10 2xl:mb-5 mb-3">
+                <div className="w-1/2">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                    <FaBookReader className="text-blue-500" />
+                    Course
+                  </p>
+                  <p className="2xl:text-base text-sm">
+                    {" "}
+                    {userInfo.profileDetails?.[0].course}
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                    <FaLocationArrow className="text-green-500" />
+                    Address
+                  </p>
+                  <p className="2xl:text-base text-sm break-words">
+                    {userInfo.profileDetails?.[0].address}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-10 2xl:mb-5 mb-3 ">
+                <div className="w-1/2">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                    <FaPhoneAlt className="text-yellow-500" />
+                    Contact Number
+                  </p>
+                  <p className="2xl:text-base text-sm">
+                    {userInfo.profileDetails?.[0].contactNo}
+                  </p>
+                </div>
+                <div className="w-1/2">
+                  <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                    <FaBirthdayCake className="text-red-500" />
+                    Birthday
+                  </p>
+                  <p className="2xl:text-base text-sm">
+                    {userInfo.profileDetails?.[0].bday}
+                  </p>
+                </div>
+              </div>
+              <div className="mb-5">
+                <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                  <FaCircleNotch className="text-orange-500" />
+                  Status
+                </p>
+                <p className="2xl:text-base text-sm">
+                  {userInfo.profileDetails?.[0].status}
+                </p>
+              </div>
+              <div className="mb-5">
+                <p className="font-bold 2xl:text-lg text-base flex gap-3 items-center">
+                  <FaPenAlt className="text-purple-500" />
+                  Bio
+                </p>
+                <p className="2xl:text-base text-sm break-words">
+                  {userInfo.profileDetails?.[0].bio}
+                </p>
+              </div>
             </div>
           </div>
         </div>

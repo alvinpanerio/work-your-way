@@ -152,14 +152,17 @@ function Login() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="text-[#102c54] text-lg  font-medium"
+            className="text-[#102c54] text-lg font-medium"
           >
-            <p className="text-[#102c54] text-3xl font-bold mb-3">Sign Up</p>
+            <p className="text-[#102c54] 2xl:text-3xl text-2xl font-bold mb-3">
+              Sign Up
+            </p>
             <div>
-              <p>
-                Choose an Avatar <span className="text-red-500">*</span>
+              <p className="2xl:text-base text-sm">
+                Choose an Avatar
+                <span className="2xl:text-base text-sm text-red-500">*</span>
               </p>
-              <div className="flex flex-wrap gap-y-5 my-5 justify-center">
+              <div className="flex flex-wrap 2xl:gap-y-5 gap-y-3 2xl:my-5 my-3 justify-center">
                 {Avatars.map((avatar, i) => {
                   return (
                     <label
@@ -188,14 +191,18 @@ function Login() {
                         />
                       )}
 
-                      <img src={avatar} alt="" className="w-14 h-14" />
+                      <img
+                        src={avatar}
+                        alt=""
+                        className="2xl:w-14 2xl:h-14 w-12 h-12"
+                      />
                     </label>
                   );
                 })}
               </div>
             </div>
             <div className="flex flex-col">
-              <label htmlFor="email" className="my-1">
+              <label htmlFor="email" className="my-1 2xl:text-base text-sm">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -203,11 +210,11 @@ function Login() {
                 id="email"
                 value={email}
                 onChange={handleEmail}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
               />
             </div>
             <div className="relative flex flex-col">
-              <label htmlFor="password" className="my-1">
+              <label htmlFor="password" className="my-1 2xl:text-base text-sm">
                 Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -215,26 +222,29 @@ function Login() {
                 id="password"
                 value={password}
                 onChange={handlePassword}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
               />
               {show ? (
                 <FaEyeSlash
                   onClick={() => {
                     setShow(false);
                   }}
-                  className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                  className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:h-5 2xl:w-5 2xl:w-5 h-4 w-4"
                 ></FaEyeSlash>
               ) : (
                 <FaEye
                   onClick={() => {
                     setShow(true);
                   }}
-                  className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                  className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:h-5 2xl:w-5 2xl:w-5 h-4 w-4"
                 ></FaEye>
               )}
             </div>
             <div className="relative flex flex-col">
-              <label htmlFor="confirm-password" className="my-1">
+              <label
+                htmlFor="confirm-password"
+                className="my-1 2xl:text-base text-sm"
+              >
                 Confirm Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -242,21 +252,21 @@ function Login() {
                 id="confirm-password"
                 value={passwordConfirm}
                 onChange={handlePasswordConfirmation}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
               />
               {show ? (
                 <FaEyeSlash
                   onClick={() => {
                     setShow(false);
                   }}
-                  className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                  className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:h-5 2xl:w-5 2xl:w-5 h-4 w-4"
                 ></FaEyeSlash>
               ) : (
                 <FaEye
                   onClick={() => {
                     setShow(true);
                   }}
-                  className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                  className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:h-5 2xl:w-5 2xl:w-5 h-4 w-4"
                 ></FaEye>
               )}
             </div>
@@ -267,12 +277,15 @@ function Login() {
               className={`inline-flex items-center text-white ${
                 submit ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-700"
               }  font-medium 
-      rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center`}
+      rounded-lg 2xl:text-base text-sm px-5 2xl:py-2.5 py-2 text-center w-full mt-3 flex justify-center`}
             >
               Signup
             </button>
             <div className="flex justify-end mt-2">
-              <Link to={"/forgot"} className={"font-medium text-blue-500"}>
+              <Link
+                to={"/forgot"}
+                className="font-medium text-blue-500 2xl:text-base text-sm"
+              >
                 Forgot Password?
               </Link>
             </div>

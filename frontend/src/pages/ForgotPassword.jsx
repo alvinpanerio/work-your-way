@@ -49,11 +49,11 @@ function ForgotPassword() {
           onSubmit={handleSubmit}
           className="text-[#102c54] text-lg font-medium"
         >
-          <p className="text-[#102c54] text-3xl font-bold mb-3">
+          <p className="text-[#102c54] 2xl:text-3xl text-2xl font-bold mb-3">
             Forgot Password
           </p>
           <div className="flex flex-col">
-            <label htmlFor="email" className="my-1">
+            <label htmlFor="email" className="my-1 2xl:text-base text-sm">
               Email <span className="text-red-500">*</span>
             </label>
             <input
@@ -61,15 +61,23 @@ function ForgotPassword() {
               id="email"
               value={email}
               onChange={handleEmail}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
             />
           </div>
-          {error && <div className="text-red-600 mt-3">{error}</div>}
-          {message && <div className="text-green-600 mt-3">{message}</div>}
+          {error && (
+            <div className="text-red-600 mt-3 2xl:text-base text-sm">
+              {error}
+            </div>
+          )}
+          {message && (
+            <div className="text-green-600 mt-3 2xl:text-base text-sm">
+              {message}
+            </div>
+          )}
           <button
             type={"submit"}
             className="inline-flex items-center text-white 
-              bg-blue-500 hover:bg-blue-700 font-medium rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center"
+              bg-blue-500 hover:bg-blue-700 font-medium rounded-lg 2xl:text-base text-sm px-5 2xl:py-2.5 py-2 text-center w-full mt-3 flex justify-center"
           >
             Submit
           </button>

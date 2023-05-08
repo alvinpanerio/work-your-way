@@ -105,11 +105,14 @@ function PasswordReset() {
               onSubmit={handleSubmit}
               className="text-[#102c54] text-lg font-medium"
             >
-              <p className="text-[#102c54] text-3xl font-bold mb-3">
+              <p className="text-[#102c54] 2xl:text-3xl text-2xl font-bold mb-3">
                 Password Reset
               </p>
               <div className="relative flex flex-col">
-                <label htmlFor="password" className="my-1">
+                <label
+                  htmlFor="password"
+                  className="my-1 2xl:text-base text-sm"
+                >
                   Password <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -117,26 +120,29 @@ function PasswordReset() {
                   id="password"
                   value={password}
                   onChange={handlePassword}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
                 />
                 {show ? (
                   <FaEyeSlash
                     onClick={() => {
                       setShow(false);
                     }}
-                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                    className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:w-5 h-4 w-4"
                   ></FaEyeSlash>
                 ) : (
                   <FaEye
                     onClick={() => {
                       setShow(true);
                     }}
-                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                    className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:w-5 h-4 w-4"
                   ></FaEye>
                 )}
               </div>
               <div className="relative flex flex-col">
-                <label htmlFor="confirm-password" className="my-1">
+                <label
+                  htmlFor="confirm-password"
+                  className="my-1 2xl:text-base text-sm"
+                >
                   Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -144,21 +150,21 @@ function PasswordReset() {
                   id="confirm-password"
                   value={passwordConfirm}
                   onChange={handlePasswordConfirmation}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 2xl:p-2.5 p-2"
                 />
                 {show ? (
                   <FaEyeSlash
                     onClick={() => {
                       setShow(false);
                     }}
-                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                    className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:w-5 h-4 w-4"
                   ></FaEyeSlash>
                 ) : (
                   <FaEye
                     onClick={() => {
                       setShow(true);
                     }}
-                    className="top-12 left-72 cursor-pointer absolute h-5 w-5"
+                    className="2xl:top-12 2xl:left-72 top-10 left-[18.5rem] cursor-pointer absolute 2xl:w-5 h-4 w-4"
                   ></FaEye>
                 )}
               </div>
@@ -169,7 +175,7 @@ function PasswordReset() {
                 className={`inline-flex items-center text-white ${
                   submit ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-700"
                 }  font-medium 
-rounded-lg text-base px-5 py-2.5 text-center w-full mt-3 flex justify-center`}
+rounded-lg 2xl:text-base text-sm px-5 2xl:py-2.5 py-2 text-center w-full mt-3 flex justify-center`}
               >
                 Reset
               </button>
