@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("confirmedFriend", ({ receiver, sender }) => {
-    const receiverVar = getUser(receiver.email);
+    const receiverVar = getUser(receiver?.email);
     io.to(receiverVar?.socketId).emit("getConfirmedFriendNotification", {
       sender,
       notificationType: "confirmedFriend",
